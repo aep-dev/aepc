@@ -1,0 +1,39 @@
+// resourcedefinition contains the
+// schema of the resource definition.
+// regenerate with
+//
+// protoc ./aepc/schema/resourcedefinition.proto --go_opt paths=source_relative\
+//   --go_out=.
+syntax = "proto3";
+option go_package = "/schema";
+
+message Service {
+  string name = 1;
+  repeated Resource resources = 2;
+}
+
+message Resource {
+  // Kind is the type of the resource
+  string kind = 1;
+  map<string, Property> properties = 2;
+  // TODO: add method support
+  // repeated Method methods = 3;
+}
+
+message Property {}
+
+// message Method {
+//   enum MethodType {
+//     METHODTYPE_UNDEFINED = 0;
+//     CREATE = 1;
+//     READ = 2;
+//     UPDATE = 3;
+//     DELETE = 4;
+//     LIST = 5;
+//     CUSTOM_MUTATION = 6;
+//     CUSTOM_RETRIEVAL = 7;
+//   }
+//
+//   MethodType type = 1;
+//   bool is_lro = 2;
+// }
