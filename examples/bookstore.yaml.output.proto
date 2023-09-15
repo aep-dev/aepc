@@ -1,0 +1,3 @@
+name: NewBookStore
+resources:
+  - kind: book

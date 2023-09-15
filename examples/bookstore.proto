@@ -1,0 +1,16 @@
+syntax = "proto3";
+package tutorial;
+option go_package = "proto";
+
+service BookStore {}
+
+message Book {
+
+  // represents the isbn.
+  string isbn = 3;
+  message Properties {}
+  message Status {}
+
+  Properties properties = 1;
+  Status status = 2;
+}
