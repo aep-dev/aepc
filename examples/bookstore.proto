@@ -2,7 +2,7 @@ syntax = "proto3";
 package tutorial;
 option go_package = "proto";
 
-service BookStore {}
+service Bookstore {}
 
 message Book {
 

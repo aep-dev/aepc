@@ -24,6 +24,7 @@ import (
 
 	"github.com/aep-dev/aepc/reader"
 	"github.com/aep-dev/aepc/schema"
+	"github.com/aep-dev/aepc/validator"
 	"github.com/aep-dev/aepc/writer/proto"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -49,6 +50,10 @@ func NewCommand() *cobra.Command {
 			err = unmarshal(ext, input, s)
 			if err != nil {
 				log.Fatal(err)
+			}
+			errors := validator.ValidateService(s)
+			if len(errors) > 0 {
+				log.Fatalf("error validating service: %v", errors)
 			}
 
 			proto, _ := proto.WriteServiceToProto(s)

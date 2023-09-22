@@ -1,0 +1,3 @@
+name: Bookstore
+resources:
+  - kind: Book

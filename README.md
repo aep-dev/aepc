@@ -22,3 +22,9 @@ flowchart LR
     hub  --> http
     hub  --> crd
 ```
+
+## User Guide
+
+```
+go run main.go -i ./examples/bookstore.yaml -o ./examples/bookstore.yaml.output.proto
+```

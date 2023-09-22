@@ -15,7 +15,8 @@ message Service {
 message Resource {
   // Kind is the type of the resource
   string kind = 1;
-  map<string, Property> properties = 2;
+  repeated string parents = 2;
+  map<string, Property> properties = 3;
   // TODO: add method support
   // repeated Method methods = 3;
 }
