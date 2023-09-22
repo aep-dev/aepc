@@ -18,6 +18,20 @@ message ReadBookRequest {
   string path = 1;
 }
 
+message Publisher {
+  string path = 1;
+}
+
+message CreatePublisherRequest {
+  string id = 1;
+
+  Publisher resource = 2;
+}
+
+message ReadPublisherRequest {
+  string path = 1;
+}
+
 service Bookstore {
   rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
     option (google.api.http) = { post: "/book" };
@@ -25,5 +39,13 @@ service Bookstore {
 
   rpc ReadBook ( ReadBookRequest ) returns ( Book ) {
     option (google.api.http) = { get: "/{path=book/*}" };
+  }
+
+  rpc CreatePublisher ( CreatePublisherRequest ) returns ( Publisher ) {
+    option (google.api.http) = { post: "/publisher" };
+  }
+
+  rpc ReadPublisher ( ReadPublisherRequest ) returns ( Publisher ) {
+    option (google.api.http) = { get: "/{path=publisher/*}" };
   }
 }

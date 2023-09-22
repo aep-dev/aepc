@@ -13,10 +13,14 @@ message Service {
 }
 
 message Resource {
-  // Kind is the type of the resource
+  // The type of the resource. Used to programmatically
+  // refer to and identify the resource.
   string kind = 1;
-  repeated string parents = 2;
-  map<string, Property> properties = 3;
+  // The plural of the resource. Used in documentation.
+  string plural = 2;
+  // The list of parent resources, referred to via the kind.
+  repeated string parents = 3;
+  map<string, Property> properties = 4;
   // TODO: add method support
   // repeated Method methods = 3;
 }

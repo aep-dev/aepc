@@ -1,8 +1,12 @@
+// NOTE: since we are missing some proto annotations that
+// must be added, the proto representation is outdated. See bookstore.yaml
 syntax = "proto3";
 package tutorial;
 option go_package = "proto";
 
-service Bookstore {}
+// bookstore.examples.com
+service Bookstore {
+}
 
 message Book {
 
