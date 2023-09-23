@@ -18,6 +18,10 @@ message ReadBookRequest {
   string path = 1;
 }
 
+message DeleteBookRequest {
+  string path = 1;
+}
+
 message Publisher {
   string path = 1;
 }
@@ -32,13 +36,21 @@ message ReadPublisherRequest {
   string path = 1;
 }
 
+message DeletePublisherRequest {
+  string path = 1;
+}
+
 service Bookstore {
   rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
     option (google.api.http) = { post: "/book" };
   }
 
   rpc ReadBook ( ReadBookRequest ) returns ( Book ) {
-    option (google.api.http) = { get: "/{path=book/*}" };
+    option (google.api.http) = { get: "/{path=publisher/*/book/*}" };
+  }
+
+  rpc DeleteBook ( DeleteBookRequest ) returns ( DeleteBookRequest ) {
+    option (google.api.http) = { delete: "/{path=publisher/*/book/*}" };
   }
 
   rpc CreatePublisher ( CreatePublisherRequest ) returns ( Publisher ) {
@@ -47,5 +59,9 @@ service Bookstore {
 
   rpc ReadPublisher ( ReadPublisherRequest ) returns ( Publisher ) {
     option (google.api.http) = { get: "/{path=publisher/*}" };
+  }
+
+  rpc DeletePublisher ( DeletePublisherRequest ) returns ( DeletePublisherRequest ) {
+    option (google.api.http) = { delete: "/{path=publisher/*}" };
   }
 }

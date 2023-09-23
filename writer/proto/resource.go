@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aep-dev/aepc/schema"
+	"github.com/aep-dev/aepc/parser"
 	"github.com/jhump/protoreflect/desc/builder"
 	"google.golang.org/genproto/googleapis/api/annotations"
 	"google.golang.org/protobuf/proto"
@@ -25,7 +25,7 @@ import (
 )
 
 // AddResource adds a resource's protos and RPCs to a file and service.
-func AddResource(r *schema.Resource, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	resourceMb, err := GeneratedResourceMessage(r)
 	if err != nil {
 		return fmt.Errorf("unable to generated resource %v: %w", r.Kind, err)
@@ -39,15 +39,15 @@ func AddResource(r *schema.Resource, fb *builder.FileBuilder, sb *builder.Servic
 	if err != nil {
 		return err
 	}
-	// err = AddDelete(r, resourceMb, fb, sb)
-	// if err != nil {
-	// 	return err
-	// }
+	err = AddDelete(r, resourceMb, fb, sb)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 // GenerateResourceMesssage adds the resource message.
-func GeneratedResourceMessage(r *schema.Resource) (*builder.MessageBuilder, error) {
+func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
 	mb.AddField(
 		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
@@ -65,7 +65,7 @@ func GeneratedResourceMessage(r *schema.Resource) (*builder.MessageBuilder, erro
 	return mb, nil
 }
 
-func AddCreate(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
 	mb := builder.NewMessage("Create" + r.Kind + "Request")
@@ -87,7 +87,7 @@ func AddCreate(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *build
 	return nil
 }
 
-func AddRead(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddRead(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
 	mb := builder.NewMessage("Read" + r.Kind + "Request")
@@ -102,7 +102,8 @@ func AddRead(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *builder
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Get{
-			Get: fmt.Sprintf("/{path=%s/*}", strings.ToLower(r.Kind)),
+			// Get: fmt.Sprintf("/{path=%s/*}", strings.ToLower(r.Kind)),
+			Get: generateHTTPPath(r),
 		},
 	})
 	method.SetOptions(options)
@@ -110,7 +111,7 @@ func AddRead(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *builder
 	return nil
 }
 
-func AddDelete(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
 	mb := builder.NewMessage("Delete" + r.Kind + "Request")
@@ -120,15 +121,30 @@ func AddDelete(r *schema.Resource, resourceMb *builder.MessageBuilder, fb *build
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Delete"+r.Kind,
 		builder.RpcTypeMessage(mb, false),
-		builder.RpcTypeMessage(nil, false),
+		// builder.RpcTypeImportedMessage(emptypb.File_google_protobuf_empty_proto, false),
 	)
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Delete{
-			Delete: fmt.Sprintf("/{path=%s/*}", strings.ToLower(r.Kind)),
+			Delete: generateHTTPPath(r),
 		},
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
 	return nil
+}
+
+func generateHTTPPath(r *parser.ParsedResource) string {
+	elements := []string{strings.ToLower(r.Kind)}
+	if len(r.Parents) > 0 {
+		// TODO: handle multiple parents
+		p := r.Parents[0]
+		for p != nil {
+			elements = append([]string{strings.ToLower(p.Kind)}, elements...)
+			if len(p.Parents) == 0 {
+				break
+			}
+		}
+	}
+	return fmt.Sprintf("/{path=%v/*}", strings.Join(elements, "/*/"))
 }

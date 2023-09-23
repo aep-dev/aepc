@@ -22,7 +22,8 @@ import (
 
 	"github.com/ghodss/yaml"
 
-	"github.com/aep-dev/aepc/reader"
+	"github.com/aep-dev/aepc/loader"
+	"github.com/aep-dev/aepc/parser"
 	"github.com/aep-dev/aepc/schema"
 	"github.com/aep-dev/aepc/validator"
 	"github.com/aep-dev/aepc/writer/proto"
@@ -55,8 +56,11 @@ func NewCommand() *cobra.Command {
 			if len(errors) > 0 {
 				log.Fatalf("error validating service: %v", errors)
 			}
-
-			proto, _ := proto.WriteServiceToProto(s)
+			ps, err := parser.NewParsedService(s)
+			if err != nil {
+				log.Fatal(err)
+			}
+			proto, _ := proto.WriteServiceToProto(ps)
 
 			err = writeFile(outputFile, proto)
 			if err != nil {
@@ -74,7 +78,7 @@ func NewCommand() *cobra.Command {
 func unmarshal(ext string, b []byte, s *schema.Service) error {
 	switch ext {
 	case ".proto":
-		if err := reader.ReadServiceFromProto(b, s); err != nil {
+		if err := loader.ReadServiceFromProto(b, s); err != nil {
 			return fmt.Errorf("unable to decode proto %q: %w", string(b), err)
 		}
 	case ".yaml":
