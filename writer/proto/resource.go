@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	"github.com/aep-dev/aepc/parser"
+	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	"google.golang.org/genproto/googleapis/api/annotations"
 	"google.golang.org/protobuf/proto"
@@ -119,9 +120,13 @@ func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
 	)
 	fb.AddMessage(mb)
+	emptyMd, err := desc.LoadMessageDescriptor("google.protobuf.Empty")
+	if err != nil {
+		return err
+	}
 	method := builder.NewMethod("Delete"+r.Kind,
 		builder.RpcTypeMessage(mb, false),
-		// builder.RpcTypeImportedMessage(emptypb.File_google_protobuf_empty_proto, false),
+		builder.RpcTypeImportedMessage(emptyMd, false),
 	)
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{

@@ -2,6 +2,8 @@ syntax = "proto3";
 
 import "google/api/annotations.proto";
 
+import "google/protobuf/empty.proto";
+
 option go_package = "/bookstore";
 
 message Book {
@@ -49,7 +51,7 @@ service Bookstore {
     option (google.api.http) = { get: "/{path=publisher/*/book/*}" };
   }
 
-  rpc DeleteBook ( DeleteBookRequest ) returns ( DeleteBookRequest ) {
+  rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
     option (google.api.http) = { delete: "/{path=publisher/*/book/*}" };
   }
 
@@ -61,7 +63,7 @@ service Bookstore {
     option (google.api.http) = { get: "/{path=publisher/*}" };
   }
 
-  rpc DeletePublisher ( DeletePublisherRequest ) returns ( DeletePublisherRequest ) {
+  rpc DeletePublisher ( DeletePublisherRequest ) returns ( google.protobuf.Empty ) {
     option (google.api.http) = { delete: "/{path=publisher/*}" };
   }
 }
