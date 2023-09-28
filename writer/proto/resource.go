@@ -78,9 +78,13 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		builder.RpcTypeMessage(resourceMb, false),
 	)
 	options := &descriptorpb.MethodOptions{}
+	parentPath := ""
+	if len(r.Parents) > 0 {
+		parentPath = fmt.Sprintf("{parent=%v}/", generateHTTPPath(r.Parents[0]))
+	}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Post{
-			Post: "/" + strings.ToLower(r.Kind),
+			Post: fmt.Sprintf("/%v%v", parentPath, strings.ToLower(r.Kind)),
 		},
 	})
 	method.SetOptions(options)
@@ -88,9 +92,9 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	return nil
 }
 
+// AddRead adds a read method for the resource, along with
+// any required messages.
 func AddRead(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	// add the resource message
-	// create request messages
 	mb := builder.NewMessage("Read" + r.Kind + "Request")
 	mb.AddField(
 		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
@@ -103,8 +107,7 @@ func AddRead(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Get{
-			// Get: fmt.Sprintf("/{path=%s/*}", strings.ToLower(r.Kind)),
-			Get: generateHTTPPath(r),
+			Get: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
 		},
 	})
 	method.SetOptions(options)
@@ -131,7 +134,7 @@ func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Delete{
-			Delete: generateHTTPPath(r),
+			Delete: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
 		},
 	})
 	method.SetOptions(options)
@@ -151,5 +154,5 @@ func generateHTTPPath(r *parser.ParsedResource) string {
 			}
 		}
 	}
-	return fmt.Sprintf("/{path=%v/*}", strings.Join(elements, "/*/"))
+	return fmt.Sprintf("%v/*", strings.Join(elements, "/*/"))
 }

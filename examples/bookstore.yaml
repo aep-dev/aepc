@@ -1,6 +1,9 @@
-name: bookstore.example.com
+name: "bookstore.example.com"
 resources:
-  - kind: Book
+  - kind: "Book"
     parents:
       - "bookstore.example.com/Publisher"
-  - kind: Publisher
+  - kind: "Publisher"
+  - kind: "Author"
+    parents:
+      - "Publisher"

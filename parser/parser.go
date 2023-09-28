@@ -5,6 +5,7 @@ package parser
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aep-dev/aepc/schema"
 )
@@ -46,6 +47,11 @@ func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 	// populate resource parents
 	for _, r := range resourceByType {
 		for _, p := range r.Resource.Parents {
+			// if the string is a shorthand resource type (sans service),
+			// build it before checking it's existence.
+			if !strings.Contains(p, "/") {
+				p = strings.Join([]string{s.Name, p}, "/")
+			}
 			parentResource, exists := resourceByType[p]
 			if !exists {
 				return nil, fmt.Errorf("parent %q for resource %q not found", p, r.Kind)

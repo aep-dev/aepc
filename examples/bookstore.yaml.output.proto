@@ -6,6 +6,24 @@ import "google/protobuf/empty.proto";
 
 option go_package = "/bookstore";
 
+message Author {
+  string path = 1;
+}
+
+message CreateAuthorRequest {
+  string id = 1;
+
+  Author resource = 2;
+}
+
+message ReadAuthorRequest {
+  string path = 1;
+}
+
+message DeleteAuthorRequest {
+  string path = 1;
+}
+
 message Book {
   string path = 1;
 }
@@ -43,8 +61,20 @@ message DeletePublisherRequest {
 }
 
 service Bookstore {
+  rpc CreateAuthor ( CreateAuthorRequest ) returns ( Author ) {
+    option (google.api.http) = { post: "/{parent=publisher/*}/author" };
+  }
+
+  rpc ReadAuthor ( ReadAuthorRequest ) returns ( Author ) {
+    option (google.api.http) = { get: "/{path=publisher/*/author/*}" };
+  }
+
+  rpc DeleteAuthor ( DeleteAuthorRequest ) returns ( google.protobuf.Empty ) {
+    option (google.api.http) = { delete: "/{path=publisher/*/author/*}" };
+  }
+
   rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { post: "/book" };
+    option (google.api.http) = { post: "/{parent=publisher/*}/book" };
   }
 
   rpc ReadBook ( ReadBookRequest ) returns ( Book ) {
