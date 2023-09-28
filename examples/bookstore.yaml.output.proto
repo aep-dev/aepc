@@ -6,6 +6,14 @@ import "google/protobuf/empty.proto";
 
 option go_package = "/bookstore";
 
+message Author {
+  string path = 1;
+}
+
+message ReadAuthorRequest {
+  string path = 1;
+}
+
 message Book {
   string path = 1;
 }
@@ -54,15 +62,11 @@ message ListPublisherResponse {
   repeated Publisher resources = 1;
 }
 
-message Author {
-  string path = 1;
-}
-
-message ReadAuthorRequest {
-  string path = 1;
-}
-
 service Bookstore {
+  rpc ReadAuthor ( ReadAuthorRequest ) returns ( Author ) {
+    option (google.api.http) = { get: "/{path=publisher/*/author/*}" };
+  }
+
   rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
     option (google.api.http) = { post: "/{parent=publisher/*}/book" };
   }
@@ -89,9 +93,5 @@ service Bookstore {
 
   rpc ListPublisher ( ListPublisherRequest ) returns ( ListPublisherResponse ) {
     option (google.api.http) = { get: "/publisher" };
-  }
-
-  rpc ReadAuthor ( ReadAuthorRequest ) returns ( Author ) {
-    option (google.api.http) = { get: "/{path=publisher/*/author/*}" };
   }
 }

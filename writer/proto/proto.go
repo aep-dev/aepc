@@ -16,6 +16,7 @@ package proto
 import (
 	"bytes"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/aep-dev/aepc/parser"
@@ -46,7 +47,7 @@ func WriteServiceToProto(ps *parser.ParsedService) ([]byte, error) {
 	fb.SetOptions(fo)
 	sb := builder.NewService(pServiceName)
 	fb.AddService(sb)
-	for _, r := range ps.ResourceByType {
+	for _, r := range getSortedResources(ps.ResourceByType) {
 		err := AddResource(r, fb, sb)
 		if err != nil {
 			return []byte{}, fmt.Errorf("adding resource %v failed: %w", r.Kind, err)
@@ -68,4 +69,17 @@ func WriteServiceToProto(ps *parser.ParsedService) ([]byte, error) {
 func toProtoServiceName(serviceName string) string {
 	parts := strings.SplitN(serviceName, ".", 2)
 	return capitalizer.String(parts[0])
+}
+
+func getSortedResources(prsByString map[string]*parser.ParsedResource) []*parser.ParsedResource {
+	keys := []string{}
+	for k := range prsByString {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	resources := make([]*parser.ParsedResource, 0, len(keys))
+	for _, k := range keys {
+		resources = append(resources, prsByString[k])
+	}
+	return resources
 }
