@@ -6,24 +6,6 @@ import "google/protobuf/empty.proto";
 
 option go_package = "/bookstore";
 
-message Author {
-  string path = 1;
-}
-
-message CreateAuthorRequest {
-  string id = 1;
-
-  Author resource = 2;
-}
-
-message ReadAuthorRequest {
-  string path = 1;
-}
-
-message DeleteAuthorRequest {
-  string path = 1;
-}
-
 message Book {
   string path = 1;
 }
@@ -38,41 +20,49 @@ message ReadBookRequest {
   string path = 1;
 }
 
+message UpdateBookRequest {
+  string path = 1;
+
+  UpdateBookRequest resource = 2;
+}
+
 message DeleteBookRequest {
   string path = 1;
+}
+
+message ListBookRequest {
+  string path = 1;
+}
+
+message ListBookResponse {
+  repeated Book resources = 1;
 }
 
 message Publisher {
   string path = 1;
 }
 
-message CreatePublisherRequest {
-  string id = 1;
-
-  Publisher resource = 2;
-}
-
 message ReadPublisherRequest {
   string path = 1;
 }
 
-message DeletePublisherRequest {
+message ListPublisherRequest {
+  string path = 1;
+}
+
+message ListPublisherResponse {
+  repeated Publisher resources = 1;
+}
+
+message Author {
+  string path = 1;
+}
+
+message ReadAuthorRequest {
   string path = 1;
 }
 
 service Bookstore {
-  rpc CreateAuthor ( CreateAuthorRequest ) returns ( Author ) {
-    option (google.api.http) = { post: "/{parent=publisher/*}/author" };
-  }
-
-  rpc ReadAuthor ( ReadAuthorRequest ) returns ( Author ) {
-    option (google.api.http) = { get: "/{path=publisher/*/author/*}" };
-  }
-
-  rpc DeleteAuthor ( DeleteAuthorRequest ) returns ( google.protobuf.Empty ) {
-    option (google.api.http) = { delete: "/{path=publisher/*/author/*}" };
-  }
-
   rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
     option (google.api.http) = { post: "/{parent=publisher/*}/book" };
   }
@@ -81,19 +71,27 @@ service Bookstore {
     option (google.api.http) = { get: "/{path=publisher/*/book/*}" };
   }
 
+  rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
+    option (google.api.http) = { get: "/{resource.name=publisher/*/book/*}" };
+  }
+
   rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
     option (google.api.http) = { delete: "/{path=publisher/*/book/*}" };
   }
 
-  rpc CreatePublisher ( CreatePublisherRequest ) returns ( Publisher ) {
-    option (google.api.http) = { post: "/publisher" };
+  rpc ListBook ( ListBookRequest ) returns ( ListBookResponse ) {
+    option (google.api.http) = { get: "/{parent=publisher/*}/book" };
   }
 
   rpc ReadPublisher ( ReadPublisherRequest ) returns ( Publisher ) {
     option (google.api.http) = { get: "/{path=publisher/*}" };
   }
 
-  rpc DeletePublisher ( DeletePublisherRequest ) returns ( google.protobuf.Empty ) {
-    option (google.api.http) = { delete: "/{path=publisher/*}" };
+  rpc ListPublisher ( ListPublisherRequest ) returns ( ListPublisherResponse ) {
+    option (google.api.http) = { get: "/publisher" };
+  }
+
+  rpc ReadAuthor ( ReadAuthorRequest ) returns ( Author ) {
+    option (google.api.http) = { get: "/{path=publisher/*/author/*}" };
   }
 }

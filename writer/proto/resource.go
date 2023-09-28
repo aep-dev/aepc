@@ -32,17 +32,37 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 		return fmt.Errorf("unable to generated resource %v: %w", r.Kind, err)
 	}
 	fb.AddMessage(resourceMb)
-	err = AddCreate(r, resourceMb, fb, sb)
-	if err != nil {
-		return err
-	}
-	err = AddRead(r, resourceMb, fb, sb)
-	if err != nil {
-		return err
-	}
-	err = AddDelete(r, resourceMb, fb, sb)
-	if err != nil {
-		return err
+	if r.Methods != nil {
+		if r.Methods.Create != nil {
+			err = AddCreate(r, resourceMb, fb, sb)
+			if err != nil {
+				return err
+			}
+		}
+		if r.Methods.Read != nil {
+			err = AddRead(r, resourceMb, fb, sb)
+			if err != nil {
+				return err
+			}
+		}
+		if r.Methods.Update != nil {
+			err = AddUpdate(r, resourceMb, fb, sb)
+			if err != nil {
+				return err
+			}
+		}
+		if r.Methods.Delete != nil {
+			err = AddDelete(r, resourceMb, fb, sb)
+			if err != nil {
+				return err
+			}
+		}
+		if r.Methods.List != nil {
+			err = AddList(r, resourceMb, fb, sb)
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
@@ -78,13 +98,9 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		builder.RpcTypeMessage(resourceMb, false),
 	)
 	options := &descriptorpb.MethodOptions{}
-	parentPath := ""
-	if len(r.Parents) > 0 {
-		parentPath = fmt.Sprintf("{parent=%v}/", generateHTTPPath(r.Parents[0]))
-	}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Post{
-			Post: fmt.Sprintf("/%v%v", parentPath, strings.ToLower(r.Kind)),
+			Post: generateParentHTTPPath(r),
 		},
 	})
 	method.SetOptions(options)
@@ -108,6 +124,31 @@ func AddRead(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Get{
 			Get: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
+		},
+	})
+	method.SetOptions(options)
+	sb.AddMethod(method)
+	return nil
+}
+
+// AddRead adds a read method for the resource, along with
+// any required messages.
+func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	mb := builder.NewMessage("Update" + r.Kind + "Request")
+	mb.AddField(
+		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+	).AddField(
+		builder.NewField(FIELD_NAME_RESOURCE, builder.FieldTypeMessage(mb)).SetNumber(2),
+	)
+	fb.AddMessage(mb)
+	method := builder.NewMethod("Update"+r.Kind,
+		builder.RpcTypeMessage(mb, false),
+		builder.RpcTypeMessage(resourceMb, false),
+	)
+	options := &descriptorpb.MethodOptions{}
+	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
+		Pattern: &annotations.HttpRule_Get{
+			Get: fmt.Sprintf("/{resource.name=%v}", generateHTTPPath(r)),
 		},
 	})
 	method.SetOptions(options)
@@ -142,6 +183,34 @@ func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	return nil
 }
 
+func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	// add the resource message
+	// create request messages
+	reqMb := builder.NewMessage("List" + r.Kind + "Request")
+	reqMb.AddField(
+		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+	)
+	fb.AddMessage(reqMb)
+	respMb := builder.NewMessage("List" + r.Kind + "Response")
+	respMb.AddField(
+		builder.NewField(FIELD_NAME_RESOURCES, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
+	)
+	fb.AddMessage(respMb)
+	method := builder.NewMethod("List"+r.Kind,
+		builder.RpcTypeMessage(reqMb, false),
+		builder.RpcTypeMessage(respMb, false),
+	)
+	options := &descriptorpb.MethodOptions{}
+	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
+		Pattern: &annotations.HttpRule_Get{
+			Get: generateParentHTTPPath(r),
+		},
+	})
+	method.SetOptions(options)
+	sb.AddMethod(method)
+	return nil
+}
+
 func generateHTTPPath(r *parser.ParsedResource) string {
 	elements := []string{strings.ToLower(r.Kind)}
 	if len(r.Parents) > 0 {
@@ -155,4 +224,12 @@ func generateHTTPPath(r *parser.ParsedResource) string {
 		}
 	}
 	return fmt.Sprintf("%v/*", strings.Join(elements, "/*/"))
+}
+
+func generateParentHTTPPath(r *parser.ParsedResource) string {
+	parentPath := ""
+	if len(r.Parents) > 0 {
+		parentPath = fmt.Sprintf("{parent=%v}/", generateHTTPPath(r.Parents[0]))
+	}
+	return fmt.Sprintf("/%v%v", parentPath, strings.ToLower(r.Kind))
 }

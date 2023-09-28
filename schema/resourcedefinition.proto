@@ -20,25 +20,25 @@ message Resource {
   string plural = 2;
   // The list of parent resources, referred to via the kind.
   repeated string parents = 3;
-  map<string, Property> properties = 4;
-  // TODO: add method support
-  // repeated Method methods = 3;
+
+  // method support
+  Methods methods = 4;
+  // TODO figure out properties.
+  // map<string, Property> properties = 4;
+}
+
+message Methods {
+  message CreateMethod {}
+  message ReadMethod {}
+  message UpdateMethod {}
+  message DeleteMethod {}
+  message ListMethod {}
+
+  CreateMethod create = 1;
+  ReadMethod read = 2;
+  UpdateMethod update = 3;
+  DeleteMethod delete = 4;
+  ListMethod list = 5;
 }
 
 message Property {}
-
-// message Method {
-//   enum MethodType {
-//     METHODTYPE_UNDEFINED = 0;
-//     CREATE = 1;
-//     READ = 2;
-//     UPDATE = 3;
-//     DELETE = 4;
-//     LIST = 5;
-//     CUSTOM_MUTATION = 6;
-//     CUSTOM_RETRIEVAL = 7;
-//   }
-//
-//   MethodType type = 1;
-//   bool is_lro = 2;
-// }

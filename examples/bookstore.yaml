@@ -3,7 +3,18 @@ resources:
   - kind: "Book"
     parents:
       - "bookstore.example.com/Publisher"
+    methods:
+      create: {}
+      read: {}
+      update: {}
+      delete: {}
+      list: {}
   - kind: "Publisher"
+    methods:
+      read: {}
+      list: {}
   - kind: "Author"
     parents:
       - "Publisher"
+    methods:
+      read: {}
