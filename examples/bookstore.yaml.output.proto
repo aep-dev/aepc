@@ -7,7 +7,9 @@ import "google/protobuf/empty.proto";
 option go_package = "/bookstore";
 
 message Author {
-  string path = 1;
+  string path = 10000;
+
+  string name = 1;
 }
 
 message ReadAuthorRequest {
@@ -15,7 +17,9 @@ message ReadAuthorRequest {
 }
 
 message Book {
-  string path = 1;
+  string path = 10000;
+
+  string isbn = 1;
 }
 
 message CreateBookRequest {
@@ -47,7 +51,7 @@ message ListBookResponse {
 }
 
 message Publisher {
-  string path = 1;
+  string path = 10000;
 }
 
 message ReadPublisherRequest {

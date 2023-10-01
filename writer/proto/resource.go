@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	"github.com/aep-dev/aepc/parser"
+	"github.com/aep-dev/aepc/schema"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	"google.golang.org/genproto/googleapis/api/annotations"
@@ -70,9 +71,19 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 // GenerateResourceMesssage adds the resource message.
 func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
+	// standard fields start at 10k, in the range until 11k.
 	mb.AddField(
-		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(10000),
 	)
+	// standard fields are added afterward.
+	for n, p := range r.Properties {
+		typ := builder.FieldTypeBool()
+		switch p.Type {
+		case schema.Type_STRING:
+			typ = builder.FieldTypeString()
+		}
+		mb.AddField(builder.NewField(n, typ).SetNumber(p.Number))
+	}
 	mb.SetOptions(
 		&descriptorpb.MessageOptions{},
 		// annotations.ResourceDescriptor{

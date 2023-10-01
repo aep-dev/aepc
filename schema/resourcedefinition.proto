@@ -20,11 +20,10 @@ message Resource {
   string plural = 2;
   // The list of parent resources, referred to via the kind.
   repeated string parents = 3;
-
+  // Properties
+  map<string, Property> properties = 4;
   // method support
-  Methods methods = 4;
-  // TODO figure out properties.
-  // map<string, Property> properties = 4;
+  Methods methods = 5;
 }
 
 message Methods {
@@ -41,4 +40,14 @@ message Methods {
   ListMethod list = 5;
 }
 
-message Property {}
+enum Type {
+  UNSPECIFIED = 0;
+  STRING = 1;
+}
+
+message Property {
+  Type type = 1;
+  // field number used for protobuf or other systems where fields must
+  // be explicitly enumerated.
+  int32 number = 2;
+}

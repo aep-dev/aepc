@@ -1,6 +1,10 @@
 name: "bookstore.example.com"
 resources:
   - kind: "Book"
+    properties:
+      isbn:
+        type: STRING
+        number: 1
     parents:
       - "bookstore.example.com/Publisher"
     methods:
@@ -14,6 +18,10 @@ resources:
       read: {}
       list: {}
   - kind: "Author"
+    properties:
+      name:
+        type: STRING
+        number: 1
     parents:
       - "Publisher"
     methods:
