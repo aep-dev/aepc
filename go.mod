@@ -25,6 +25,7 @@ require (
 
 require (
 	github.com/ghodss/yaml v1.0.0
+	github.com/google/go-cmp v0.5.9
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.12.0
 )

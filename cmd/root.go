@@ -40,39 +40,46 @@ func NewCommand() *cobra.Command {
 		Short: "aepc compiles resource representations to full proto rpcs",
 		Long:  "aepc compiles resource representations to full proto rpcs",
 		Run: func(cmd *cobra.Command, args []string) {
-			// TODO: error handling
-			s := &schema.Service{}
-			input, err := readFile(inputFile)
-			fmt.Printf("input: %s\n", string(input))
-			if err != nil {
-				log.Fatalf("unable to read file: %v", err)
-			}
-			ext := filepath.Ext(inputFile)
-			err = unmarshal(ext, input, s)
+			err := ProcessInput(inputFile, outputFile)
 			if err != nil {
 				log.Fatal(err)
 			}
-			errors := validator.ValidateService(s)
-			if len(errors) > 0 {
-				log.Fatalf("error validating service: %v", errors)
-			}
-			ps, err := parser.NewParsedService(s)
-			if err != nil {
-				log.Fatal(err)
-			}
-			proto, _ := proto.WriteServiceToProto(ps)
-
-			err = writeFile(outputFile, proto)
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Printf("output file: %s\n", outputFile)
-			fmt.Printf("output proto: %s\n", proto)
 		},
 	}
 	c.Flags().StringVarP(&inputFile, "input", "i", "", "input files with resource")
 	c.Flags().StringVarP(&outputFile, "output", "o", "", "output file to use")
 	return c
+}
+
+func ProcessInput(inputFile, outputFile string) error {
+	s := &schema.Service{}
+	input, err := ReadFile(inputFile)
+	fmt.Printf("input: %s\n", string(input))
+	if err != nil {
+		return fmt.Errorf("unable to read file: %w", err)
+	}
+	ext := filepath.Ext(inputFile)
+	err = unmarshal(ext, input, s)
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal file: %w", err)
+	}
+	errors := validator.ValidateService(s)
+	if len(errors) > 0 {
+		return fmt.Errorf("error validating service: %v", errors)
+	}
+	ps, err := parser.NewParsedService(s)
+	if err != nil {
+		return fmt.Errorf("error parsing service: %w", err)
+	}
+	proto, _ := proto.WriteServiceToProto(ps)
+
+	err = WriteFile(outputFile, proto)
+	if err != nil {
+		return fmt.Errorf("error writing file: %w", err)
+	}
+	fmt.Printf("output file: %s\n", outputFile)
+	fmt.Printf("output proto: %s\n", proto)
+	return nil
 }
 
 func unmarshal(ext string, b []byte, s *schema.Service) error {
@@ -99,7 +106,7 @@ func unmarshal(ext string, b []byte, s *schema.Service) error {
 	return nil
 }
 
-func readFile(fileName string) ([]byte, error) {
+func ReadFile(fileName string) ([]byte, error) {
 	var value []byte
 	f, err := os.OpenFile(fileName, os.O_RDONLY, 0644)
 	if err != nil {
@@ -123,7 +130,7 @@ func readFile(fileName string) ([]byte, error) {
 	return value, nil
 }
 
-func writeFile(fileName string, value []byte) error {
+func WriteFile(fileName string, value []byte) error {
 	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
