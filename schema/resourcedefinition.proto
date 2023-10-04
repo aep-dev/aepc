@@ -1,0 +1,53 @@
+// resourcedefinition contains the
+// schema of the resource definition.
+// regenerate with
+//
+// protoc ./aepc/schema/resourcedefinition.proto --go_opt paths=source_relative\
+//   --go_out=.
+syntax = "proto3";
+option go_package = "/schema";
+
+message Service {
+  string name = 1;
+  repeated Resource resources = 2;
+}
+
+message Resource {
+  // The type of the resource. Used to programmatically
+  // refer to and identify the resource.
+  string kind = 1;
+  // The plural of the resource. Used in documentation.
+  string plural = 2;
+  // The list of parent resources, referred to via the kind.
+  repeated string parents = 3;
+  // Properties
+  map<string, Property> properties = 4;
+  // method support
+  Methods methods = 5;
+}
+
+message Methods {
+  message CreateMethod {}
+  message ReadMethod {}
+  message UpdateMethod {}
+  message DeleteMethod {}
+  message ListMethod {}
+
+  CreateMethod create = 1;
+  ReadMethod read = 2;
+  UpdateMethod update = 3;
+  DeleteMethod delete = 4;
+  ListMethod list = 5;
+}
+
+enum Type {
+  UNSPECIFIED = 0;
+  STRING = 1;
+}
+
+message Property {
+  Type type = 1;
+  // field number used for protobuf or other systems where fields must
+  // be explicitly enumerated.
+  int32 number = 2;
+}

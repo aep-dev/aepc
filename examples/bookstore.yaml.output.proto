@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+import "google/protobuf/empty.proto";
+
+option go_package = "/bookstore";
+
+message Author {
+  string path = 10000;
+
+  string name = 1;
+}
+
+message ReadAuthorRequest {
+  string path = 1;
+}
+
+message Book {
+  string path = 10000;
+
+  string isbn = 1;
+}
+
+message CreateBookRequest {
+  string id = 1;
+
+  Book resource = 2;
+}
+
+message ReadBookRequest {
+  string path = 1;
+}
+
+message UpdateBookRequest {
+  string path = 1;
+
+  UpdateBookRequest resource = 2;
+}
+
+message DeleteBookRequest {
+  string path = 1;
+}
+
+message ListBookRequest {
+  string path = 1;
+}
+
+message ListBookResponse {
+  repeated Book resources = 1;
+}
+
+message Publisher {
+  string path = 10000;
+}
+
+message ReadPublisherRequest {
+  string path = 1;
+}
+
+message ListPublisherRequest {
+  string path = 1;
+}
+
+message ListPublisherResponse {
+  repeated Publisher resources = 1;
+}
+
+service Bookstore {
+  rpc ReadAuthor ( ReadAuthorRequest ) returns ( Author ) {
+    option (google.api.http) = { get: "/{path=publisher/*/author/*}" };
+  }
+
+  rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
+    option (google.api.http) = { post: "/{parent=publisher/*}/book" };
+  }
+
+  rpc ReadBook ( ReadBookRequest ) returns ( Book ) {
+    option (google.api.http) = { get: "/{path=publisher/*/book/*}" };
+  }
+
+  rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
+    option (google.api.http) = { get: "/{resource.name=publisher/*/book/*}" };
+  }
+
+  rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
+    option (google.api.http) = { delete: "/{path=publisher/*/book/*}" };
+  }
+
+  rpc ListBook ( ListBookRequest ) returns ( ListBookResponse ) {
+    option (google.api.http) = { get: "/{parent=publisher/*}/book" };
+  }
+
+  rpc ReadPublisher ( ReadPublisherRequest ) returns ( Publisher ) {
+    option (google.api.http) = { get: "/{path=publisher/*}" };
+  }
+
+  rpc ListPublisher ( ListPublisherRequest ) returns ( ListPublisherResponse ) {
+    option (google.api.http) = { get: "/publisher" };
+  }
+}

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+option go_package = "/newbookstore";
+
+message book {
+  string path = 1;
+}
+
+message CreatebookRequest {
+  string id = 1;
+
+  book resource = 2;
+}
+
+message ReadbookRequest {
+  string path = 1;
+}
+
+service NewBookStore {
+  rpc Createbook ( CreatebookRequest ) returns ( book ) {
+    option (google.api.http) = { post: "/book" };
+  }
+
+  rpc Readbook ( ReadbookRequest ) returns ( book ) {
+    option (google.api.http) = { get: "/{path=book/*}" };
+  }
+}
