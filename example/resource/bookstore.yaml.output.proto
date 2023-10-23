@@ -23,9 +23,11 @@ message Book {
 }
 
 message CreateBookRequest {
-  string id = 1;
+  string parent = 1;
 
-  Book resource = 2;
+  string id = 2;
+
+  Book resource = 3;
 }
 
 message ReadBookRequest {
@@ -35,7 +37,7 @@ message ReadBookRequest {
 message UpdateBookRequest {
   string path = 1;
 
-  UpdateBookRequest resource = 2;
+  Book resource = 2;
 }
 
 message DeleteBookRequest {
@@ -43,7 +45,7 @@ message DeleteBookRequest {
 }
 
 message ListBookRequest {
-  string path = 1;
+  string parent = 1;
 }
 
 message ListBookResponse {
@@ -59,7 +61,7 @@ message ReadPublisherRequest {
 }
 
 message ListPublisherRequest {
-  string path = 1;
+  string parent = 1;
 }
 
 message ListPublisherResponse {
@@ -80,7 +82,7 @@ service Bookstore {
   }
 
   rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { get: "/{resource.name=publisher/*/book/*}" };
+    option (google.api.http) = { get: "/{resource.path=publisher/*/book/*}" };
   }
 
   rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
