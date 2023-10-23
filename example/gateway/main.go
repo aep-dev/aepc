@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	bpb "github.com/toumorokoshi/aep-sandbox/service/bookstore"
+	bpb "github.com/aep-dev/aepc/example/bookstore"
 )
 
 var (
@@ -28,7 +28,7 @@ func run() error {
 	// Note: Make sure the gRPC server is running properly and accessible
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	err := bpb.RegisterBookStoreHandlerFromEndpoint(ctx, mux, *grpcServerEndpoint, opts)
+	err := bpb.RegisterBookstoreHandlerFromEndpoint(ctx, mux, *grpcServerEndpoint, opts)
 	if err != nil {
 		return err
 	}
