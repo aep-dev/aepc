@@ -13,6 +13,7 @@
 // limitations under the License.
 package proto
 
+const FIELD_NAME_PARENT = "parent"
 const FIELD_NAME_PATH = "path"
 const FIELD_NAME_RESOURCE = "resource"
 const FIELD_NAME_RESOURCES = "resources"

@@ -101,8 +101,9 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	// add the resource message
 	// create request messages
 	mb := builder.NewMessage("Create" + r.Kind + "Request")
-	mb.AddField(builder.NewField(FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(1))
-	mb.AddField(builder.NewField(FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(2))
+	mb.AddField(builder.NewField(FIELD_NAME_PARENT, builder.FieldTypeString()).SetNumber(1))
+	mb.AddField(builder.NewField(FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(2))
+	mb.AddField(builder.NewField(FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(3))
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Create"+r.Kind,
 		builder.RpcTypeMessage(mb, false),
@@ -149,7 +150,7 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	mb.AddField(
 		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
 	).AddField(
-		builder.NewField(FIELD_NAME_RESOURCE, builder.FieldTypeMessage(mb)).SetNumber(2),
+		builder.NewField(FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(2),
 	)
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Update"+r.Kind,
@@ -159,7 +160,7 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Get{
-			Get: fmt.Sprintf("/{resource.name=%v}", generateHTTPPath(r)),
+			Get: fmt.Sprintf("/{resource.path=%v}", generateHTTPPath(r)),
 		},
 	})
 	method.SetOptions(options)
@@ -199,7 +200,7 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	// create request messages
 	reqMb := builder.NewMessage("List" + r.Kind + "Request")
 	reqMb.AddField(
-		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+		builder.NewField(FIELD_NAME_PARENT, builder.FieldTypeString()).SetNumber(1),
 	)
 	fb.AddMessage(reqMb)
 	respMb := builder.NewMessage("List" + r.Kind + "Response")
