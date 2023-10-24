@@ -1,9 +1,12 @@
-package main
+package service
 
 import (
 	"context"
 	"fmt"
+	"log"
+	"net"
 
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -32,4 +35,17 @@ func (BookstoreServer) ReadBook(_ context.Context, r *bpb.ReadBookRequest) (*bpb
 		return b, nil
 	}
 	return nil, status.Errorf(codes.NotFound, "book %q not found", r.Path)
+}
+
+func StartServer(targetPort int) {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", targetPort))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	bpb.RegisterBookstoreServer(s, NewBookstoreServer())
+	log.Printf("server listening at %v", lis.Addr())
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 }

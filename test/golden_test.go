@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	goldenDir = "examples"
+	goldenDir = "example/bookstore"
 )
 
 // TestGolden output relative to input
@@ -26,7 +26,7 @@ func TestGolden(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, f := range files {
-		if strings.HasSuffix(f.Name(), ".output.proto") {
+		if strings.Contains(f.Name(), ".output") {
 			continue
 		}
 		inputFile := path.Join(root, f.Name())

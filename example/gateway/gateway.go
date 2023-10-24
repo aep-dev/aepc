@@ -1,8 +1,7 @@
-package main
+package gateway
 
 import (
 	"context"
-	"flag"
 	"net/http"
 
 	"github.com/golang/glog"
@@ -13,13 +12,8 @@ import (
 	bpb "github.com/aep-dev/aepc/example/bookstore"
 )
 
-var (
-	// command-line options:
-	// gRPC server endpoint
-	grpcServerEndpoint = flag.String("grpc-server-endpoint", "localhost:9090", "gRPC server endpoint")
-)
-
-func run() error {
+// gRPC server endpoint
+func Run(grpcServerEndpoint string) {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -28,20 +22,13 @@ func run() error {
 	// Note: Make sure the gRPC server is running properly and accessible
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	err := bpb.RegisterBookstoreHandlerFromEndpoint(ctx, mux, *grpcServerEndpoint, opts)
+	err := bpb.RegisterBookstoreHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 	if err != nil {
-		return err
+		glog.Fatal(err)
 	}
 
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
-	return http.ListenAndServe(":8081", mux)
-}
-
-func main() {
-	flag.Parse()
-	defer glog.Flush()
-
-	if err := run(); err != nil {
+	if err := http.ListenAndServe(":8081", mux); err != nil {
 		glog.Fatal(err)
 	}
 }
