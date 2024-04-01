@@ -72,9 +72,9 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
 	// standard fields start at 10k, in the range until 11k.
-	mb.AddField(
-		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(10000),
-	)
+	pathField := builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(10000);
+	pathField.SetComments(builder.Comments{LeadingComment: fmt.Sprintf("Path should be of the form \"%s\"", generateHTTPPath(r))})
+	mb.AddField(pathField);
 	// standard fields are added afterward.
 	for n, p := range r.Properties {
 		typ := builder.FieldTypeBool()
