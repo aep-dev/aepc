@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: example/resource/bookstore.yaml.output.proto
+// source: example/bookstore/bookstore.yaml.output.proto
 
 package bookstore
 
@@ -365,5 +365,5 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "example/resource/bookstore.yaml.output.proto",
+	Metadata: "example/bookstore/bookstore.yaml.output.proto",
 }
