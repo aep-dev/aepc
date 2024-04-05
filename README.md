@@ -26,5 +26,5 @@ flowchart LR
 ## User Guide
 
 ```
-go run main.go -i ./examples/bookstore.yaml -o ./examples/bookstore.yaml.output.proto
+go run main.go -i ./example/bookstore/bookstore.yaml -o ./example/bookstore/bookstore.yaml.output.proto
 ```
