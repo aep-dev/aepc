@@ -64,6 +64,12 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 				return err
 			}
 		}
+		if r.Methods.GlobalList != nil {
+			err = AddGlobalRead(r, resourceMb, fb, sb)
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
@@ -72,9 +78,9 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
 	// standard fields start at 10k, in the range until 11k.
-	pathField := builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(10000);
+	pathField := builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(10000)
 	pathField.SetComments(builder.Comments{LeadingComment: fmt.Sprintf("Path should be of the form \"%s\"", generateHTTPPath(r))})
-	mb.AddField(pathField);
+	mb.AddField(pathField)
 	// standard fields are added afterward.
 	for n, p := range r.Properties {
 		typ := builder.FieldTypeBool()
@@ -159,8 +165,8 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	)
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
-		Pattern: &annotations.HttpRule_Get{
-			Get: fmt.Sprintf("/{resource.path=%v}", generateHTTPPath(r)),
+		Pattern: &annotations.HttpRule_Put{
+			Put: fmt.Sprintf("/{resource.path=%v}", generateHTTPPath(r)),
 		},
 	})
 	method.SetOptions(options)
@@ -216,6 +222,34 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Get{
 			Get: generateParentHTTPPath(r),
+		},
+	})
+	method.SetOptions(options)
+	sb.AddMethod(method)
+	return nil
+}
+
+func AddGlobalRead(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	// add the resource message
+	// create request messages
+	reqMb := builder.NewMessage("GlobalList" + r.Kind + "Request")
+	reqMb.AddField(
+		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+	)
+	fb.AddMessage(reqMb)
+	respMb := builder.NewMessage("GlobalList" + r.Kind + "Response")
+	respMb.AddField(
+		builder.NewField(FIELD_NAME_RESOURCES, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
+	)
+	fb.AddMessage(respMb)
+	method := builder.NewMethod("GlobalList"+r.Kind,
+		builder.RpcTypeMessage(reqMb, false),
+		builder.RpcTypeMessage(respMb, false),
+	)
+	options := &descriptorpb.MethodOptions{}
+	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
+		Pattern: &annotations.HttpRule_Get{
+			Get: fmt.Sprintf("/{path=*/%v}", strings.ToLower(r.Kind)),
 		},
 	})
 	method.SetOptions(options)
