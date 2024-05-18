@@ -65,7 +65,7 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 			}
 		}
 		if r.Methods.GlobalList != nil {
-			err = AddGlobalRead(r, resourceMb, fb, sb)
+			err = AddGlobalList(r, resourceMb, fb, sb)
 			if err != nil {
 				return err
 			}
@@ -229,7 +229,7 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	return nil
 }
 
-func AddGlobalRead(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddGlobalList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
 	reqMb := builder.NewMessage("GlobalList" + r.Kind + "Request")
@@ -249,7 +249,7 @@ func AddGlobalRead(r *parser.ParsedResource, resourceMb *builder.MessageBuilder,
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Get{
-			Get: fmt.Sprintf("/{path=*/%v}", strings.ToLower(r.Kind)),
+			Get: fmt.Sprintf("/{path=**/%v}", strings.ToLower(r.Kind)),
 		},
 	})
 	method.SetOptions(options)
