@@ -6,22 +6,12 @@ import "google/protobuf/empty.proto";
 
 option go_package = "/bookstore";
 
-message Author {
-  // Path should be of the form "publisher/*/author/*"
-  string path = 10000;
-
-  string name = 1;
-}
-
-message ReadAuthorRequest {
-  string path = 1;
-}
-
 message Book {
-  // Path should be of the form "publisher/*/book/*"
+  string isbn = 1;
+
   string path = 10000;
 
-  string isbn = 1;
+  string id = 10001;
 }
 
 message CreateBookRequest {
@@ -54,65 +44,37 @@ message ListBookResponse {
   repeated Book resources = 1;
 }
 
-message GlobalListBookRequest {
+message ApplyBookRequest {
   string path = 1;
-}
 
-message GlobalListBookResponse {
-  repeated Book resources = 1;
-}
-
-message Publisher {
-  // Path should be of the form "publisher/*"
-  string path = 10000;
-}
-
-message ReadPublisherRequest {
-  string path = 1;
-}
-
-message ListPublisherRequest {
-  string parent = 1;
-}
-
-message ListPublisherResponse {
-  repeated Publisher resources = 1;
+  Book resource = 2;
 }
 
 service Bookstore {
-  rpc ReadAuthor ( ReadAuthorRequest ) returns ( Author ) {
-    option (google.api.http) = { get: "/{path=publisher/*/author/*}" };
-  }
-
   rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { post: "/{parent=publisher/*}/book" };
+    option (google.api.http) = { post: "/books", body: "resource" };
   }
 
   rpc ReadBook ( ReadBookRequest ) returns ( Book ) {
-    option (google.api.http) = { get: "/{path=publisher/*/book/*}" };
+    option (google.api.http) = { get: "/{path=books/*}" };
   }
 
   rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { put: "/{resource.path=publisher/*/book/*}" };
+    option (google.api.http) = {
+      patch: "/{resource.path=books/*}",
+      body: "resource"
+    };
   }
 
   rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
-    option (google.api.http) = { delete: "/{path=publisher/*/book/*}" };
+    option (google.api.http) = { delete: "/{path=books/*}" };
   }
 
   rpc ListBook ( ListBookRequest ) returns ( ListBookResponse ) {
-    option (google.api.http) = { get: "/{parent=publisher/*}/book" };
+    option (google.api.http) = { get: "/books" };
   }
 
-  rpc GlobalListBook ( GlobalListBookRequest ) returns ( GlobalListBookResponse ) {
-    option (google.api.http) = { get: "/{path=--/book}" };
-  }
-
-  rpc ReadPublisher ( ReadPublisherRequest ) returns ( Publisher ) {
-    option (google.api.http) = { get: "/{path=publisher/*}" };
-  }
-
-  rpc ListPublisher ( ListPublisherRequest ) returns ( ListPublisherResponse ) {
-    option (google.api.http) = { get: "/publisher" };
+  rpc ApplyBook ( ApplyBookRequest ) returns ( Book ) {
+    option (google.api.http) = { put: "/{path=books/*}", body: "resource" };
   }
 }

@@ -25,6 +25,14 @@ flowchart LR
 
 ## User Guide
 
+Building the proto and openapi files:
+
 ```
 go run main.go -i ./example/bookstore/bookstore.yaml -o ./example/bookstore/bookstore.yaml.output.proto
+```
+
+Building the Terraform provider:
+
+```
+go run example/terraform/main.go
 ```
