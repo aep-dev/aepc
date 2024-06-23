@@ -249,7 +249,7 @@ func AddGlobalList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder,
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Get{
-			Get: fmt.Sprintf("/{path=**/%v}", strings.ToLower(r.Kind)),
+			Get: fmt.Sprintf("/{path=--/%v}", strings.ToLower(r.Kind)),
 		},
 	})
 	method.SetOptions(options)
