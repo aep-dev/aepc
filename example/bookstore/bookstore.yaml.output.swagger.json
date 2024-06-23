@@ -158,6 +158,37 @@
     },
     "/{path_2}": {
       "get": {
+        "operationId": "Bookstore_GlobalListBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GlobalListBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_2",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "--/book"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/{path_3}": {
+      "get": {
         "operationId": "Bookstore_ReadPublisher",
         "responses": {
           "200": {
@@ -175,7 +206,7 @@
         },
         "parameters": [
           {
-            "name": "path_2",
+            "name": "path_3",
             "in": "path",
             "required": true,
             "type": "string",
@@ -249,7 +280,7 @@
       }
     },
     "/{resource.path}": {
-      "get": {
+      "put": {
         "operationId": "Bookstore_UpdateBook",
         "responses": {
           "200": {
@@ -315,6 +346,18 @@
         },
         "isbn": {
           "type": "string"
+        }
+      }
+    },
+    "GlobalListBookResponse": {
+      "type": "object",
+      "properties": {
+        "resources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Book"
+          }
         }
       }
     },

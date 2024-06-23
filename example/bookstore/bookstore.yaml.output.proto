@@ -54,6 +54,14 @@ message ListBookResponse {
   repeated Book resources = 1;
 }
 
+message GlobalListBookRequest {
+  string path = 1;
+}
+
+message GlobalListBookResponse {
+  repeated Book resources = 1;
+}
+
 message Publisher {
   // Path should be of the form "publisher/*"
   string path = 10000;
@@ -85,7 +93,7 @@ service Bookstore {
   }
 
   rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { get: "/{resource.path=publisher/*/book/*}" };
+    option (google.api.http) = { put: "/{resource.path=publisher/*/book/*}" };
   }
 
   rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
@@ -94,6 +102,10 @@ service Bookstore {
 
   rpc ListBook ( ListBookRequest ) returns ( ListBookResponse ) {
     option (google.api.http) = { get: "/{parent=publisher/*}/book" };
+  }
+
+  rpc GlobalListBook ( GlobalListBookRequest ) returns ( GlobalListBookResponse ) {
+    option (google.api.http) = { get: "/{path=--/book}" };
   }
 
   rpc ReadPublisher ( ReadPublisherRequest ) returns ( Publisher ) {

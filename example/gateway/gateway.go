@@ -2,9 +2,9 @@ package gateway
 
 import (
 	"context"
+	"log"
 	"net/http"
 
-	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -24,11 +24,12 @@ func Run(grpcServerEndpoint string) {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	err := bpb.RegisterBookstoreHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 	if err != nil {
-		glog.Fatal(err)
+		log.Fatal(err)
 	}
 
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
+	log.Printf("HTTP-gRPC gateway listening at :8081")
 	if err := http.ListenAndServe(":8081", mux); err != nil {
-		glog.Fatal(err)
+		log.Fatal(err)
 	}
 }

@@ -218,11 +218,12 @@ type Methods struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Create *Methods_CreateMethod `protobuf:"bytes,1,opt,name=create,proto3" json:"create,omitempty"`
-	Read   *Methods_ReadMethod   `protobuf:"bytes,2,opt,name=read,proto3" json:"read,omitempty"`
-	Update *Methods_UpdateMethod `protobuf:"bytes,3,opt,name=update,proto3" json:"update,omitempty"`
-	Delete *Methods_DeleteMethod `protobuf:"bytes,4,opt,name=delete,proto3" json:"delete,omitempty"`
-	List   *Methods_ListMethod   `protobuf:"bytes,5,opt,name=list,proto3" json:"list,omitempty"`
+	Create     *Methods_CreateMethod     `protobuf:"bytes,1,opt,name=create,proto3" json:"create,omitempty"`
+	Read       *Methods_ReadMethod       `protobuf:"bytes,2,opt,name=read,proto3" json:"read,omitempty"`
+	Update     *Methods_UpdateMethod     `protobuf:"bytes,3,opt,name=update,proto3" json:"update,omitempty"`
+	Delete     *Methods_DeleteMethod     `protobuf:"bytes,4,opt,name=delete,proto3" json:"delete,omitempty"`
+	List       *Methods_ListMethod       `protobuf:"bytes,5,opt,name=list,proto3" json:"list,omitempty"`
+	GlobalList *Methods_GlobalListMethod `protobuf:"bytes,6,opt,name=global_list,json=globalList,proto3" json:"global_list,omitempty"`
 }
 
 func (x *Methods) Reset() {
@@ -288,6 +289,13 @@ func (x *Methods) GetDelete() *Methods_DeleteMethod {
 func (x *Methods) GetList() *Methods_ListMethod {
 	if x != nil {
 		return x.List
+	}
+	return nil
+}
+
+func (x *Methods) GetGlobalList() *Methods_GlobalListMethod {
+	if x != nil {
+		return x.GlobalList
 	}
 	return nil
 }
@@ -539,6 +547,44 @@ func (*Methods_ListMethod) Descriptor() ([]byte, []int) {
 	return file_schema_resourcedefinition_proto_rawDescGZIP(), []int{2, 4}
 }
 
+type Methods_GlobalListMethod struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *Methods_GlobalListMethod) Reset() {
+	*x = Methods_GlobalListMethod{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_schema_resourcedefinition_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Methods_GlobalListMethod) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Methods_GlobalListMethod) ProtoMessage() {}
+
+func (x *Methods_GlobalListMethod) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_resourcedefinition_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Methods_GlobalListMethod.ProtoReflect.Descriptor instead.
+func (*Methods_GlobalListMethod) Descriptor() ([]byte, []int) {
+	return file_schema_resourcedefinition_proto_rawDescGZIP(), []int{2, 5}
+}
+
 var File_schema_resourcedefinition_proto protoreflect.FileDescriptor
 
 var file_schema_resourcedefinition_proto_rawDesc = []byte{
@@ -564,7 +610,7 @@ var file_schema_resourcedefinition_proto_rawDesc = []byte{
 	0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79,
 	0x12, 0x1f, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
 	0x09, 0x2e, 0x50, 0x72, 0x6f, 0x70, 0x65, 0x72, 0x74, 0x79, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75,
-	0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0xb4, 0x02, 0x0a, 0x07, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64,
+	0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x84, 0x03, 0x0a, 0x07, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64,
 	0x73, 0x12, 0x2d, 0x0a, 0x06, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x0b, 0x32, 0x15, 0x2e, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x73, 0x2e, 0x43, 0x72, 0x65, 0x61,
 	0x74, 0x65, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x52, 0x06, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65,
@@ -579,11 +625,16 @@ var file_schema_resourcedefinition_proto_rawDesc = []byte{
 	0x06, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x12, 0x27, 0x0a, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x18,
 	0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x73, 0x2e,
 	0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x52, 0x04, 0x6c, 0x69, 0x73, 0x74,
-	0x1a, 0x0e, 0x0a, 0x0c, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64,
-	0x1a, 0x0c, 0x0a, 0x0a, 0x52, 0x65, 0x61, 0x64, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x0e,
-	0x0a, 0x0c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x0e,
-	0x0a, 0x0c, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x0c,
-	0x0a, 0x0a, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x22, 0x3d, 0x0a, 0x08,
+	0x12, 0x3a, 0x0a, 0x0b, 0x67, 0x6c, 0x6f, 0x62, 0x61, 0x6c, 0x5f, 0x6c, 0x69, 0x73, 0x74, 0x18,
+	0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x73, 0x2e,
+	0x47, 0x6c, 0x6f, 0x62, 0x61, 0x6c, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64,
+	0x52, 0x0a, 0x67, 0x6c, 0x6f, 0x62, 0x61, 0x6c, 0x4c, 0x69, 0x73, 0x74, 0x1a, 0x0e, 0x0a, 0x0c,
+	0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x0c, 0x0a, 0x0a,
+	0x52, 0x65, 0x61, 0x64, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x0e, 0x0a, 0x0c, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x0e, 0x0a, 0x0c, 0x44, 0x65,
+	0x6c, 0x65, 0x74, 0x65, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x0c, 0x0a, 0x0a, 0x4c, 0x69,
+	0x73, 0x74, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x12, 0x0a, 0x10, 0x47, 0x6c, 0x6f, 0x62,
+	0x61, 0x6c, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x22, 0x3d, 0x0a, 0x08,
 	0x50, 0x72, 0x6f, 0x70, 0x65, 0x72, 0x74, 0x79, 0x12, 0x19, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x05, 0x2e, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x74,
 	0x79, 0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x02, 0x20,
@@ -607,19 +658,20 @@ func file_schema_resourcedefinition_proto_rawDescGZIP() []byte {
 }
 
 var file_schema_resourcedefinition_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_schema_resourcedefinition_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_schema_resourcedefinition_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_schema_resourcedefinition_proto_goTypes = []interface{}{
-	(Type)(0),                    // 0: Type
-	(*Service)(nil),              // 1: Service
-	(*Resource)(nil),             // 2: Resource
-	(*Methods)(nil),              // 3: Methods
-	(*Property)(nil),             // 4: Property
-	nil,                          // 5: Resource.PropertiesEntry
-	(*Methods_CreateMethod)(nil), // 6: Methods.CreateMethod
-	(*Methods_ReadMethod)(nil),   // 7: Methods.ReadMethod
-	(*Methods_UpdateMethod)(nil), // 8: Methods.UpdateMethod
-	(*Methods_DeleteMethod)(nil), // 9: Methods.DeleteMethod
-	(*Methods_ListMethod)(nil),   // 10: Methods.ListMethod
+	(Type)(0),                        // 0: Type
+	(*Service)(nil),                  // 1: Service
+	(*Resource)(nil),                 // 2: Resource
+	(*Methods)(nil),                  // 3: Methods
+	(*Property)(nil),                 // 4: Property
+	nil,                              // 5: Resource.PropertiesEntry
+	(*Methods_CreateMethod)(nil),     // 6: Methods.CreateMethod
+	(*Methods_ReadMethod)(nil),       // 7: Methods.ReadMethod
+	(*Methods_UpdateMethod)(nil),     // 8: Methods.UpdateMethod
+	(*Methods_DeleteMethod)(nil),     // 9: Methods.DeleteMethod
+	(*Methods_ListMethod)(nil),       // 10: Methods.ListMethod
+	(*Methods_GlobalListMethod)(nil), // 11: Methods.GlobalListMethod
 }
 var file_schema_resourcedefinition_proto_depIdxs = []int32{
 	2,  // 0: Service.resources:type_name -> Resource
@@ -630,13 +682,14 @@ var file_schema_resourcedefinition_proto_depIdxs = []int32{
 	8,  // 5: Methods.update:type_name -> Methods.UpdateMethod
 	9,  // 6: Methods.delete:type_name -> Methods.DeleteMethod
 	10, // 7: Methods.list:type_name -> Methods.ListMethod
-	0,  // 8: Property.type:type_name -> Type
-	4,  // 9: Resource.PropertiesEntry.value:type_name -> Property
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	11, // 8: Methods.global_list:type_name -> Methods.GlobalListMethod
+	0,  // 9: Property.type:type_name -> Type
+	4,  // 10: Resource.PropertiesEntry.value:type_name -> Property
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_schema_resourcedefinition_proto_init() }
@@ -753,6 +806,18 @@ func file_schema_resourcedefinition_proto_init() {
 				return nil
 			}
 		}
+		file_schema_resourcedefinition_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Methods_GlobalListMethod); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -760,7 +825,7 @@ func file_schema_resourcedefinition_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_schema_resourcedefinition_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

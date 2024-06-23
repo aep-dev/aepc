@@ -20,14 +20,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Bookstore_ReadAuthor_FullMethodName    = "/Bookstore/ReadAuthor"
-	Bookstore_CreateBook_FullMethodName    = "/Bookstore/CreateBook"
-	Bookstore_ReadBook_FullMethodName      = "/Bookstore/ReadBook"
-	Bookstore_UpdateBook_FullMethodName    = "/Bookstore/UpdateBook"
-	Bookstore_DeleteBook_FullMethodName    = "/Bookstore/DeleteBook"
-	Bookstore_ListBook_FullMethodName      = "/Bookstore/ListBook"
-	Bookstore_ReadPublisher_FullMethodName = "/Bookstore/ReadPublisher"
-	Bookstore_ListPublisher_FullMethodName = "/Bookstore/ListPublisher"
+	Bookstore_ReadAuthor_FullMethodName     = "/Bookstore/ReadAuthor"
+	Bookstore_CreateBook_FullMethodName     = "/Bookstore/CreateBook"
+	Bookstore_ReadBook_FullMethodName       = "/Bookstore/ReadBook"
+	Bookstore_UpdateBook_FullMethodName     = "/Bookstore/UpdateBook"
+	Bookstore_DeleteBook_FullMethodName     = "/Bookstore/DeleteBook"
+	Bookstore_ListBook_FullMethodName       = "/Bookstore/ListBook"
+	Bookstore_GlobalListBook_FullMethodName = "/Bookstore/GlobalListBook"
+	Bookstore_ReadPublisher_FullMethodName  = "/Bookstore/ReadPublisher"
+	Bookstore_ListPublisher_FullMethodName  = "/Bookstore/ListPublisher"
 )
 
 // BookstoreClient is the client API for Bookstore service.
@@ -40,6 +41,7 @@ type BookstoreClient interface {
 	UpdateBook(ctx context.Context, in *UpdateBookRequest, opts ...grpc.CallOption) (*Book, error)
 	DeleteBook(ctx context.Context, in *DeleteBookRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListBook(ctx context.Context, in *ListBookRequest, opts ...grpc.CallOption) (*ListBookResponse, error)
+	GlobalListBook(ctx context.Context, in *GlobalListBookRequest, opts ...grpc.CallOption) (*GlobalListBookResponse, error)
 	ReadPublisher(ctx context.Context, in *ReadPublisherRequest, opts ...grpc.CallOption) (*Publisher, error)
 	ListPublisher(ctx context.Context, in *ListPublisherRequest, opts ...grpc.CallOption) (*ListPublisherResponse, error)
 }
@@ -106,6 +108,15 @@ func (c *bookstoreClient) ListBook(ctx context.Context, in *ListBookRequest, opt
 	return out, nil
 }
 
+func (c *bookstoreClient) GlobalListBook(ctx context.Context, in *GlobalListBookRequest, opts ...grpc.CallOption) (*GlobalListBookResponse, error) {
+	out := new(GlobalListBookResponse)
+	err := c.cc.Invoke(ctx, Bookstore_GlobalListBook_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *bookstoreClient) ReadPublisher(ctx context.Context, in *ReadPublisherRequest, opts ...grpc.CallOption) (*Publisher, error) {
 	out := new(Publisher)
 	err := c.cc.Invoke(ctx, Bookstore_ReadPublisher_FullMethodName, in, out, opts...)
@@ -134,6 +145,7 @@ type BookstoreServer interface {
 	UpdateBook(context.Context, *UpdateBookRequest) (*Book, error)
 	DeleteBook(context.Context, *DeleteBookRequest) (*emptypb.Empty, error)
 	ListBook(context.Context, *ListBookRequest) (*ListBookResponse, error)
+	GlobalListBook(context.Context, *GlobalListBookRequest) (*GlobalListBookResponse, error)
 	ReadPublisher(context.Context, *ReadPublisherRequest) (*Publisher, error)
 	ListPublisher(context.Context, *ListPublisherRequest) (*ListPublisherResponse, error)
 	mustEmbedUnimplementedBookstoreServer()
@@ -160,6 +172,9 @@ func (UnimplementedBookstoreServer) DeleteBook(context.Context, *DeleteBookReque
 }
 func (UnimplementedBookstoreServer) ListBook(context.Context, *ListBookRequest) (*ListBookResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBook not implemented")
+}
+func (UnimplementedBookstoreServer) GlobalListBook(context.Context, *GlobalListBookRequest) (*GlobalListBookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GlobalListBook not implemented")
 }
 func (UnimplementedBookstoreServer) ReadPublisher(context.Context, *ReadPublisherRequest) (*Publisher, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReadPublisher not implemented")
@@ -288,6 +303,24 @@ func _Bookstore_ListBook_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Bookstore_GlobalListBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GlobalListBookRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).GlobalListBook(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_GlobalListBook_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).GlobalListBook(ctx, req.(*GlobalListBookRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Bookstore_ReadPublisher_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ReadPublisherRequest)
 	if err := dec(in); err != nil {
@@ -354,6 +387,10 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListBook",
 			Handler:    _Bookstore_ListBook_Handler,
+		},
+		{
+			MethodName: "GlobalListBook",
+			Handler:    _Bookstore_GlobalListBook_Handler,
 		},
 		{
 			MethodName: "ReadPublisher",
