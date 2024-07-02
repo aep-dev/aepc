@@ -6,6 +6,8 @@ import "google/protobuf/empty.proto";
 
 option go_package = "/bookstore";
 
+package example.bookstore;
+
 message Book {
   string isbn = 1;
 
