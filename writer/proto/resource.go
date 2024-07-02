@@ -112,7 +112,7 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	mb := builder.NewMessage("Create" + r.Kind + "Request")
 	mb.AddField(builder.NewField(constants.FIELD_NAME_PARENT, builder.FieldTypeString()).SetNumber(1))
 	mb.AddField(builder.NewField(constants.FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(2))
-	mb.AddField(builder.NewField(constants.FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(3))
+	mb.AddField(builder.NewField(constants.FIELD_RESOURCE_NAME, builder.FieldTypeMessage(resourceMb)).SetNumber(3))
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Create"+r.Kind,
 		builder.RpcTypeMessage(mb, false),
@@ -131,8 +131,11 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		// 		},
 		// 	},
 		// },
-		Body: constants.FIELD_NAME_RESOURCE,
+		Body: constants.FIELD_RESOURCE_NAME,
 	})
+	proto.SetExtension(options, annotations.E_MethodSignature, strings.Join([]string{
+		constants.FIELD_NAME_PARENT, constants.FIELD_RESOURCE_NAME,
+	}, ","))
 	method.SetOptions(options)
 	sb.AddMethod(method)
 	return nil
@@ -168,7 +171,7 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	mb.AddField(
 		builder.NewField(constants.FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
 	).AddField(
-		builder.NewField(constants.FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(2),
+		builder.NewField(constants.FIELD_RESOURCE_NAME, builder.FieldTypeMessage(resourceMb)).SetNumber(2),
 	)
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Update"+r.Kind,
@@ -180,8 +183,11 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		Pattern: &annotations.HttpRule_Patch{
 			Patch: fmt.Sprintf("/{resource.path=%v}", generateHTTPPath(r)),
 		},
-		Body: constants.FIELD_NAME_RESOURCE,
+		Body: constants.FIELD_RESOURCE_NAME,
 	})
+	proto.SetExtension(options, annotations.E_MethodSignature, strings.Join([]string{
+		constants.FIELD_RESOURCE_NAME, constants.FIELD_UPDATE_MASK_NAME,
+	}, ","))
 	method.SetOptions(options)
 	sb.AddMethod(method)
 	return nil
@@ -221,10 +227,17 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	reqMb.AddField(
 		builder.NewField(constants.FIELD_NAME_PARENT, builder.FieldTypeString()).SetNumber(1),
 	)
+	reqMb.AddField(
+		builder.NewField(constants.FIELD_PAGE_TOKEN_NAME, builder.FieldTypeString()).SetNumber(constants.FIELD_PAGE_TOKEN_FIELD_NUMBER),
+	)
 	fb.AddMessage(reqMb)
 	respMb := builder.NewMessage("List" + r.Kind + "Response")
 	respMb.AddField(
-		builder.NewField(constants.FIELD_NAME_RESOURCES, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
+		builder.NewField(constants.FIELD_RESOURCES_NAME, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
+	)
+	respMb.AddField(
+		builder.NewField(constants.FIELD_NAME_NEXT_PAGE_TOKEN, builder.FieldTypeMessage(resourceMb)
+		).SetNumber(constants.FIELD_NAME_NEXT_PAGE_TOKEN_FIELD_NUMBER),
 	)
 	fb.AddMessage(respMb)
 	method := builder.NewMethod("List"+r.Kind,
@@ -252,7 +265,7 @@ func AddGlobalList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder,
 	fb.AddMessage(reqMb)
 	respMb := builder.NewMessage("GlobalList" + r.Kind + "Response")
 	respMb.AddField(
-		builder.NewField(constants.FIELD_NAME_RESOURCES, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
+		builder.NewField(constants.FIELD_RESOURCES_NAME, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
 	)
 	fb.AddMessage(respMb)
 	method := builder.NewMethod("GlobalList"+r.Kind,
@@ -277,7 +290,7 @@ func AddApply(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *
 	mb.AddField(
 		builder.NewField(constants.FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
 	).AddField(
-		builder.NewField(constants.FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(2),
+		builder.NewField(constants.FIELD_RESOURCE_NAME, builder.FieldTypeMessage(resourceMb)).SetNumber(2),
 	)
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Apply"+r.Kind,
@@ -289,7 +302,7 @@ func AddApply(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *
 		Pattern: &annotations.HttpRule_Put{
 			Put: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
 		},
-		Body: constants.FIELD_NAME_RESOURCE,
+		Body: constants.FIELD_RESOURCE_NAME,
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
@@ -312,7 +325,7 @@ func generateHTTPPath(r *parser.ParsedResource) string {
 }
 
 func generateParentHTTPPath(r *parser.ParsedResource) string {
-	parentPath := ""
+	parentPath := "{parent=}/"
 	if len(r.Parents) > 0 {
 		parentPath = fmt.Sprintf("{parent=%v}/", generateHTTPPath(r.Parents[0]))
 	}

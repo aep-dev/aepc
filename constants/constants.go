@@ -15,6 +15,12 @@ package constants
 
 const FIELD_NAME_PARENT = "parent"
 const FIELD_NAME_PATH = "path"
-const FIELD_NAME_RESOURCE = "resource"
-const FIELD_NAME_RESOURCES = "resources"
+const FIELD_RESOURCE_NAME = "resource"
+const FIELD_RESOURCES_NAME = "resources"
+const FIELD_PAGE_TOKEN_NAME = "page_token"
+const FIELD_PAGE_TOKEN_FIELD_NUMBER = 10010
+const FIELD_UPDATE_MASK_NAME = "update_mask"
+const FIELD_UPDATE_MASK_NUMBER = 10012
+const FIELD_NAME_NEXT_PAGE_TOKEN = "next_page_token"
+const FIELD_NAME_NEXT_PAGE_TOKEN_FIELD_NUMBER = 10011
 const FIELD_NAME_ID = "id"
