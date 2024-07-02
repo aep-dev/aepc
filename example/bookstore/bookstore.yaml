@@ -1,29 +1,33 @@
 name: "bookstore.example.com"
 resources:
   - kind: "Book"
+    plural: "books"
     properties:
       isbn:
         type: STRING
         number: 1
-    parents:
-      - "bookstore.example.com/Publisher"
+        required: true
+    # parents:
+    #   - "bookstore.example.com/Publisher"
     methods:
       create: {}
       read: {}
       update: {}
       delete: {}
       list: {}
-      global_list: {}
-  - kind: "Publisher"
-    methods:
-      read: {}
-      list: {}
-  - kind: "Author"
-    properties:
-      name:
-        type: STRING
-        number: 1
-    parents:
-      - "Publisher"
-    methods:
-      read: {}
+      apply: {}
+#   - kind: "Publisher"
+#     plural: "publishers"
+#     methods:
+#       read: {}
+#       list: {}
+#   - kind: "Author"
+#     plural: "authors"
+#     properties:
+#       name:
+#         type: STRING
+#         number: 1
+#     parents:
+#       - "Publisher"
+#     methods:
+#       read: {}

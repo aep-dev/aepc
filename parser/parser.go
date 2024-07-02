@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aep-dev/aepc/constants"
 	"github.com/aep-dev/aepc/schema"
 )
 
@@ -58,6 +59,32 @@ func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 			}
 			r.Parents = append(r.Parents, parentResource)
 		}
+		addGetToResource(r)
+		addCommonFieldsToResource(r)
 	}
 	return resourceByType, nil
+}
+
+// addGetToResource adds a Get method to a resource,
+// since all resources must have a Get method.
+func addGetToResource(pr *ParsedResource) {
+	if pr.Methods.Read == nil {
+		pr.Methods.Read = &schema.Methods_ReadMethod{}
+	}
+}
+
+// add an id field to the resource.
+// TODO(yft): this has to be reconciled with the
+// existence of path.
+func addCommonFieldsToResource(pr *ParsedResource) {
+	pr.Properties[constants.FIELD_NAME_PATH] = &schema.Property{
+		Type:     schema.Type_STRING,
+		Number:   10000,
+		ReadOnly: true,
+	}
+	pr.Properties[constants.FIELD_NAME_ID] = &schema.Property{
+		Type:     schema.Type_STRING,
+		Number:   10001,
+		ReadOnly: true,
+	}
 }

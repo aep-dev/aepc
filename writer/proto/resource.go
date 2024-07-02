@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aep-dev/aepc/constants"
 	"github.com/aep-dev/aepc/parser"
 	"github.com/aep-dev/aepc/schema"
 	"github.com/jhump/protoreflect/desc"
@@ -30,7 +31,7 @@ import (
 func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	resourceMb, err := GeneratedResourceMessage(r)
 	if err != nil {
-		return fmt.Errorf("unable to generated resource %v: %w", r.Kind, err)
+		return fmt.Errorf("unable to generate resource %v: %w", r.Kind, err)
 	}
 	fb.AddMessage(resourceMb)
 	if r.Methods != nil {
@@ -70,6 +71,13 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 				return err
 			}
 		}
+
+		if r.Methods.Apply != nil {
+			err = AddApply(r, resourceMb, fb, sb)
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
@@ -77,11 +85,6 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 // GenerateResourceMesssage adds the resource message.
 func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
-	// standard fields start at 10k, in the range until 11k.
-	pathField := builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(10000)
-	pathField.SetComments(builder.Comments{LeadingComment: fmt.Sprintf("Path should be of the form \"%s\"", generateHTTPPath(r))})
-	mb.AddField(pathField)
-	// standard fields are added afterward.
 	for n, p := range r.Properties {
 		typ := builder.FieldTypeBool()
 		switch p.Type {
@@ -107,9 +110,9 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	// add the resource message
 	// create request messages
 	mb := builder.NewMessage("Create" + r.Kind + "Request")
-	mb.AddField(builder.NewField(FIELD_NAME_PARENT, builder.FieldTypeString()).SetNumber(1))
-	mb.AddField(builder.NewField(FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(2))
-	mb.AddField(builder.NewField(FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(3))
+	mb.AddField(builder.NewField(constants.FIELD_NAME_PARENT, builder.FieldTypeString()).SetNumber(1))
+	mb.AddField(builder.NewField(constants.FIELD_NAME_ID, builder.FieldTypeString()).SetNumber(2))
+	mb.AddField(builder.NewField(constants.FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(3))
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Create"+r.Kind,
 		builder.RpcTypeMessage(mb, false),
@@ -118,8 +121,17 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Post{
+			// TODO(yft): switch this over to use "id" in the path.
 			Post: generateParentHTTPPath(r),
 		},
+		// AdditionalBindings: []*annotations.HttpRule{
+		// 	{
+		// 		Pattern: &annotations.HttpRule_Post{
+		// 			Post: fmt.Sprintf("%v/{id}", generateParentHTTPPath(r)),
+		// 		},
+		// 	},
+		// },
+		Body: constants.FIELD_NAME_RESOURCE,
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
@@ -131,7 +143,7 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 func AddRead(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	mb := builder.NewMessage("Read" + r.Kind + "Request")
 	mb.AddField(
-		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+		builder.NewField(constants.FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
 	)
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Read"+r.Kind,
@@ -154,9 +166,9 @@ func AddRead(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	mb := builder.NewMessage("Update" + r.Kind + "Request")
 	mb.AddField(
-		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+		builder.NewField(constants.FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
 	).AddField(
-		builder.NewField(FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(2),
+		builder.NewField(constants.FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(2),
 	)
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Update"+r.Kind,
@@ -165,9 +177,10 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	)
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
-		Pattern: &annotations.HttpRule_Put{
-			Put: fmt.Sprintf("/{resource.path=%v}", generateHTTPPath(r)),
+		Pattern: &annotations.HttpRule_Patch{
+			Patch: fmt.Sprintf("/{resource.path=%v}", generateHTTPPath(r)),
 		},
+		Body: constants.FIELD_NAME_RESOURCE,
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
@@ -179,7 +192,7 @@ func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	// create request messages
 	mb := builder.NewMessage("Delete" + r.Kind + "Request")
 	mb.AddField(
-		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+		builder.NewField(constants.FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
 	)
 	fb.AddMessage(mb)
 	emptyMd, err := desc.LoadMessageDescriptor("google.protobuf.Empty")
@@ -206,12 +219,12 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	// create request messages
 	reqMb := builder.NewMessage("List" + r.Kind + "Request")
 	reqMb.AddField(
-		builder.NewField(FIELD_NAME_PARENT, builder.FieldTypeString()).SetNumber(1),
+		builder.NewField(constants.FIELD_NAME_PARENT, builder.FieldTypeString()).SetNumber(1),
 	)
 	fb.AddMessage(reqMb)
 	respMb := builder.NewMessage("List" + r.Kind + "Response")
 	respMb.AddField(
-		builder.NewField(FIELD_NAME_RESOURCES, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
+		builder.NewField(constants.FIELD_NAME_RESOURCES, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
 	)
 	fb.AddMessage(respMb)
 	method := builder.NewMethod("List"+r.Kind,
@@ -234,12 +247,12 @@ func AddGlobalList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder,
 	// create request messages
 	reqMb := builder.NewMessage("GlobalList" + r.Kind + "Request")
 	reqMb.AddField(
-		builder.NewField(FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+		builder.NewField(constants.FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
 	)
 	fb.AddMessage(reqMb)
 	respMb := builder.NewMessage("GlobalList" + r.Kind + "Response")
 	respMb.AddField(
-		builder.NewField(FIELD_NAME_RESOURCES, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
+		builder.NewField(constants.FIELD_NAME_RESOURCES, builder.FieldTypeMessage(resourceMb)).SetRepeated().SetNumber(1),
 	)
 	fb.AddMessage(respMb)
 	method := builder.NewMethod("GlobalList"+r.Kind,
@@ -257,13 +270,39 @@ func AddGlobalList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder,
 	return nil
 }
 
+// AddApply adds a read method for the resource, along with
+// any required messages.
+func AddApply(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	mb := builder.NewMessage("Apply" + r.Kind + "Request")
+	mb.AddField(
+		builder.NewField(constants.FIELD_NAME_PATH, builder.FieldTypeString()).SetNumber(1),
+	).AddField(
+		builder.NewField(constants.FIELD_NAME_RESOURCE, builder.FieldTypeMessage(resourceMb)).SetNumber(2),
+	)
+	fb.AddMessage(mb)
+	method := builder.NewMethod("Apply"+r.Kind,
+		builder.RpcTypeMessage(mb, false),
+		builder.RpcTypeMessage(resourceMb, false),
+	)
+	options := &descriptorpb.MethodOptions{}
+	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
+		Pattern: &annotations.HttpRule_Put{
+			Put: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
+		},
+		Body: constants.FIELD_NAME_RESOURCE,
+	})
+	method.SetOptions(options)
+	sb.AddMethod(method)
+	return nil
+}
+
 func generateHTTPPath(r *parser.ParsedResource) string {
-	elements := []string{strings.ToLower(r.Kind)}
+	elements := []string{strings.ToLower(r.Plural)}
 	if len(r.Parents) > 0 {
 		// TODO: handle multiple parents
 		p := r.Parents[0]
 		for p != nil {
-			elements = append([]string{strings.ToLower(p.Kind)}, elements...)
+			elements = append([]string{strings.ToLower(p.Plural)}, elements...)
 			if len(p.Parents) == 0 {
 				break
 			}
@@ -277,5 +316,5 @@ func generateParentHTTPPath(r *parser.ParsedResource) string {
 	if len(r.Parents) > 0 {
 		parentPath = fmt.Sprintf("{parent=%v}/", generateHTTPPath(r.Parents[0]))
 	}
-	return fmt.Sprintf("/%v%v", parentPath, strings.ToLower(r.Kind))
+	return fmt.Sprintf("/%v%v", parentPath, strings.ToLower(r.Plural))
 }

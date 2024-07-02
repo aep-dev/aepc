@@ -33,6 +33,7 @@ message Methods {
   message DeleteMethod {}
   message ListMethod {}
   message GlobalListMethod {}
+  message ApplyMethod {}
 
   CreateMethod create = 1;
   ReadMethod read = 2;
@@ -40,6 +41,7 @@ message Methods {
   DeleteMethod delete = 4;
   ListMethod list = 5;
   GlobalListMethod global_list = 6;
+  ApplyMethod apply = 7;
 }
 
 enum Type {
@@ -52,4 +54,6 @@ message Property {
  // field number used for protobuf or other systems where fields must
   // be explicitly enumerated.
   int32 number = 2;
+  bool readOnly = 3;
+  bool required = 4;
 }

@@ -16,37 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/publisher": {
-      "get": {
-        "operationId": "Bookstore_ListPublisher",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ListPublisherResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "parent",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Bookstore"
-        ]
-      }
-    },
-    "/{parent}/book": {
+    "/books": {
       "get": {
         "operationId": "Bookstore_ListBook",
         "responses": {
@@ -66,10 +36,9 @@
         "parameters": [
           {
             "name": "parent",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "publisher/[^/]+"
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -94,27 +63,21 @@
         },
         "parameters": [
           {
-            "name": "parent",
-            "in": "path",
+            "name": "resource",
+            "in": "body",
             "required": true,
-            "type": "string",
-            "pattern": "publisher/[^/]+"
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          {
+            "name": "parent",
+            "in": "query",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "resource.path",
-            "description": "Path should be of the form \"publisher/*/book/*\"",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "resource.isbn",
             "in": "query",
             "required": false,
             "type": "string"
@@ -125,7 +88,7 @@
         ]
       }
     },
-    "/{path_1}": {
+    "/{path}": {
       "get": {
         "operationId": "Bookstore_ReadBook",
         "responses": {
@@ -144,104 +107,11 @@
         },
         "parameters": [
           {
-            "name": "path_1",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "publisher/[^/]+/book/[^/]+"
-          }
-        ],
-        "tags": [
-          "Bookstore"
-        ]
-      }
-    },
-    "/{path_2}": {
-      "get": {
-        "operationId": "Bookstore_GlobalListBook",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/GlobalListBookResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "path_2",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "--/book"
-          }
-        ],
-        "tags": [
-          "Bookstore"
-        ]
-      }
-    },
-    "/{path_3}": {
-      "get": {
-        "operationId": "Bookstore_ReadPublisher",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/Publisher"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "path_3",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "publisher/[^/]+"
-          }
-        ],
-        "tags": [
-          "Bookstore"
-        ]
-      }
-    },
-    "/{path}": {
-      "get": {
-        "operationId": "Bookstore_ReadAuthor",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/Author"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
             "name": "path",
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "publisher/[^/]+/author/[^/]+"
+            "pattern": "books/[^/]+"
           }
         ],
         "tags": [
@@ -271,7 +141,44 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "publisher/[^/]+/book/[^/]+"
+            "pattern": "books/[^/]+"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "put": {
+        "operationId": "Bookstore_ApplyBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "books/[^/]+"
+          },
+          {
+            "name": "resource",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
           }
         ],
         "tags": [
@@ -280,7 +187,7 @@
       }
     },
     "/{resource.path}": {
-      "put": {
+      "patch": {
         "operationId": "Bookstore_UpdateBook",
         "responses": {
           "200": {
@@ -299,20 +206,29 @@
         "parameters": [
           {
             "name": "resource.path",
-            "description": "Path should be of the form \"publisher/*/book/*\"",
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "publisher/[^/]+/book/[^/]+"
+            "pattern": "books/[^/]+"
+          },
+          {
+            "name": "resource",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "isbn": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                }
+              }
+            }
           },
           {
             "name": "path",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "resource.isbn",
             "in": "query",
             "required": false,
             "type": "string"
@@ -325,39 +241,17 @@
     }
   },
   "definitions": {
-    "Author": {
-      "type": "object",
-      "properties": {
-        "path": {
-          "type": "string",
-          "title": "Path should be of the form \"publisher/*/author/*\""
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
     "Book": {
       "type": "object",
       "properties": {
-        "path": {
-          "type": "string",
-          "title": "Path should be of the form \"publisher/*/book/*\""
-        },
         "isbn": {
           "type": "string"
-        }
-      }
-    },
-    "GlobalListBookResponse": {
-      "type": "object",
-      "properties": {
-        "resources": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/Book"
-          }
+        },
+        "path": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
         }
       }
     },
@@ -370,27 +264,6 @@
             "type": "object",
             "$ref": "#/definitions/Book"
           }
-        }
-      }
-    },
-    "ListPublisherResponse": {
-      "type": "object",
-      "properties": {
-        "resources": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/Publisher"
-          }
-        }
-      }
-    },
-    "Publisher": {
-      "type": "object",
-      "properties": {
-        "path": {
-          "type": "string",
-          "title": "Path should be of the form \"publisher/*\""
         }
       }
     },
