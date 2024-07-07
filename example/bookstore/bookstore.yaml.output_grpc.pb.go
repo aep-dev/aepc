@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Bookstore_CreateBook_FullMethodName = "/Bookstore/CreateBook"
-	Bookstore_ReadBook_FullMethodName   = "/Bookstore/ReadBook"
+	Bookstore_GetBook_FullMethodName    = "/Bookstore/GetBook"
 	Bookstore_UpdateBook_FullMethodName = "/Bookstore/UpdateBook"
 	Bookstore_DeleteBook_FullMethodName = "/Bookstore/DeleteBook"
 	Bookstore_ListBook_FullMethodName   = "/Bookstore/ListBook"
@@ -32,11 +32,17 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BookstoreClient interface {
+	// An aep-compliant Create method for Book.
 	CreateBook(ctx context.Context, in *CreateBookRequest, opts ...grpc.CallOption) (*Book, error)
-	ReadBook(ctx context.Context, in *ReadBookRequest, opts ...grpc.CallOption) (*Book, error)
+	// An aep-compliant Get method for Book.
+	GetBook(ctx context.Context, in *GetBookRequest, opts ...grpc.CallOption) (*Book, error)
+	// An aep-compliant Update method for Book.
 	UpdateBook(ctx context.Context, in *UpdateBookRequest, opts ...grpc.CallOption) (*Book, error)
+	// An aep-compliant Delete method for Book.
 	DeleteBook(ctx context.Context, in *DeleteBookRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// An aep-compliant List method for books.
 	ListBook(ctx context.Context, in *ListBookRequest, opts ...grpc.CallOption) (*ListBookResponse, error)
+	// An aep-compliant Apply method for books.
 	ApplyBook(ctx context.Context, in *ApplyBookRequest, opts ...grpc.CallOption) (*Book, error)
 }
 
@@ -57,9 +63,9 @@ func (c *bookstoreClient) CreateBook(ctx context.Context, in *CreateBookRequest,
 	return out, nil
 }
 
-func (c *bookstoreClient) ReadBook(ctx context.Context, in *ReadBookRequest, opts ...grpc.CallOption) (*Book, error) {
+func (c *bookstoreClient) GetBook(ctx context.Context, in *GetBookRequest, opts ...grpc.CallOption) (*Book, error) {
 	out := new(Book)
-	err := c.cc.Invoke(ctx, Bookstore_ReadBook_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Bookstore_GetBook_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -106,11 +112,17 @@ func (c *bookstoreClient) ApplyBook(ctx context.Context, in *ApplyBookRequest, o
 // All implementations must embed UnimplementedBookstoreServer
 // for forward compatibility
 type BookstoreServer interface {
+	// An aep-compliant Create method for Book.
 	CreateBook(context.Context, *CreateBookRequest) (*Book, error)
-	ReadBook(context.Context, *ReadBookRequest) (*Book, error)
+	// An aep-compliant Get method for Book.
+	GetBook(context.Context, *GetBookRequest) (*Book, error)
+	// An aep-compliant Update method for Book.
 	UpdateBook(context.Context, *UpdateBookRequest) (*Book, error)
+	// An aep-compliant Delete method for Book.
 	DeleteBook(context.Context, *DeleteBookRequest) (*emptypb.Empty, error)
+	// An aep-compliant List method for books.
 	ListBook(context.Context, *ListBookRequest) (*ListBookResponse, error)
+	// An aep-compliant Apply method for books.
 	ApplyBook(context.Context, *ApplyBookRequest) (*Book, error)
 	mustEmbedUnimplementedBookstoreServer()
 }
@@ -122,8 +134,8 @@ type UnimplementedBookstoreServer struct {
 func (UnimplementedBookstoreServer) CreateBook(context.Context, *CreateBookRequest) (*Book, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateBook not implemented")
 }
-func (UnimplementedBookstoreServer) ReadBook(context.Context, *ReadBookRequest) (*Book, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReadBook not implemented")
+func (UnimplementedBookstoreServer) GetBook(context.Context, *GetBookRequest) (*Book, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBook not implemented")
 }
 func (UnimplementedBookstoreServer) UpdateBook(context.Context, *UpdateBookRequest) (*Book, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateBook not implemented")
@@ -168,20 +180,20 @@ func _Bookstore_CreateBook_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Bookstore_ReadBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ReadBookRequest)
+func _Bookstore_GetBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBookRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BookstoreServer).ReadBook(ctx, in)
+		return srv.(BookstoreServer).GetBook(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Bookstore_ReadBook_FullMethodName,
+		FullMethod: Bookstore_GetBook_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BookstoreServer).ReadBook(ctx, req.(*ReadBookRequest))
+		return srv.(BookstoreServer).GetBook(ctx, req.(*GetBookRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -270,8 +282,8 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bookstore_CreateBook_Handler,
 		},
 		{
-			MethodName: "ReadBook",
-			Handler:    _Bookstore_ReadBook_Handler,
+			MethodName: "GetBook",
+			Handler:    _Bookstore_GetBook_Handler,
 		},
 		{
 			MethodName: "UpdateBook",

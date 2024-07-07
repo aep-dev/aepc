@@ -32,7 +32,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 var (
-	filter_Bookstore_CreateBook_0 = &utilities.DoubleArray{Encoding: map[string]int{"resource": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
+	filter_Bookstore_CreateBook_0 = &utilities.DoubleArray{Encoding: map[string]int{"book": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
 )
 
 func request_Bookstore_CreateBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -43,7 +43,7 @@ func request_Bookstore_CreateBook_0(ctx context.Context, marshaler runtime.Marsh
 	if berr != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
 	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Resource); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Book); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -67,7 +67,7 @@ func local_request_Bookstore_CreateBook_0(ctx context.Context, marshaler runtime
 	if berr != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
 	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Resource); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Book); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -83,8 +83,8 @@ func local_request_Bookstore_CreateBook_0(ctx context.Context, marshaler runtime
 
 }
 
-func request_Bookstore_ReadBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ReadBookRequest
+func request_Bookstore_GetBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetBookRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -104,13 +104,13 @@ func request_Bookstore_ReadBook_0(ctx context.Context, marshaler runtime.Marshal
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := client.ReadBook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetBook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_ReadBook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ReadBookRequest
+func local_request_Bookstore_GetBook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetBookRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -130,13 +130,13 @@ func local_request_Bookstore_ReadBook_0(ctx context.Context, marshaler runtime.M
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := server.ReadBook(ctx, &protoReq)
+	msg, err := server.GetBook(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_Bookstore_UpdateBook_0 = &utilities.DoubleArray{Encoding: map[string]int{"resource": 0, "path": 1}, Base: []int{1, 4, 5, 2, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 4, 2, 2, 3}}
+	filter_Bookstore_UpdateBook_0 = &utilities.DoubleArray{Encoding: map[string]int{"book": 0, "path": 1}, Base: []int{1, 4, 5, 2, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 4, 2, 2, 3}}
 )
 
 func request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -147,8 +147,15 @@ func request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime.Marsh
 	if berr != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
 	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Resource); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Book); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if protoReq.UpdateMask == nil || len(protoReq.UpdateMask.GetPaths()) == 0 {
+		if fieldMask, err := runtime.FieldMaskFromRequestBody(newReader(), protoReq.Book); err != nil {
+			return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+		} else {
+			protoReq.UpdateMask = fieldMask
+		}
 	}
 
 	var (
@@ -158,14 +165,14 @@ func request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime.Marsh
 		_   = err
 	)
 
-	val, ok = pathParams["resource.path"]
+	val, ok = pathParams["book.path"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "resource.path")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book.path")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "resource.path", val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "book.path", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "resource.path", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book.path", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -188,8 +195,15 @@ func local_request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime
 	if berr != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
 	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Resource); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Book); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if protoReq.UpdateMask == nil || len(protoReq.UpdateMask.GetPaths()) == 0 {
+		if fieldMask, err := runtime.FieldMaskFromRequestBody(newReader(), protoReq.Book); err != nil {
+			return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+		} else {
+			protoReq.UpdateMask = fieldMask
+		}
 	}
 
 	var (
@@ -199,14 +213,14 @@ func local_request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime
 		_   = err
 	)
 
-	val, ok = pathParams["resource.path"]
+	val, ok = pathParams["book.path"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "resource.path")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book.path")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "resource.path", val)
+	err = runtime.PopulateFieldFromPath(&protoReq, "book.path", val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "resource.path", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book.path", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -317,7 +331,7 @@ func request_Bookstore_ApplyBook_0(ctx context.Context, marshaler runtime.Marsha
 	if berr != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
 	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Resource); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Book); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -351,7 +365,7 @@ func local_request_Bookstore_ApplyBook_0(ctx context.Context, marshaler runtime.
 	if berr != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
 	}
-	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Resource); err != nil && err != io.EOF {
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.Book); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -408,7 +422,7 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_ReadBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_GetBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -416,12 +430,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.Bookstore/ReadBook", runtime.WithHTTPPathPattern("/{path=books/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.Bookstore/GetBook", runtime.WithHTTPPathPattern("/{path=books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_ReadBook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_GetBook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -429,7 +443,7 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_ReadBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_GetBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -441,7 +455,7 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{resource.path=books/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{book.path=books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -596,25 +610,25 @@ func RegisterBookstoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_ReadBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_GetBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.Bookstore/ReadBook", runtime.WithHTTPPathPattern("/{path=books/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.Bookstore/GetBook", runtime.WithHTTPPathPattern("/{path=books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_ReadBook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_GetBook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_ReadBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_GetBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -624,7 +638,7 @@ func RegisterBookstoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{resource.path=books/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{book.path=books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -712,9 +726,9 @@ func RegisterBookstoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 var (
 	pattern_Bookstore_CreateBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"books"}, ""))
 
-	pattern_Bookstore_ReadBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"books", "path"}, ""))
+	pattern_Bookstore_GetBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"books", "path"}, ""))
 
-	pattern_Bookstore_UpdateBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"books", "resource.path"}, ""))
+	pattern_Bookstore_UpdateBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"books", "book.path"}, ""))
 
 	pattern_Bookstore_DeleteBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"books", "path"}, ""))
 
@@ -726,7 +740,7 @@ var (
 var (
 	forward_Bookstore_CreateBook_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_ReadBook_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_GetBook_0 = runtime.ForwardResponseMessage
 
 	forward_Bookstore_UpdateBook_0 = runtime.ForwardResponseMessage
 
