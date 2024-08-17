@@ -163,7 +163,7 @@ func resourceToSchema(r *parser.ParsedResource) Schema {
 		t := "string"
 		properties[name] = Schema{
 			Type:         t,
-			XTerraformID: name == constants.FIELD_NAME_ID,
+			XTerraformID: name == constants.FIELD_ID_NAME,
 			ReadOnly:     p.ReadOnly,
 		}
 		if p.Required {

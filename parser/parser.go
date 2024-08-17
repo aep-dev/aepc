@@ -21,6 +21,7 @@ type ParsedService struct {
 
 type ParsedResource struct {
 	*schema.Resource
+	Type    string
 	Parents []*ParsedResource
 }
 
@@ -39,9 +40,10 @@ func NewParsedService(s *schema.Service) (*ParsedService, error) {
 func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 	resourceByType := map[string]*ParsedResource{}
 	for _, r := range s.Resources {
-		name := fmt.Sprintf("%s/%s", s.Name, r.Kind)
-		resourceByType[name] = &ParsedResource{
+		t := fmt.Sprintf("%s/%s", s.Name, r.Kind)
+		resourceByType[t] = &ParsedResource{
 			Resource: r,
+			Type:     t,
 			Parents:  []*ParsedResource{},
 		}
 	}
@@ -77,12 +79,12 @@ func addGetToResource(pr *ParsedResource) {
 // TODO(yft): this has to be reconciled with the
 // existence of path.
 func addCommonFieldsToResource(pr *ParsedResource) {
-	pr.Properties[constants.FIELD_NAME_PATH] = &schema.Property{
+	pr.Properties[constants.FIELD_PATH_NAME] = &schema.Property{
 		Type:     schema.Type_STRING,
 		Number:   10000,
 		ReadOnly: true,
 	}
-	pr.Properties[constants.FIELD_NAME_ID] = &schema.Property{
+	pr.Properties[constants.FIELD_ID_NAME] = &schema.Property{
 		Type:     schema.Type_STRING,
 		Number:   10001,
 		ReadOnly: true,

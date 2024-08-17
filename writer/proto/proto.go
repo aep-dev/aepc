@@ -46,13 +46,16 @@ func WriteServiceToProto(ps *parser.ParsedService) ([]byte, error) {
 	}
 	fb.SetOptions(fo)
 	sb := builder.NewService(pServiceName)
-	fb.AddService(sb)
+	sb.SetComments(builder.Comments{
+		LeadingComment: "A service.",
+	})
 	for _, r := range getSortedResources(ps.ResourceByType) {
 		err := AddResource(r, fb, sb)
 		if err != nil {
 			return []byte{}, fmt.Errorf("adding resource %v failed: %w", r.Kind, err)
 		}
 	}
+	fb.AddService(sb)
 	fd, err := fb.Build()
 	if err != nil {
 		return []byte{}, fmt.Errorf("unable to build service file %v: %w", fb.GetName(), err)
