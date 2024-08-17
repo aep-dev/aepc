@@ -18,7 +18,9 @@ import (
 	"io"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/ghodss/yaml"
 
@@ -34,25 +36,31 @@ import (
 
 func NewCommand() *cobra.Command {
 	var inputFile string
-	var outputFile string
+	var outputDir string
 
 	c := &cobra.Command{
 		Use:   "aepc",
 		Short: "aepc compiles resource representations to full proto rpcs",
 		Long:  "aepc compiles resource representations to full proto rpcs",
 		Run: func(cmd *cobra.Command, args []string) {
-			err := ProcessInput(inputFile, outputFile)
+			err := ProcessInput(inputFile, outputDir)
 			if err != nil {
 				log.Fatal(err)
 			}
 		},
 	}
 	c.Flags().StringVarP(&inputFile, "input", "i", "", "input files with resource")
-	c.Flags().StringVarP(&outputFile, "output", "o", "", "output file to use")
+	c.Flags().StringVarP(&outputDir, "output", "o", "", "output directory to write to")
 	return c
 }
 
-func ProcessInput(inputFile, outputFile string) error {
+func ProcessInput(inputFile, outputDir string) error {
+	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
+		err := os.MkdirAll(outputDir, 0755)
+		if err != nil {
+			return fmt.Errorf("error creating output directory: %w", err)
+		}
+	}
 	s := &schema.Service{}
 	input, err := ReadFile(inputFile)
 	fmt.Printf("input: %s\n", string(input))
@@ -69,18 +77,20 @@ func ProcessInput(inputFile, outputFile string) error {
 		return fmt.Errorf("error validating service: %v", errors)
 	}
 	ps, err := parser.NewParsedService(s)
+	fileNamePrefix := strings.ToLower(ps.GetShortName())
+	outputFilePrefix := path.Join(outputDir, fileNamePrefix)
 	if err != nil {
 		return fmt.Errorf("error parsing service: %w", err)
 	}
 	proto, _ := proto.WriteServiceToProto(ps)
-	protoFile := fmt.Sprintf("%s.proto", outputFile)
+	protoFile := fmt.Sprintf("%s.proto", outputFilePrefix)
 	err = WriteFile(protoFile, proto)
 	if err != nil {
 		return fmt.Errorf("error writing file: %w", err)
 	}
 	fmt.Printf("output proto file: %s\n", protoFile)
 	openapi, _ := openapi.WriteServiceToOpenAPI(ps)
-	openapiFile := fmt.Sprintf("%s.openapi.json", outputFile)
+	openapiFile := fmt.Sprintf("%s_openapi.json", outputFilePrefix)
 	err = WriteFile(openapiFile, openapi)
 	if err != nil {
 		return fmt.Errorf("error writing file: %w", err)

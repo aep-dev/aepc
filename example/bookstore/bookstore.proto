@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package bookstore;
+
 import "google/api/annotations.proto";
 
 import "google/api/client.proto";
@@ -13,6 +15,49 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/field_mask.proto";
 
 option go_package = "/bookstore";
+
+// A service.
+service Bookstore {
+  // An aep-compliant Create method for Book.
+  rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
+    option (google.api.http) = { post: "/{parent=books}", body: "book" };
+
+    option (google.api.method_signature) = "parent,resource";
+  }
+
+  // An aep-compliant Get method for Book.
+  rpc GetBook ( GetBookRequest ) returns ( Book ) {
+    option (google.api.http) = { get: "/{path=books/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant Update method for Book.
+  rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
+    option (google.api.http) = { patch: "/{book.path=books/*}", body: "book" };
+
+    option (google.api.method_signature) = "update_mask,resource";
+  }
+
+  // An aep-compliant Delete method for Book.
+  rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
+    option (google.api.http) = { delete: "/{path=books/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant List method for books.
+  rpc ListBook ( ListBookRequest ) returns ( ListBookResponse ) {
+    option (google.api.http) = { get: "/{parent=books}" };
+
+    option (google.api.method_signature) = "parent";
+  }
+
+  // An aep-compliant Apply method for books.
+  rpc ApplyBook ( ApplyBookRequest ) returns ( Book ) {
+    option (google.api.http) = { put: "/{path=books/*}", body: "book" };
+  }
+}
 
 // A Book resource.
 message Book {
@@ -29,7 +74,10 @@ message Book {
 // A Create request for a  Book resource.
 message CreateBookRequest {
   // A field for the parent of Book
-  string parent = 10013 [(google.api.field_behavior) = REQUIRED];
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
 
   // An id that uniquely identifies the resource within the collection%!(EXTRA string=Book)
   string id = 10014;
@@ -77,10 +125,13 @@ message DeleteBookRequest {
   ];
 }
 
-// Request message for the DeleteBook method
+// Request message for the ListBook method
 message ListBookRequest {
   // A field for the parent of Book
-  string parent = 10013 [(google.api.field_behavior) = REQUIRED];
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
 
   // The page token indicating the starting point of the page
   string page_token = 10010;
@@ -89,7 +140,7 @@ message ListBookRequest {
   int32 max_page_size = 10017;
 }
 
-// Response message for the DeleteBook method
+// Response message for the ListBook method
 message ListBookResponse {
   // A list of books
   Book books = 10016;
@@ -108,45 +159,4 @@ message ApplyBookRequest {
 
   // The resource to perform the operation on.
   Book book = 10015 [(google.api.field_behavior) = REQUIRED];
-}
-
-// A service.
-service Bookstore {
-  // An aep-compliant Create method for Book.
-  rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { post: "/books", body: "book" };
-
-    option (google.api.method_signature) = "parent,resource";
-  }
-
-  // An aep-compliant Get method for Book.
-  rpc GetBook ( GetBookRequest ) returns ( Book ) {
-    option (google.api.http) = { get: "/{path=books/*}" };
-  }
-
-  // An aep-compliant Update method for Book.
-  rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { patch: "/{book.path=books/*}", body: "book" };
-
-    option (google.api.method_signature) = "update_mask,resource";
-  }
-
-  // An aep-compliant Delete method for Book.
-  rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
-    option (google.api.http) = { delete: "/{path=books/*}" };
-
-    option (google.api.method_signature) = "path";
-  }
-
-  // An aep-compliant List method for books.
-  rpc ListBook ( ListBookRequest ) returns ( ListBookResponse ) {
-    option (google.api.http) = { get: "/books" };
-
-    option (google.api.method_signature) = "parent";
-  }
-
-  // An aep-compliant Apply method for books.
-  rpc ApplyBook ( ApplyBookRequest ) returns ( Book ) {
-    option (google.api.http) = { put: "/{path=books/*}", body: "book" };
-  }
 }

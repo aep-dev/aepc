@@ -9,5 +9,5 @@ if [ ! -d /tmp/googleapis ]; then
 fi
 
 api-linter \
-    ./example/bookstore/bookstore.yaml.output.proto \
+    ./example/bookstore/bookstore.proto \
     -I /tmp/googleapis

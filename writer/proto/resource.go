@@ -173,6 +173,9 @@ func AddGet(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *bu
 			Get: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
 		},
 	})
+	proto.SetExtension(options, annotations.E_MethodSignature, []string{
+		strings.Join([]string{constants.FIELD_PATH_NAME}, ","),
+	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
 	return nil
@@ -258,7 +261,7 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	// create request messages
 	reqMb := builder.NewMessage("List" + r.Kind + "Request")
 	reqMb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Request message for the Delete%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Request message for the List%v method", r.Kind),
 	})
 	addParentField(r, reqMb)
 	addPageToken(r, reqMb)
@@ -270,7 +273,7 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	fb.AddMessage(reqMb)
 	respMb := builder.NewMessage("List" + r.Kind + "Response")
 	respMb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Response message for the Delete%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Response message for the List%v method", r.Kind),
 	})
 	addResourcesField(r, resourceMb, respMb)
 	addNextPageToken(r, respMb)
@@ -376,14 +379,16 @@ func generateHTTPPath(r *parser.ParsedResource) string {
 func generateParentHTTPPath(r *parser.ParsedResource) string {
 	parentPath := ""
 	if len(r.Parents) > 0 {
-		parentPath = fmt.Sprintf("{parent=%v}/", generateHTTPPath(r.Parents[0]))
+		parentPath = generateHTTPPath(r.Parents[0])
+		// parentPath = fmt.Sprintf("{parent=%v/}", generateHTTPPath(r.Parents[0]))
 	}
-	return fmt.Sprintf("/%v%v", parentPath, strings.ToLower(r.Plural))
+	return fmt.Sprintf("/{parent=%v%v}", parentPath, strings.ToLower(r.Plural))
 }
 
 func addParentField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 	o := &descriptorpb.FieldOptions{}
 	proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
+	proto.SetExtension(o, annotations.E_ResourceReference, &annotations.ResourceReference{})
 	f := builder.
 		NewField(constants.FIELD_PARENT_NAME, builder.FieldTypeString()).
 		SetNumber(constants.FIELD_PARENT_NUMBER).
