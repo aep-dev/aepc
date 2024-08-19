@@ -125,7 +125,6 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	})
 	addParentField(r, mb)
 	addIdField(r, mb)
-	addPathField(r, mb)
 	addResourceField(r, resourceMb, mb)
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Create"+r.Kind,
@@ -144,7 +143,7 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		Body: strings.ToLower(r.Kind),
 	})
 	proto.SetExtension(options, annotations.E_MethodSignature, []string{
-		strings.Join([]string{constants.FIELD_PARENT_NAME, constants.FIELD_RESOURCE_NAME}, ","),
+		strings.Join([]string{constants.FIELD_PARENT_NAME, strings.ToLower(r.Kind)}, ","),
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
@@ -215,7 +214,7 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		Body: strings.ToLower(r.Kind),
 	})
 	proto.SetExtension(options, annotations.E_MethodSignature, []string{
-		strings.Join([]string{constants.FIELD_UPDATE_MASK_NAME, constants.FIELD_RESOURCE_NAME}, ","),
+		strings.Join([]string{strings.ToLower(r.Kind), constants.FIELD_UPDATE_MASK_NAME}, ","),
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
@@ -434,9 +433,9 @@ func addResourceField(r *parser.ParsedResource, resourceMb, mb *builder.MessageB
 }
 
 func addResourcesField(r *parser.ParsedResource, resourceMb, mb *builder.MessageBuilder) {
-	f := builder.NewField(strings.ToLower(r.Plural), builder.FieldTypeMessage(resourceMb)).SetNumber(constants.FIELD_RESOURCES_NUMBER).SetComments(builder.Comments{
+	f := builder.NewField("results", builder.FieldTypeMessage(resourceMb)).SetNumber(constants.FIELD_RESOURCES_NUMBER).SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("A list of %v", r.Plural),
-	})
+	}).SetRepeated()
 	mb.AddField(f)
 }
 

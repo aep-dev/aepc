@@ -167,13 +167,6 @@
             "in": "query",
             "required": false,
             "type": "string"
-          },
-          {
-            "name": "path",
-            "description": "The globally unique identifier for the resource",
-            "in": "query",
-            "required": true,
-            "type": "string"
           }
         ],
         "tags": [
@@ -312,8 +305,12 @@
     "bookstoreListBookResponse": {
       "type": "object",
       "properties": {
-        "books": {
-          "$ref": "#/definitions/bookstoreBook",
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/bookstoreBook"
+          },
           "title": "A list of books"
         },
         "nextPageToken": {

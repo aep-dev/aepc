@@ -22,7 +22,7 @@ service Bookstore {
   rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
     option (google.api.http) = { post: "/{parent=books}", body: "book" };
 
-    option (google.api.method_signature) = "parent,resource";
+    option (google.api.method_signature) = "parent,book";
   }
 
   // An aep-compliant Get method for Book.
@@ -36,7 +36,7 @@ service Bookstore {
   rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
     option (google.api.http) = { patch: "/{book.path=books/*}", body: "book" };
 
-    option (google.api.method_signature) = "update_mask,resource";
+    option (google.api.method_signature) = "book,update_mask";
   }
 
   // An aep-compliant Delete method for Book.
@@ -81,12 +81,6 @@ message CreateBookRequest {
 
   // An id that uniquely identifies the resource within the collection%!(EXTRA string=Book)
   string id = 10014;
-
-  // The globally unique identifier for the resource
-  string path = 10018 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/Book" }
-  ];
 
   // The resource to perform the operation on.
   Book book = 10015 [(google.api.field_behavior) = REQUIRED];
@@ -143,7 +137,7 @@ message ListBookRequest {
 // Response message for the ListBook method
 message ListBookResponse {
   // A list of books
-  Book books = 10016;
+  repeated Book results = 10016;
 
   // The page token indicating the ending point of this response.
   string next_page_token = 10011;
