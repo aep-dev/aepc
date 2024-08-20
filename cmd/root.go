@@ -18,9 +18,7 @@ import (
 	"io"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
-	"strings"
 
 	"github.com/ghodss/yaml"
 
@@ -36,31 +34,26 @@ import (
 
 func NewCommand() *cobra.Command {
 	var inputFile string
-	var outputDir string
+	var outputFilePrefix string
 
 	c := &cobra.Command{
 		Use:   "aepc",
 		Short: "aepc compiles resource representations to full proto rpcs",
 		Long:  "aepc compiles resource representations to full proto rpcs",
 		Run: func(cmd *cobra.Command, args []string) {
-			err := ProcessInput(inputFile, outputDir)
+			err := ProcessInput(inputFile, outputFilePrefix)
 			if err != nil {
 				log.Fatal(err)
 			}
 		},
 	}
 	c.Flags().StringVarP(&inputFile, "input", "i", "", "input files with resource")
-	c.Flags().StringVarP(&outputDir, "output", "o", "", "output directory to write to")
+	c.Flags().StringVarP(&outputFilePrefix, "output", "o", "", "output file to write to. File types will be appended to this prefix)")
 	return c
 }
 
-func ProcessInput(inputFile, outputDir string) error {
-	if _, err := os.Stat(outputDir); os.IsNotExist(err) {
-		err := os.MkdirAll(outputDir, 0755)
-		if err != nil {
-			return fmt.Errorf("error creating output directory: %w", err)
-		}
-	}
+func ProcessInput(inputFile, outputFilePrefix string) error {
+	outputDir := filepath.Dir(outputFilePrefix)
 	s := &schema.Service{}
 	input, err := ReadFile(inputFile)
 	fmt.Printf("input: %s\n", string(input))
@@ -77,12 +70,10 @@ func ProcessInput(inputFile, outputDir string) error {
 		return fmt.Errorf("error validating service: %v", errors)
 	}
 	ps, err := parser.NewParsedService(s)
-	fileNamePrefix := strings.ToLower(ps.GetShortName())
-	outputFilePrefix := path.Join(outputDir, fileNamePrefix)
 	if err != nil {
 		return fmt.Errorf("error parsing service: %w", err)
 	}
-	proto, _ := proto.WriteServiceToProto(ps)
+	proto, _ := proto.WriteServiceToProto(ps, outputDir)
 	protoFile := fmt.Sprintf("%s.proto", outputFilePrefix)
 	err = WriteFile(protoFile, proto)
 	if err != nil {

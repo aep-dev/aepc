@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: example/bookstore/bookstore.yaml.output.proto
+// source: example/bookstore/v1/bookstore.proto
 
 package bookstore
 
@@ -20,12 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Bookstore_CreateBook_FullMethodName = "/Bookstore/CreateBook"
-	Bookstore_GetBook_FullMethodName    = "/Bookstore/GetBook"
-	Bookstore_UpdateBook_FullMethodName = "/Bookstore/UpdateBook"
-	Bookstore_DeleteBook_FullMethodName = "/Bookstore/DeleteBook"
-	Bookstore_ListBook_FullMethodName   = "/Bookstore/ListBook"
-	Bookstore_ApplyBook_FullMethodName  = "/Bookstore/ApplyBook"
+	Bookstore_CreateBook_FullMethodName = "/example.bookstore.v1.Bookstore/CreateBook"
+	Bookstore_GetBook_FullMethodName    = "/example.bookstore.v1.Bookstore/GetBook"
+	Bookstore_UpdateBook_FullMethodName = "/example.bookstore.v1.Bookstore/UpdateBook"
+	Bookstore_DeleteBook_FullMethodName = "/example.bookstore.v1.Bookstore/DeleteBook"
+	Bookstore_ListBook_FullMethodName   = "/example.bookstore.v1.Bookstore/ListBook"
+	Bookstore_ApplyBook_FullMethodName  = "/example.bookstore.v1.Bookstore/ApplyBook"
 )
 
 // BookstoreClient is the client API for Bookstore service.
@@ -274,7 +274,7 @@ func _Bookstore_ApplyBook_Handler(srv interface{}, ctx context.Context, dec func
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Bookstore_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Bookstore",
+	ServiceName: "example.bookstore.v1.Bookstore",
 	HandlerType: (*BookstoreServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -303,5 +303,5 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "example/bookstore/bookstore.yaml.output.proto",
+	Metadata: "example/bookstore/v1/bookstore.proto",
 }

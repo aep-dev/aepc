@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package bookstore;
+package example.bookstore.v1;
 
 import "google/api/annotations.proto";
 

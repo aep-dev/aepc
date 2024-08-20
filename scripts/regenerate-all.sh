@@ -11,7 +11,7 @@ buf generate --path ./schema/
 # protoc ./schema/resourcedefinition.proto --go_opt paths=source_relative --go_out=.
 # generate service proto from resource proto
 # proto package names have to match a-z0-9_
-go run main.go -i ./example/bookstore/bookstore.yaml -o example/bookstore/
+go run main.go -i ./example/bookstore/v1/bookstore.yaml -o ./example/bookstore/v1/bookstore
 # bookstore.pb.go
 # bookstore.yaml
 # bookstore.proto

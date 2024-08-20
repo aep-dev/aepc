@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	bpb "github.com/aep-dev/aepc/example/bookstore"
+	bpb "github.com/aep-dev/aepc/example/bookstore/v1/bookstore"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 )

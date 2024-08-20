@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "example/bookstore/bookstore.proto",
+    "title": "example/bookstore/v1/bookstore.proto",
     "version": "version not set"
   },
   "tags": [
@@ -24,7 +24,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/bookstoreBook"
+              "$ref": "#/definitions/v1Book"
             }
           },
           "default": {
@@ -84,7 +84,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/bookstoreListBookResponse"
+              "$ref": "#/definitions/v1ListBookResponse"
             }
           },
           "default": {
@@ -130,7 +130,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/bookstoreBook"
+              "$ref": "#/definitions/v1Book"
             }
           },
           "default": {
@@ -155,7 +155,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/bookstoreBook",
+              "$ref": "#/definitions/v1Book",
               "required": [
                 "book"
               ]
@@ -182,7 +182,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/bookstoreBook"
+              "$ref": "#/definitions/v1Book"
             }
           },
           "default": {
@@ -245,7 +245,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/bookstoreBook"
+              "$ref": "#/definitions/v1Book"
             }
           },
           "default": {
@@ -270,7 +270,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/bookstoreBook",
+              "$ref": "#/definitions/v1Book",
               "required": [
                 "book"
               ]
@@ -284,42 +284,6 @@
     }
   },
   "definitions": {
-    "bookstoreBook": {
-      "type": "object",
-      "properties": {
-        "isbn": {
-          "type": "string",
-          "description": "Field for isbn."
-        },
-        "path": {
-          "type": "string",
-          "description": "Field for path."
-        },
-        "id": {
-          "type": "string",
-          "description": "Field for id."
-        }
-      },
-      "description": "A Book resource."
-    },
-    "bookstoreListBookResponse": {
-      "type": "object",
-      "properties": {
-        "results": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/bookstoreBook"
-          },
-          "title": "A list of books"
-        },
-        "nextPageToken": {
-          "type": "string",
-          "description": "The page token indicating the ending point of this response."
-        }
-      },
-      "title": "Response message for the ListBook method"
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -347,6 +311,42 @@
           }
         }
       }
+    },
+    "v1Book": {
+      "type": "object",
+      "properties": {
+        "isbn": {
+          "type": "string",
+          "description": "Field for isbn."
+        },
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        },
+        "id": {
+          "type": "string",
+          "description": "Field for id."
+        }
+      },
+      "description": "A Book resource."
+    },
+    "v1ListBookResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Book"
+          },
+          "title": "A list of books"
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token indicating the ending point of this response."
+        }
+      },
+      "title": "Response message for the ListBook method"
     }
   }
 }
