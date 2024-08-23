@@ -19,6 +19,11 @@ type ParsedService struct {
 	ResourceByType map[string]*ParsedResource
 }
 
+func (ps *ParsedService) GetShortName() string {
+	before, _, _ := strings.Cut(ps.Name, ".")
+	return before
+}
+
 type ParsedResource struct {
 	*schema.Resource
 	Type    string

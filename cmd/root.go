@@ -34,25 +34,26 @@ import (
 
 func NewCommand() *cobra.Command {
 	var inputFile string
-	var outputFile string
+	var outputFilePrefix string
 
 	c := &cobra.Command{
 		Use:   "aepc",
 		Short: "aepc compiles resource representations to full proto rpcs",
 		Long:  "aepc compiles resource representations to full proto rpcs",
 		Run: func(cmd *cobra.Command, args []string) {
-			err := ProcessInput(inputFile, outputFile)
+			err := ProcessInput(inputFile, outputFilePrefix)
 			if err != nil {
 				log.Fatal(err)
 			}
 		},
 	}
 	c.Flags().StringVarP(&inputFile, "input", "i", "", "input files with resource")
-	c.Flags().StringVarP(&outputFile, "output", "o", "", "output file to use")
+	c.Flags().StringVarP(&outputFilePrefix, "output", "o", "", "output file to write to. File types will be appended to this prefix)")
 	return c
 }
 
-func ProcessInput(inputFile, outputFile string) error {
+func ProcessInput(inputFile, outputFilePrefix string) error {
+	outputDir := filepath.Dir(outputFilePrefix)
 	s := &schema.Service{}
 	input, err := ReadFile(inputFile)
 	fmt.Printf("input: %s\n", string(input))
@@ -72,15 +73,15 @@ func ProcessInput(inputFile, outputFile string) error {
 	if err != nil {
 		return fmt.Errorf("error parsing service: %w", err)
 	}
-	proto, _ := proto.WriteServiceToProto(ps)
-	protoFile := fmt.Sprintf("%s.proto", outputFile)
+	proto, _ := proto.WriteServiceToProto(ps, outputDir)
+	protoFile := fmt.Sprintf("%s.proto", outputFilePrefix)
 	err = WriteFile(protoFile, proto)
 	if err != nil {
 		return fmt.Errorf("error writing file: %w", err)
 	}
 	fmt.Printf("output proto file: %s\n", protoFile)
 	openapi, _ := openapi.WriteServiceToOpenAPI(ps)
-	openapiFile := fmt.Sprintf("%s.openapi.json", outputFile)
+	openapiFile := fmt.Sprintf("%s_openapi.json", outputFilePrefix)
 	err = WriteFile(openapiFile, openapi)
 	if err != nil {
 		return fmt.Errorf("error writing file: %w", err)

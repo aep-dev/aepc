@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "example/bookstore/bookstore.yaml.output.proto",
+    "title": "example/bookstore/v1/bookstore.proto",
     "version": "version not set"
   },
   "tags": [
@@ -16,109 +16,6 @@
     "application/json"
   ],
   "paths": {
-    "/books": {
-      "get": {
-        "summary": "An aep-compliant List method for books.",
-        "operationId": "Bookstore_ListBook",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/ListBookResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "parent",
-            "description": "A field for the parent of Book",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "pageToken",
-            "description": "The page token indicating the starting point of the page",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "maxPageSize",
-            "description": "The maximum number of resources to return in a single page.",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "tags": [
-          "Bookstore"
-        ]
-      },
-      "post": {
-        "summary": "An aep-compliant Create method for Book.",
-        "operationId": "Bookstore_CreateBook",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/Book"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "book",
-            "description": "The resource to perform the operation on.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Book",
-              "required": [
-                "book"
-              ]
-            }
-          },
-          {
-            "name": "parent",
-            "description": "A field for the parent of Book",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "description": "An id that uniquely identifies the resource within the collection%!(EXTRA string=Book)",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "path",
-            "description": "The globally unique identifier for the resource",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Bookstore"
-        ]
-      }
-    },
     "/{book.path}": {
       "patch": {
         "summary": "An aep-compliant Update method for Book.",
@@ -127,7 +24,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/definitions/v1Book"
             }
           },
           "default": {
@@ -179,6 +76,104 @@
         ]
       }
     },
+    "/{parent}": {
+      "get": {
+        "summary": "An aep-compliant List method for books.",
+        "operationId": "Bookstore_ListBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "A field for the parent of Book",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "books"
+          },
+          {
+            "name": "pageToken",
+            "description": "The page token indicating the starting point of the page",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "description": "The maximum number of resources to return in a single page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "post": {
+        "summary": "An aep-compliant Create method for Book.",
+        "operationId": "Bookstore_CreateBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Book"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "A field for the parent of Book",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "books"
+          },
+          {
+            "name": "book",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Book",
+              "required": [
+                "book"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "description": "An id that uniquely identifies the resource within the collection%!(EXTRA string=Book)",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
     "/{path}": {
       "get": {
         "summary": "An aep-compliant Get method for Book.",
@@ -187,7 +182,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/definitions/v1Book"
             }
           },
           "default": {
@@ -250,7 +245,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/definitions/v1Book"
             }
           },
           "default": {
@@ -275,7 +270,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Book",
+              "$ref": "#/definitions/v1Book",
               "required": [
                 "book"
               ]
@@ -289,38 +284,6 @@
     }
   },
   "definitions": {
-    "Book": {
-      "type": "object",
-      "properties": {
-        "isbn": {
-          "type": "string",
-          "description": "Field for isbn."
-        },
-        "path": {
-          "type": "string",
-          "description": "Field for path."
-        },
-        "id": {
-          "type": "string",
-          "description": "Field for id."
-        }
-      },
-      "description": "A Book resource."
-    },
-    "ListBookResponse": {
-      "type": "object",
-      "properties": {
-        "books": {
-          "$ref": "#/definitions/Book",
-          "title": "A list of books"
-        },
-        "nextPageToken": {
-          "type": "string",
-          "description": "The page token indicating the ending point of this response."
-        }
-      },
-      "title": "Response message for the DeleteBook method"
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -348,6 +311,42 @@
           }
         }
       }
+    },
+    "v1Book": {
+      "type": "object",
+      "properties": {
+        "isbn": {
+          "type": "string",
+          "description": "Field for isbn."
+        },
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        },
+        "id": {
+          "type": "string",
+          "description": "Field for id."
+        }
+      },
+      "description": "A Book resource."
+    },
+    "v1ListBookResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Book"
+          },
+          "title": "A list of books"
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token indicating the ending point of this response."
+        }
+      },
+      "title": "Response message for the ListBook method"
     }
   }
 }

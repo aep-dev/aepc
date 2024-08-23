@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	bpb "github.com/aep-dev/aepc/example/bookstore"
+	bpb "github.com/aep-dev/aepc/example/bookstore/v1/bookstore"
 )
 
 // gRPC server endpoint
