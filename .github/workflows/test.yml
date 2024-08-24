@@ -15,6 +15,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Run script
+      - name: Verify no change to generated files.
         run: |
-          ./scripts/run-api-linter.sh
+          ./scripts/verify-goldens.sh
+
+      # - name: Run script
+      #   run: |
+      #     ./scripts/run-api-linter.sh

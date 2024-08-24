@@ -51,13 +51,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "isbn": {
-                  "type": "string",
-                  "description": "Field for isbn."
-                },
                 "id": {
                   "type": "string",
                   "description": "Field for id."
+                },
+                "isbn": {
+                  "type": "string",
+                  "description": "Field for isbn."
                 }
               },
               "title": "The resource to perform the operation on."
@@ -315,6 +315,10 @@
     "v1Book": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Field for id."
+        },
         "isbn": {
           "type": "string",
           "description": "Field for isbn."
@@ -322,10 +326,6 @@
         "path": {
           "type": "string",
           "description": "Field for path."
-        },
-        "id": {
-          "type": "string",
-          "description": "Field for id."
         }
       },
       "description": "A Book resource."
