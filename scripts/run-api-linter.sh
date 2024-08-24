@@ -11,4 +11,5 @@ fi
 
 api-linter \
     ./example/bookstore/v1/bookstore.proto \
-    -I /tmp/googleapis
+    -I /tmp/googleapis \
+    --set-exit-status
