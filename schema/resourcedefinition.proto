@@ -51,7 +51,7 @@ enum Type {
 
 message Property {
   Type type = 1;
- // field number used for protobuf or other systems where fields must
+  // field number used for protobuf or other systems where fields must
   // be explicitly enumerated.
   int32 number = 2;
   bool readOnly = 3;
