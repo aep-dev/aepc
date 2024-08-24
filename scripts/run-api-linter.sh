@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 if ! which api-linter ; then
     go install github.com/aep-dev/api-linter/cmd/api-linter@latest
