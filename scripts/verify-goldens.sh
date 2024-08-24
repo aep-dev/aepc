@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 ./scripts/regenerate-all.sh
-if git diff --quiet --exit-code; then
+if git diff --exit-code; then
     echo "No differences found."
 else
     echo "Differences found.";
