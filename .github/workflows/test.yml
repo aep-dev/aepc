@@ -1,0 +1,25 @@
+name: Tests
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.22.3
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Verify no change to generated files.
+        run: |
+          go install github.com/bufbuild/buf/cmd/buf@v1.38.0
+          ./scripts/verify-goldens.sh
+
+      # - name: Run script
+      #   run: |
+      #     ./scripts/run-api-linter.sh

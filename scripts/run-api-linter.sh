@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 if ! which api-linter ; then
     go install github.com/aep-dev/api-linter/cmd/api-linter@latest
@@ -10,4 +11,5 @@ fi
 
 api-linter \
     ./example/bookstore/v1/bookstore.proto \
-    -I /tmp/googleapis
+    -I /tmp/googleapis \
+    --set-exit-status

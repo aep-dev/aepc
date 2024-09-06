@@ -91,15 +91,15 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 // GenerateResourceMesssage adds the resource message.
 func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
-	for n, p := range r.Properties {
+	for _, p := range r.GetFieldsSortedByNumber() {
 		typ := builder.FieldTypeBool()
 		switch p.Type {
 		case schema.Type_STRING:
 			typ = builder.FieldTypeString()
 		}
-		mb.AddField(builder.NewField(n, typ).SetNumber(p.Number).SetComments(
+		mb.AddField(builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
 			builder.Comments{
-				LeadingComment: fmt.Sprintf("Field for %v.", n),
+				LeadingComment: fmt.Sprintf("Field for %v.", p.Name),
 			},
 		))
 	}

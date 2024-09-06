@@ -30,6 +30,11 @@ type ParsedResource struct {
 	Parents []*ParsedResource
 }
 
+type ParsedProperty struct {
+	*schema.Property
+	Name string
+}
+
 func NewParsedService(s *schema.Service) (*ParsedService, error) {
 	resourceByType, err := loadResourceByType(s)
 	if err != nil {
@@ -78,6 +83,17 @@ func addGetToResource(pr *ParsedResource) {
 	if pr.Methods.Read == nil {
 		pr.Methods.Read = &schema.Methods_ReadMethod{}
 	}
+}
+
+func (r *ParsedResource) GetFieldsSortedByNumber() []*ParsedProperty {
+	fields := []*ParsedProperty{}
+	for name, p := range r.Properties {
+		fields = append(fields, &ParsedProperty{
+			Property: p,
+			Name:     name,
+		})
+	}
+	return fields
 }
 
 // add an id field to the resource.
