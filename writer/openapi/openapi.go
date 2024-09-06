@@ -18,7 +18,11 @@ func init() {
 }
 
 func WriteServiceToOpenAPI(ps *parser.ParsedService) ([]byte, error) {
-	openAPI := convertToOpenAPI(ps)
+	openAPI, err := convertToOpenAPI(ps)
+	if(err != nil) {
+		return nil, err
+	}
+
 	jsonData, err := json.MarshalIndent(openAPI, "", "  ")
 	if err != nil {
 		return nil, err
@@ -26,11 +30,15 @@ func WriteServiceToOpenAPI(ps *parser.ParsedService) ([]byte, error) {
 	return jsonData, nil
 }
 
-func convertToOpenAPI(service *parser.ParsedService) *OpenAPI {
+func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 	paths := Paths{}
 	definitions := Definitions{}
 	for _, r := range service.ResourceByType {
-		definitions[r.Kind] = resourceToSchema(r)
+		d, err := resourceToSchema(r)
+		if(err != nil) {
+			return nil, err
+		}
+		definitions[r.Kind] = d;
 		schemaRef := fmt.Sprintf("#/definitions/%v", r.Kind)
 		if r.Methods.List != nil {
 			log.Printf("resource plural: %s", r.Plural)
@@ -152,15 +160,18 @@ func convertToOpenAPI(service *parser.ParsedService) *OpenAPI {
 		Paths:       paths,
 		Definitions: definitions,
 	}
-	return openAPI
+	return openAPI, nil
 }
 
-func resourceToSchema(r *parser.ParsedResource) Schema {
+func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 	properties := Properties{}
 	required := []string{}
 	for name, p := range r.Properties {
 		// TODO(YFT): add more handling of types here
-		t := openAPIType(p)
+		t, err := openAPIType(p)
+		if(err != nil ) {
+			return Schema{}, err
+		}
 		properties[name] = Schema{
 			Type:         t.openapi_type,
 			Format:       t.openapi_format,
@@ -175,7 +186,7 @@ func resourceToSchema(r *parser.ParsedResource) Schema {
 		Type:       "object",
 		Properties: &properties,
 		Required:   required,
-	}
+	}, nil
 }
 
 func addMethodToPath(paths Paths, path, method string, methodInfo MethodInfo) {
