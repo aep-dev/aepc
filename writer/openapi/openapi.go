@@ -160,9 +160,10 @@ func resourceToSchema(r *parser.ParsedResource) Schema {
 	required := []string{}
 	for name, p := range r.Properties {
 		// TODO(YFT): add more handling of types here
-		t := "string"
+		t := openAPIType(p)
 		properties[name] = Schema{
-			Type:         t,
+			Type:         t.openapi_type,
+			Format:       t.openapi_format,
 			XTerraformID: name == constants.FIELD_ID_NAME,
 			ReadOnly:     p.ReadOnly,
 		}
@@ -229,6 +230,7 @@ type ParameterInfo struct {
 type Schema struct {
 	Ref          string      `json:"$ref,omitempty"`
 	Type         string      `json:"type,omitempty"`
+	Format       string      `json:"format,omitempty"`
 	Required     []string    `json:"required,omitempty"`
 	ReadOnly     bool        `json:"readOnly,omitempty"`
 	Items        *Schema     `json:"items,omitempty"`
