@@ -170,7 +170,7 @@ func local_request_Bookstore_GetBook_0(ctx context.Context, marshaler runtime.Ma
 }
 
 var (
-	filter_Bookstore_UpdateBook_0 = &utilities.DoubleArray{Encoding: map[string]int{"book": 0, "path": 1}, Base: []int{1, 4, 5, 2, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 4, 2, 2, 3}}
+	filter_Bookstore_UpdateBook_0 = &utilities.DoubleArray{Encoding: map[string]int{"book": 0, "path": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
 )
 
 func request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -199,14 +199,14 @@ func request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime.Marsh
 		_   = err
 	)
 
-	val, ok = pathParams["book.path"]
+	val, ok = pathParams["path"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book.path")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "path")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "book.path", val)
+	protoReq.Path, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book.path", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -247,14 +247,14 @@ func local_request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime
 		_   = err
 	)
 
-	val, ok = pathParams["book.path"]
+	val, ok = pathParams["path"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book.path")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "path")
 	}
 
-	err = runtime.PopulateFieldFromPath(&protoReq, "book.path", val)
+	protoReq.Path, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book.path", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -523,7 +523,7 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{book.path=books/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{path=books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -706,7 +706,7 @@ func RegisterBookstoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{book.path=books/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{path=books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -796,7 +796,7 @@ var (
 
 	pattern_Bookstore_GetBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"books", "path"}, ""))
 
-	pattern_Bookstore_UpdateBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"books", "book.path"}, ""))
+	pattern_Bookstore_UpdateBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"books", "path"}, ""))
 
 	pattern_Bookstore_DeleteBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"books", "path"}, ""))
 

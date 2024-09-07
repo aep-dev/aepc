@@ -11,24 +11,6 @@ To start the service, running the following from the root directory:
 go run example/main.go
 ```
 
-## Architecture
-
-```mermaid
-graph TD
-    resource("resource definitions in bookstore.yaml")
-    serviceProto("fully defined service in bookstore.yaml.output.proto")
-    gService("gRPC service")
-    httpService("HTTP -> gRPC gateway")
-    OpenAPI("OpenAPI Definition")
-    client("Client")
-    resource -- aepc --> serviceProto
-    resource -- aepc --> OpenAPI
-    serviceProto -- protoc --> gService
-    serviceProto -- protoc --> httpService
-    OpenAPI -- terraform-provider-openapi --> terraform provider
-    OpenAPI -- openapi-generator et al --> clients
-```
-
 ## Terraform Provider
 
 This example provides an example of generating a terraform provider using
@@ -67,3 +49,7 @@ $ terraform apply -auto-approve
 $ terraform apply -auto-approve
 # - observe the resource has been deleted.
 ```
+
+### API Example
+
+See [test_http_api.sh](./scripts/test_http_api.sh).
