@@ -110,14 +110,12 @@
     "Book": {
       "type": "object",
       "required": [
-        "isbn",
-        "price",
-        "published"
+        "details",
+        "isbn"
       ],
       "properties": {
-        "edition": {
-          "type": "integer",
-          "format": "int32"
+        "details": {
+          "type": "string"
         },
         "id": {
           "type": "string",
@@ -130,13 +128,6 @@
         "path": {
           "type": "string",
           "readOnly": true
-        },
-        "price": {
-          "type": "number",
-          "format": "float"
-        },
-        "published": {
-          "type": "boolean"
         }
       }
     }

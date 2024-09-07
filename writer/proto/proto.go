@@ -65,9 +65,15 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 		LeadingComment: "A service.",
 	})
 	for _, r := range getSortedResources(ps.ResourceByType) {
-		err := AddResource(r, fb, sb)
+		err := AddResource(r, ps, fb, sb)
 		if err != nil {
 			return []byte{}, fmt.Errorf("adding resource %v failed: %w", r.Kind, err)
+		}
+	}
+	for _, r := range getSortedResources(ps.ObjectByType) {
+		err := AddResource(r, ps, fb, sb)
+		if err != nil {
+			return []byte{}, fmt.Errorf("adding object %v failed: %w", r.Kind, err)
 		}
 	}
 	fb.AddService(sb)

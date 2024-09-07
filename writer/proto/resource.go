@@ -30,8 +30,8 @@ import (
 )
 
 // AddResource adds a resource's protos and RPCs to a file and service.
-func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	resourceMb, err := GeneratedResourceMessage(r)
+func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	resourceMb, err := GeneratedResourceMessage(r, ps)
 	if err != nil {
 		return fmt.Errorf("unable to generate resource %v: %w", r.Kind, err)
 	}
@@ -89,7 +89,7 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 }
 
 // GenerateResourceMesssage adds the resource message.
-func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder, error) {
+func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
 	for _, p := range r.GetPropertiesSortedByNumber() {
 		typ := builder.FieldTypeBool()
@@ -106,6 +106,12 @@ func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder
 			typ = builder.FieldTypeDouble()
 		case schema.Type_FLOAT:
 			typ = builder.FieldTypeFloat()
+		case schema.Type_OBJECT:
+			obj, err := s.FetchObject(p.ObjectType)
+			if(err != nil) {
+				return nil, err
+			}
+			typ = builder.FieldTypeMessage(builder.NewMessage(obj.Kind))
 		default:
 			return nil, fmt.Errorf("proto mapping for type %s not found", p.Type)
 		}
