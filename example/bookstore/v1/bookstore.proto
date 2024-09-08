@@ -61,12 +61,6 @@ service Bookstore {
 
 // A Book resource.
 message Book {
-  // Field for published.
-  bool published = 3;
-
-  // Field for path.
-  string path = 10000;
-
   // Field for id.
   string id = 10001;
 
@@ -78,6 +72,12 @@ message Book {
 
   // Field for price.
   float price = 2;
+
+  // Field for published.
+  bool published = 3;
+
+  // Field for path.
+  string path = 10000;
 }
 
 // A Create request for a  Book resource.

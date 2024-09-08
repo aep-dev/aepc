@@ -51,10 +51,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "published": {
-                  "type": "boolean",
-                  "description": "Field for published."
-                },
                 "id": {
                   "type": "string",
                   "description": "Field for id."
@@ -72,6 +68,10 @@
                   "type": "number",
                   "format": "float",
                   "description": "Field for price."
+                },
+                "published": {
+                  "type": "boolean",
+                  "description": "Field for published."
                 }
               },
               "title": "The resource to perform the operation on."
@@ -329,14 +329,6 @@
     "v1Book": {
       "type": "object",
       "properties": {
-        "published": {
-          "type": "boolean",
-          "description": "Field for published."
-        },
-        "path": {
-          "type": "string",
-          "description": "Field for path."
-        },
         "id": {
           "type": "string",
           "description": "Field for id."
@@ -354,6 +346,14 @@
           "type": "number",
           "format": "float",
           "description": "Field for price."
+        },
+        "published": {
+          "type": "boolean",
+          "description": "Field for published."
+        },
+        "path": {
+          "type": "string",
+          "description": "Field for path."
         }
       },
       "description": "A Book resource."
