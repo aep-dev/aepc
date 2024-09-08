@@ -33,6 +33,14 @@ func WriteServiceToOpenAPI(ps *parser.ParsedService) ([]byte, error) {
 func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 	paths := Paths{}
 	definitions := Definitions{}
+	for _, r := range service.ObjectByType {
+		d, err := resourceToSchema(r)
+		if (err != nil) {
+			return nil, err
+		}
+		definitions[r.Kind] = d
+	}
+
 	for _, r := range service.ResourceByType {
 		d, err := resourceToSchema(r)
 		if err != nil {
@@ -174,6 +182,7 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 		properties[f.Name] = Schema{
 			Type:         t.openapi_type,
 			Format:       t.openapi_format,
+			Ref:          t.openapi_ref,
 			XTerraformID: f.Name == constants.FIELD_ID_NAME,
 			ReadOnly:     f.ReadOnly,
 		}
