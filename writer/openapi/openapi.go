@@ -167,7 +167,6 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 	properties := Properties{}
 	required := []string{}
 	for name, p := range r.Properties {
-		// TODO(YFT): add more handling of types here
 		t, err := openAPIType(p)
 		if(err != nil ) {
 			return Schema{}, err

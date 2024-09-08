@@ -107,7 +107,7 @@ func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder
 		case schema.Type_FLOAT:
 			typ = builder.FieldTypeFloat()
 		default:
-			return nil, fmt.Errorf("%s does not have type support in protobuf", p.Type)
+			return nil, fmt.Errorf("proto mapping for type %s not found", p.Type)
 		}
 		mb.AddField(builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
 			builder.Comments{
