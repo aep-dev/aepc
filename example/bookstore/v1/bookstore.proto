@@ -14,8 +14,6 @@ import "google/protobuf/empty.proto";
 
 import "google/protobuf/field_mask.proto";
 
-import "{generated-file-0001}.proto";
-
 option go_package = "/bookstore";
 
 // A service.
@@ -63,17 +61,17 @@ service Bookstore {
 
 // A Book resource.
 message Book {
-  // Field for details.
-  Details details = 2;
-
-  // Field for isbn.
-  string isbn = 1;
-
   // Field for path.
   string path = 10000;
 
   // Field for id.
   string id = 10001;
+
+  // Field for details.
+  Details details = 2;
+
+  // Field for isbn.
+  string isbn = 1;
 }
 
 // A Create request for a  Book resource.

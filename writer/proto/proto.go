@@ -94,6 +94,16 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 	if err != nil {
 		return []byte{}, fmt.Errorf("unable to build service file %v: %w", fb.GetName(), err)
 	}
+
+	// protoreflect sometimes adds "import {generated-file-0001}.proto" unnecessarily.
+	d := []string{}
+	for _, v := range fd.AsFileDescriptorProto().Dependency {
+		if !strings.Contains(v, "generated-file") {
+			d = append(d, v)
+		}
+	}
+	fd.AsFileDescriptorProto().Dependency = d
+
 	printer := protoprint.Printer{
 		CustomSortFunction: compareProtoElements,
 	}

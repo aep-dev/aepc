@@ -2,12 +2,11 @@ module github.com/aep-dev/aepc
 
 go 1.21
 
-toolchain go1.22.3
+toolchain go1.22.1
 
 require (
-	github.com/dikhan/terraform-provider-openapi/v3 v3.0.0
+	github.com/golang/glog v1.1.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1
 	github.com/jhump/protoreflect v1.17.0
 	github.com/spf13/cobra v1.7.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17
@@ -26,6 +25,7 @@ require (
 	github.com/bufbuild/protocompile v0.14.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dikhan/http_goclient v0.0.0-20181010015730-b9de9b5ee7b6 // indirect
+	github.com/dikhan/terraform-provider-openapi/v3 v3.0.0 // indirect
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/go-openapi/analysis v0.0.0-20171215055114-2bbaa248df98 // indirect
 	github.com/go-openapi/errors v0.0.0-20170426151106-03cfca65330d // indirect
@@ -52,11 +52,13 @@ require (
 	github.com/hashicorp/terraform-json v0.13.0 // indirect
 	github.com/hashicorp/terraform-plugin-go v0.5.0 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.2.0 // indirect
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1 // indirect
 	github.com/hashicorp/terraform-registry-address v0.0.0-20210412075316-9b2996cce896 // indirect
 	github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734 // indirect
 	github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d // indirect
 	github.com/iancoleman/strcase v0.0.0-20180726023541-3605ed457bf7 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect

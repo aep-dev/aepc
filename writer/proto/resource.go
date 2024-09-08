@@ -137,12 +137,12 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService,
 			},
 		))
 	}
-	mb.SetOptions(
-		&descriptorpb.MessageOptions{},
+	//mb.SetOptions(
+		// &descriptorpb.MessageOptions{},
 		// annotations.ResourceDescriptor{
 		//	"type": sb.GetName() + "/" + r.Kind,
 		//},
-	)
+	//)
 	// md.GetMessageOptions().ProtoReflect().Set(protoreflect.FieldDescriptor, protoreflect.Value)
 	// mb.AddNestedExtension(
 	// 	builder.NewExtension("google.api.http", tag int32, typ *builder.FieldType, extendee *builder.MessageBuilder)
