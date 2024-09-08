@@ -298,11 +298,6 @@
     "v1Book": {
       "type": "object",
       "properties": {
-        "edition": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Field for edition."
-        },
         "isbn": {
           "type": "string",
           "description": "Field for isbn."
@@ -315,6 +310,11 @@
         "published": {
           "type": "boolean",
           "description": "Field for published."
+        },
+        "edition": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Field for edition."
         },
         "path": {
           "type": "string",

@@ -1,15 +1,18 @@
 module github.com/aep-dev/aepc
 
-go 1.20
+go 1.21
+
+toolchain go1.22.3
 
 require (
-	github.com/golang/glog v1.1.2
+	github.com/dikhan/terraform-provider-openapi/v3 v3.0.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0
-	github.com/jhump/protoreflect v1.15.2
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1
+	github.com/jhump/protoreflect v1.17.0
 	github.com/spf13/cobra v1.7.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20230822172742-b8732ec3820d
-	google.golang.org/grpc v1.59.0
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17
+	google.golang.org/grpc v1.61.0
+	google.golang.org/protobuf v1.34.2
 )
 
 require (
@@ -20,10 +23,9 @@ require (
 	github.com/apparentlymart/go-textseg v1.0.0 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a // indirect
-	github.com/bufbuild/protocompile v0.6.0 // indirect
+	github.com/bufbuild/protocompile v0.14.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dikhan/http_goclient v0.0.0-20181010015730-b9de9b5ee7b6 // indirect
-	github.com/dikhan/terraform-provider-openapi/v3 v3.0.0 // indirect
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/go-openapi/analysis v0.0.0-20171215055114-2bbaa248df98 // indirect
 	github.com/go-openapi/errors v0.0.0-20170426151106-03cfca65330d // indirect
@@ -33,7 +35,7 @@ require (
 	github.com/go-openapi/spec v0.19.0 // indirect
 	github.com/go-openapi/strfmt v0.0.0-20171222154016-4dd3d302e100 // indirect
 	github.com/go-openapi/swag v0.17.0 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-checkpoint v0.5.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
@@ -50,13 +52,11 @@ require (
 	github.com/hashicorp/terraform-json v0.13.0 // indirect
 	github.com/hashicorp/terraform-plugin-go v0.5.0 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.2.0 // indirect
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.10.1 // indirect
 	github.com/hashicorp/terraform-registry-address v0.0.0-20210412075316-9b2996cce896 // indirect
 	github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734 // indirect
 	github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d // indirect
 	github.com/iancoleman/strcase v0.0.0-20180726023541-3605ed457bf7 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
@@ -72,19 +72,19 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.9.1 // indirect
-	golang.org/x/crypto v0.13.0 // indirect
-	golang.org/x/net v0.15.0 // indirect
-	golang.org/x/sync v0.3.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20230822172742-b8732ec3820d // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
+	golang.org/x/crypto v0.23.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/sync v0.8.0 // indirect
+	google.golang.org/appengine v1.6.8 // indirect
+	google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	gopkg.in/mgo.v2 v2.0.0-20160818020120-3f83fa500528 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 require (
 	github.com/ghodss/yaml v1.0.0
-	github.com/google/go-cmp v0.5.9
-	golang.org/x/sys v0.12.0 // indirect
-	golang.org/x/text v0.13.0
+	github.com/google/go-cmp v0.6.0
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/text v0.15.0
 )

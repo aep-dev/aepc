@@ -91,7 +91,7 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 // GenerateResourceMesssage adds the resource message.
 func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
-	for _, p := range r.GetFieldsSortedByNumber() {
+	for _, p := range r.GetPropertiesSortedByNumber() {
 		typ := builder.FieldTypeBool()
 		switch p.Type {
 		case schema.Type_STRING:

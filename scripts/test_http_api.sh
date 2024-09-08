@@ -8,6 +8,7 @@ BOOK_ID="tomorrow-and-tomorrow-and-tomorrow"
 ISBN="978-1476788036"
 
 # start a process and get it's PID
+go build example/main.go
 go run example/main.go &
 PID=$!
 echo "started server with PID: ${PID}"

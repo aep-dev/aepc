@@ -61,9 +61,6 @@ service Bookstore {
 
 // A Book resource.
 message Book {
-  // Field for edition.
-  int32 edition = 4;
-
   // Field for isbn.
   string isbn = 1;
 
@@ -72,6 +69,9 @@ message Book {
 
   // Field for published.
   bool published = 3;
+
+  // Field for edition.
+  int32 edition = 4;
 
   // Field for path.
   string path = 10000;
