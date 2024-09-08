@@ -184,6 +184,13 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 		if f.Required {
 			required = append(required, f.Name)
 		}
+		if p.Repeated {
+			s.Items = &Schema{
+				Type: t.array_type.openapi_type,
+				Format: t.array_type.openapi_format,
+			}
+		}
+		properties[name] = s
 	}
 	return Schema{
 		Type:       "object",

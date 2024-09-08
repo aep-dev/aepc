@@ -135,11 +135,20 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService,
 		default:
 			return nil, fmt.Errorf("proto mapping for type %s not found", p.Type)
 		}
-		mb.AddField(builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
+		f := builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
 			builder.Comments{
 				LeadingComment: fmt.Sprintf("Field for %v.", p.Name),
 			},
-		))
+		)
+		if(p.Repeated) {
+			f.SetRepeated()
+		}
+		o := &descriptorpb.FieldOptions{}
+		if(p.Required) {
+			proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
+		}
+		f.SetOptions(o)
+		mb.AddField(f)
 	}
 	m.Messages[fmt.Sprintf("%s/%s", s.Name, r.Kind)] = mb
 	return mb, nil

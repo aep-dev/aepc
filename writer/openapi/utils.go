@@ -10,14 +10,30 @@ type TypeInfo struct {
 	 openapi_type string
 	 openapi_format string
 	 openapi_ref string
+
+	 array_type *TypeInfo
 }
 
 func openAPIType(p *schema.Property) (TypeInfo, error) {
+	if(p.Repeated) {
+		at, err := openAPIType_helper(p.Type)
+		if(err != nil) {
+			return TypeInfo{}, nil
+		}
+		return TypeInfo{
+			openapi_type: "array",
+			array_type: &at,
+		}, nil
+	}
+	return openAPIType_helper(p.Type)
+}
+
+func openAPIType_helper(p schema.Type) (TypeInfo, error) {
 	t := "";
 	f := "";
 	r := "";
 
-	switch(p.Type) {
+	switch(p) {
 		case schema.Type_STRING:
 			t = "string"
 		case schema.Type_DOUBLE:

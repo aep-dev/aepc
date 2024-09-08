@@ -8,11 +8,19 @@ resources:
         type: STRING
         number: 1
         required: true
-      details:
-        type: OBJECT
+        repeated: true
+      price:
+        type: FLOAT
         number: 2
         required: true
-        object_type: Details
+      published:
+        type: BOOLEAN
+        number: 3
+        required: true
+      edition:
+        type: INT32
+        number: 4
+        required: false
     # parents:
     #   - "bookstore.example.com/Publisher"
     methods:
@@ -37,12 +45,3 @@ resources:
 #       - "Publisher"
 #     methods:
 #       read: {}
-objects:
-  - kind: "Details"
-    properties:
-      edition:
-        type: STRING
-        number: 1
-      supported_ereaders:
-        type: STRING
-        number: 2
