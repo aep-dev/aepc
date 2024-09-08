@@ -107,11 +107,7 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService)
 		case schema.Type_FLOAT:
 			typ = builder.FieldTypeFloat()
 		case schema.Type_OBJECT:
-			obj, err := s.FetchObject(p.ObjectType)
-			if(err != nil) {
-				return nil, err
-			}
-			typ = builder.FieldTypeMessage(builder.NewMessage(obj.Kind))
+			typ = builder.FieldTypeMessage(builder.NewMessage(p.ObjectType))
 		default:
 			return nil, fmt.Errorf("proto mapping for type %s not found", p.Type)
 		}
