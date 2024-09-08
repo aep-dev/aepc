@@ -16,6 +16,7 @@ package proto
 import (
 	"bytes"
 	"fmt"
+	"maps"
 	"path/filepath"
 	"slices"
 	"sort"
@@ -35,7 +36,12 @@ func init() {
 	capitalizer = cases.Title(language.AmericanEnglish)
 }
 
+type MessageStorage struct {
+	Messages map[string]*builder.MessageBuilder
+}
+
 func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, error) {
+	m := &MessageStorage{Messages: map[string]*builder.MessageBuilder{}}
 	dir, file := filepath.Split(outputDir)
 	packageParts := []string{file}
 	for dir != "." {
@@ -64,14 +70,21 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 	sb.SetComments(builder.Comments{
 		LeadingComment: "A service.",
 	})
+
+	// Add resources to MessageStorage.
+	err := GenerateResourceMessages(ps.ResourceByType, ps.ObjectByType, ps, m)
+	if(err != nil) {
+		return nil, err
+	}
+
 	for _, r := range getSortedResources(ps.ResourceByType) {
-		err := AddResource(r, ps, fb, sb)
+		err := AddResource(r, ps, fb, sb, m)
 		if err != nil {
 			return []byte{}, fmt.Errorf("adding resource %v failed: %w", r.Kind, err)
 		}
 	}
 	for _, r := range getSortedResources(ps.ObjectByType) {
-		err := AddResource(r, ps, fb, sb)
+		err := AddResource(r, ps, fb, sb, m)
 		if err != nil {
 			return []byte{}, fmt.Errorf("adding object %v failed: %w", r.Kind, err)
 		}
@@ -90,6 +103,27 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 		return []byte{}, err
 	}
 	return output.Bytes(), nil
+}
+
+func GenerateResourceMessages(r map[string]*parser.ParsedResource, o map[string]*parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (error) {
+	// Combine maps
+	c := CombineResourceMaps(r, o)
+
+	// Generate Resource messages on combined map
+	for _, r := range getSortedResources(c) {
+		_, err := GeneratedResourceMessage(r, s, m)
+		if(err != nil) {
+			return err
+		}
+	}
+	return nil
+}
+
+func CombineResourceMaps(r map[string]*parser.ParsedResource, o map[string]*parser.ParsedResource) map[string]*parser.ParsedResource {
+	c := map[string]*parser.ParsedResource{}
+	maps.Copy(c, r)
+	maps.Copy(c, o)
+	return c
 }
 
 func toProtoServiceName(serviceName string) string {

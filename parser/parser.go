@@ -39,15 +39,6 @@ type ParsedProperty struct {
 	Name string
 }
 
-func (p *ParsedService) FetchObject(name string) (*ParsedResource, error) {
-	for _, o := range p.Objects {
-		if(o.GetKind() == fmt.Sprintf("%s/%s", p.Name, name)) {
-			return ParsedResourceForObject(o, p.Service), nil
-		}
-	}
-	return nil, fmt.Errorf("no such resource found for %s/%s", p.Name, name)
-}
-
 func NewParsedService(s *schema.Service) (*ParsedService, error) {
 	resourceByType, err := loadResourceByType(s)
 	if err != nil {

@@ -30,11 +30,13 @@ import (
 )
 
 // AddResource adds a resource's protos and RPCs to a file and service.
-func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	resourceMb, err := GeneratedResourceMessage(r, ps)
-	if err != nil {
-		return fmt.Errorf("unable to generate resource %v: %w", r.Kind, err)
+func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder.FileBuilder, sb *builder.ServiceBuilder, m *MessageStorage) error {
+	// Do not recreate resources if they've already been created.
+	resourceMb, ok := m.Messages[fmt.Sprintf("%s/%s", ps.Name, r.Kind)]
+	if !ok {
+		return fmt.Errorf("%s not found in message storage", r.Kind)
 	}
+
 	// set comments for resourceMB
 	resourceMb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("A %v resource.", r.Kind),
@@ -42,44 +44,44 @@ func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder
 	fb.AddMessage(resourceMb)
 	if r.Methods != nil {
 		if r.Methods.Create != nil {
-			err = AddCreate(r, resourceMb, fb, sb)
+			err := AddCreate(r, resourceMb, fb, sb)
 			if err != nil {
 				return err
 			}
 		}
 		if r.Methods.Read != nil {
-			err = AddGet(r, resourceMb, fb, sb)
+			err := AddGet(r, resourceMb, fb, sb)
 			if err != nil {
 				return err
 			}
 		}
 		if r.Methods.Update != nil {
-			err = AddUpdate(r, resourceMb, fb, sb)
+			err := AddUpdate(r, resourceMb, fb, sb)
 			if err != nil {
 				return err
 			}
 		}
 		if r.Methods.Delete != nil {
-			err = AddDelete(r, resourceMb, fb, sb)
+			err := AddDelete(r, resourceMb, fb, sb)
 			if err != nil {
 				return err
 			}
 		}
 		if r.Methods.List != nil {
-			err = AddList(r, resourceMb, fb, sb)
+			err := AddList(r, resourceMb, fb, sb)
 			if err != nil {
 				return err
 			}
 		}
 		if r.Methods.GlobalList != nil {
-			err = AddGlobalList(r, resourceMb, fb, sb)
+			err := AddGlobalList(r, resourceMb, fb, sb)
 			if err != nil {
 				return err
 			}
 		}
 
 		if r.Methods.Apply != nil {
-			err = AddApply(r, resourceMb, fb, sb)
+			err := AddApply(r, resourceMb, fb, sb)
 			if err != nil {
 				return err
 			}
@@ -89,7 +91,7 @@ func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder
 }
 
 // GenerateResourceMesssage adds the resource message.
-func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService) (*builder.MessageBuilder, error) {
+func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
 	for _, p := range r.GetPropertiesSortedByNumber() {
 		typ := builder.FieldTypeBool()
@@ -107,7 +109,25 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService)
 		case schema.Type_FLOAT:
 			typ = builder.FieldTypeFloat()
 		case schema.Type_OBJECT:
-			typ = builder.FieldTypeMessage(builder.NewMessage(p.ObjectType))
+			wantedType := fmt.Sprintf("%s/%s", s.Name, p.ObjectType)
+			_, ok := m.Messages[wantedType]
+			if(!ok) {
+				// Resource has not been generated yet.
+				c := CombineResourceMaps(s.ObjectByType, s.ResourceByType)
+				n, ok := c[wantedType]
+				if(!ok) {
+					return nil, fmt.Errorf("could not find %s in full object list", wantedType)
+				}
+				_, err := GeneratedResourceMessage(n, s, m)
+				if (err != nil) {
+					return nil, err;
+				}
+			}
+			resourceMb, ok := m.Messages[wantedType]
+			if(!ok) {
+				return nil, fmt.Errorf("could not find message %s after recursive create", wantedType)
+			}
+			typ = builder.FieldTypeMessage(resourceMb);
 		default:
 			return nil, fmt.Errorf("proto mapping for type %s not found", p.Type)
 		}
@@ -127,6 +147,7 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService)
 	// mb.AddNestedExtension(
 	// 	builder.NewExtension("google.api.http", tag int32, typ *builder.FieldType, extendee *builder.MessageBuilder)
 	// )
+	m.Messages[fmt.Sprintf("%s/%s", s.Name, r.Kind)] = mb
 	return mb, nil
 }
 
@@ -414,7 +435,7 @@ func addParentField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 
 func addIdField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 	f := builder.NewField(constants.FIELD_ID_NAME, builder.FieldTypeString()).SetNumber(constants.FIELD_ID_NUMBER).SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("An id that uniquely identifies the resource within the collection", r.Kind),
+		LeadingComment: "An id that uniquely identifies the resource within the collection",
 	})
 	mb.AddField(f)
 }

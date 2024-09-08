@@ -1,0 +1,170 @@
+syntax = "proto3";
+
+package example.bookstore.v1;
+
+import "google/api/annotations.proto";
+
+import "google/api/client.proto";
+
+import "google/api/field_behavior.proto";
+
+import "google/api/resource.proto";
+
+import "google/protobuf/empty.proto";
+
+import "google/protobuf/field_mask.proto";
+
+import "{generated-file-0001}.proto";
+
+option go_package = "/bookstore";
+
+// A service.
+service Bookstore {
+  // An aep-compliant Create method for Book.
+  rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
+    option (google.api.http) = { post: "/{parent=books}", body: "book" };
+
+    option (google.api.method_signature) = "parent,book";
+  }
+
+  // An aep-compliant Get method for Book.
+  rpc GetBook ( GetBookRequest ) returns ( Book ) {
+    option (google.api.http) = { get: "/{path=books/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant Update method for Book.
+  rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
+    option (google.api.http) = { patch: "/{book.path=books/*}", body: "book" };
+
+    option (google.api.method_signature) = "book,update_mask";
+  }
+
+  // An aep-compliant Delete method for Book.
+  rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
+    option (google.api.http) = { delete: "/{path=books/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant List method for books.
+  rpc ListBook ( ListBookRequest ) returns ( ListBookResponse ) {
+    option (google.api.http) = { get: "/{parent=books}" };
+
+    option (google.api.method_signature) = "parent";
+  }
+
+  // An aep-compliant Apply method for books.
+  rpc ApplyBook ( ApplyBookRequest ) returns ( Book ) {
+    option (google.api.http) = { put: "/{path=books/*}", body: "book" };
+  }
+}
+
+// A Book resource.
+message Book {
+  // Field for details.
+  Details details = 2;
+
+  // Field for isbn.
+  string isbn = 1;
+
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// A Create request for a  Book resource.
+message CreateBookRequest {
+  // A field for the parent of Book
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // An id that uniquely identifies the resource within the collection
+  string id = 10014;
+
+  // The resource to perform the operation on.
+  Book book = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for the GetBook method
+message GetBookRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/Book" }
+  ];
+}
+
+// Request message for the UpdateBook method
+message UpdateBookRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/Book" }
+  ];
+
+  // The resource to perform the operation on.
+  Book book = 10015 [(google.api.field_behavior) = REQUIRED];
+
+  // The update mask for the resource
+  google.protobuf.FieldMask update_mask = 10012;
+}
+
+// Request message for the DeleteBook method
+message DeleteBookRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/Book" }
+  ];
+}
+
+// Request message for the ListBook method
+message ListBookRequest {
+  // A field for the parent of Book
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // The page token indicating the starting point of the page
+  string page_token = 10010;
+
+  // The maximum number of resources to return in a single page.
+  int32 max_page_size = 10017;
+}
+
+// Response message for the ListBook method
+message ListBookResponse {
+  // A list of books
+  repeated Book results = 10016;
+
+  // The page token indicating the ending point of this response.
+  string next_page_token = 10011;
+}
+
+// Request message for the ApplyBook method
+message ApplyBookRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/Book" }
+  ];
+
+  // The resource to perform the operation on.
+  Book book = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// A Details resource.
+message Details {
+  // Field for edition.
+  string edition = 1;
+
+  // Field for supportedEReaders.
+  string supportedEReaders = 2;
+}
