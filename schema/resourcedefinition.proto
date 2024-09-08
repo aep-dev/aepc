@@ -47,6 +47,11 @@ message Methods {
 enum Type {
   UNSPECIFIED = 0;
   STRING = 1;
+  INT32 = 2;
+  INT64 = 3;
+  DOUBLE = 4;
+  FLOAT = 5;
+  BOOLEAN = 6;
 }
 
 message Property {

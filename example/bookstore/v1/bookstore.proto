@@ -61,14 +61,23 @@ service Bookstore {
 
 // A Book resource.
 message Book {
+  // Field for id.
+  string id = 10001;
+
+  // Field for edition.
+  int32 edition = 4;
+
   // Field for isbn.
   string isbn = 1;
 
+  // Field for price.
+  float price = 2;
+
+  // Field for published.
+  bool published = 3;
+
   // Field for path.
   string path = 10000;
-
-  // Field for id.
-  string id = 10001;
 }
 
 // A Create request for a  Book resource.

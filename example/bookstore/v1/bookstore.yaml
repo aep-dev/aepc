@@ -8,6 +8,18 @@ resources:
         type: STRING
         number: 1
         required: true
+      price:
+        type: FLOAT
+        number: 2
+        required: true
+      published:
+        type: BOOLEAN
+        number: 3
+        required: true
+      edition:
+        type: INT32
+        number: 4
+        required: false
     # parents:
     #   - "bookstore.example.com/Publisher"
     methods:

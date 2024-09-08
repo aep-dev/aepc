@@ -96,6 +96,18 @@ func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder
 		switch p.Type {
 		case schema.Type_STRING:
 			typ = builder.FieldTypeString()
+		case schema.Type_INT32:
+			typ = builder.FieldTypeInt32()
+		case schema.Type_INT64:
+			typ = builder.FieldTypeInt64()
+		case schema.Type_BOOLEAN:
+			typ = builder.FieldTypeBool()
+		case schema.Type_DOUBLE:
+			typ = builder.FieldTypeDouble()
+		case schema.Type_FLOAT:
+			typ = builder.FieldTypeFloat()
+		default:
+			return nil, fmt.Errorf("proto mapping for type %s not found", p.Type)
 		}
 		mb.AddField(builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
 			builder.Comments{

@@ -51,13 +51,27 @@
             "schema": {
               "type": "object",
               "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Field for id."
+                },
+                "edition": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "Field for edition."
+                },
                 "isbn": {
                   "type": "string",
                   "description": "Field for isbn."
                 },
-                "id": {
-                  "type": "string",
-                  "description": "Field for id."
+                "price": {
+                  "type": "number",
+                  "format": "float",
+                  "description": "Field for price."
+                },
+                "published": {
+                  "type": "boolean",
+                  "description": "Field for published."
                 }
               },
               "title": "The resource to perform the operation on."
@@ -315,17 +329,31 @@
     "v1Book": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Field for id."
+        },
+        "edition": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Field for edition."
+        },
         "isbn": {
           "type": "string",
           "description": "Field for isbn."
         },
+        "price": {
+          "type": "number",
+          "format": "float",
+          "description": "Field for price."
+        },
+        "published": {
+          "type": "boolean",
+          "description": "Field for published."
+        },
         "path": {
           "type": "string",
           "description": "Field for path."
-        },
-        "id": {
-          "type": "string",
-          "description": "Field for id."
         }
       },
       "description": "A Book resource."
