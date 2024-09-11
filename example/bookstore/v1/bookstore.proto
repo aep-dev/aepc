@@ -61,9 +61,6 @@ service Bookstore {
 
 // A Book resource.
 message Book {
-  // Field for path.
-  string path = 10000;
-
   // Field for id.
   string id = 10001;
 
@@ -72,6 +69,9 @@ message Book {
 
   // Field for isbn.
   string isbn = 1;
+
+  // Field for path.
+  string path = 10000;
 }
 
 // A Create request for a  Book resource.
@@ -160,9 +160,9 @@ message ApplyBookRequest {
 
 // A Details resource.
 message Details {
+  // Field for supported_ereaders.
+  string supported_ereaders = 2;
+
   // Field for edition.
   string edition = 1;
-
-  // Field for supportedEReaders.
-  string supportedEReaders = 2;
 }

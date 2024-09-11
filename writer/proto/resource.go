@@ -42,6 +42,11 @@ func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder
 		LeadingComment: fmt.Sprintf("A %v resource.", r.Kind),
 	})
 	fb.AddMessage(resourceMb)
+
+	if(!r.IsResource) {
+		return nil;
+	}
+
 	if r.Methods != nil {
 		if r.Methods.Create != nil {
 			err := AddCreate(r, resourceMb, fb, sb)
@@ -113,8 +118,7 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService,
 			_, ok := m.Messages[wantedType]
 			if(!ok) {
 				// Resource has not been generated yet.
-				c := CombineResourceMaps(s.ObjectByType, s.ResourceByType)
-				n, ok := c[wantedType]
+				n, ok := s.ResourceByType[wantedType]
 				if(!ok) {
 					return nil, fmt.Errorf("could not find %s in full object list", wantedType)
 				}
@@ -137,16 +141,6 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService,
 			},
 		))
 	}
-	//mb.SetOptions(
-		// &descriptorpb.MessageOptions{},
-		// annotations.ResourceDescriptor{
-		//	"type": sb.GetName() + "/" + r.Kind,
-		//},
-	//)
-	// md.GetMessageOptions().ProtoReflect().Set(protoreflect.FieldDescriptor, protoreflect.Value)
-	// mb.AddNestedExtension(
-	// 	builder.NewExtension("google.api.http", tag int32, typ *builder.FieldType, extendee *builder.MessageBuilder)
-	// )
 	m.Messages[fmt.Sprintf("%s/%s", s.Name, r.Kind)] = mb
 	return mb, nil
 }

@@ -16,7 +16,6 @@ package proto
 import (
 	"bytes"
 	"fmt"
-	"maps"
 	"path/filepath"
 	"slices"
 	"sort"
@@ -72,7 +71,7 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 	})
 
 	// Add resources to MessageStorage.
-	err := GenerateResourceMessages(ps.ResourceByType, ps.ObjectByType, ps, m)
+	err := GenerateResourceMessages(ps.ResourceByType, ps, m)
 	if(err != nil) {
 		return nil, err
 	}
@@ -81,12 +80,6 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 		err := AddResource(r, ps, fb, sb, m)
 		if err != nil {
 			return []byte{}, fmt.Errorf("adding resource %v failed: %w", r.Kind, err)
-		}
-	}
-	for _, r := range getSortedResources(ps.ObjectByType) {
-		err := AddResource(r, ps, fb, sb, m)
-		if err != nil {
-			return []byte{}, fmt.Errorf("adding object %v failed: %w", r.Kind, err)
 		}
 	}
 	fb.AddService(sb)
@@ -115,25 +108,15 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 	return output.Bytes(), nil
 }
 
-func GenerateResourceMessages(r map[string]*parser.ParsedResource, o map[string]*parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (error) {
-	// Combine maps
-	c := CombineResourceMaps(r, o)
-
+func GenerateResourceMessages(r map[string]*parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (error) {
 	// Generate Resource messages on combined map
-	for _, r := range getSortedResources(c) {
+	for _, r := range getSortedResources(r) {
 		_, err := GeneratedResourceMessage(r, s, m)
 		if(err != nil) {
 			return err
 		}
 	}
 	return nil
-}
-
-func CombineResourceMaps(r map[string]*parser.ParsedResource, o map[string]*parser.ParsedResource) map[string]*parser.ParsedResource {
-	c := map[string]*parser.ParsedResource{}
-	maps.Copy(c, r)
-	maps.Copy(c, o)
-	return c
 }
 
 func toProtoServiceName(serviceName string) string {

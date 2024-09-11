@@ -110,8 +110,8 @@
     "Book": {
       "type": "object",
       "required": [
-        "isbn",
-        "details"
+        "details",
+        "isbn"
       ],
       "properties": {
         "details": {
@@ -137,7 +137,7 @@
         "edition": {
           "type": "string"
         },
-        "supportedEReaders": {
+        "supported_ereaders": {
           "type": "string"
         }
       }

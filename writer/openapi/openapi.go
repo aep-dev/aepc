@@ -33,20 +33,15 @@ func WriteServiceToOpenAPI(ps *parser.ParsedService) ([]byte, error) {
 func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 	paths := Paths{}
 	definitions := Definitions{}
-	for _, r := range service.ObjectByType {
-		d, err := resourceToSchema(r)
-		if (err != nil) {
-			return nil, err
-		}
-		definitions[r.Kind] = d
-	}
-
 	for _, r := range service.ResourceByType {
 		d, err := resourceToSchema(r)
 		if err != nil {
 			return nil, err
 		}
-		definitions[r.Kind] = d
+		definitions[r.Kind] = d;
+		if(!r.IsResource) {
+			continue;
+		}
 		schemaRef := fmt.Sprintf("#/definitions/%v", r.Kind)
 		if r.Methods.List != nil {
 			log.Printf("resource plural: %s", r.Plural)

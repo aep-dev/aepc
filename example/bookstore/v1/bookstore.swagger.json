@@ -319,10 +319,6 @@
     "v1Book": {
       "type": "object",
       "properties": {
-        "path": {
-          "type": "string",
-          "description": "Field for path."
-        },
         "id": {
           "type": "string",
           "description": "Field for id."
@@ -334,6 +330,10 @@
         "isbn": {
           "type": "string",
           "description": "Field for isbn."
+        },
+        "path": {
+          "type": "string",
+          "description": "Field for path."
         }
       },
       "description": "A Book resource."
@@ -341,13 +341,13 @@
     "v1Details": {
       "type": "object",
       "properties": {
+        "supportedEreaders": {
+          "type": "string",
+          "description": "Field for supported_ereaders."
+        },
         "edition": {
           "type": "string",
           "description": "Field for edition."
-        },
-        "supportedEReaders": {
-          "type": "string",
-          "description": "Field for supportedEReaders."
         }
       },
       "description": "A Details resource."

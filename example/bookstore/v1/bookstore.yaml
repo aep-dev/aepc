@@ -43,6 +43,6 @@ objects:
       edition:
         type: STRING
         number: 1
-      supportedEReaders:
+      supported_ereaders:
         type: STRING
         number: 2

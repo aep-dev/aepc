@@ -18,9 +18,6 @@ import (
 type ParsedService struct {
 	*schema.Service
 	ResourceByType map[string]*ParsedResource
-
-	// Object messages are expressed as ParsedResource to maximize code re-use.
-	ObjectByType map[string]*ParsedResource
 }
 
 func (ps *ParsedService) GetShortName() string {
@@ -32,6 +29,8 @@ type ParsedResource struct {
 	*schema.Resource
 	Type    string
 	Parents []*ParsedResource
+
+	IsResource bool
 }
 
 type ParsedProperty struct {
@@ -44,14 +43,13 @@ func NewParsedService(s *schema.Service) (*ParsedService, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to build service %q: %w", s, err)
 	}
-	objectByType, err := loadObjectsByType(s.Objects, s)
+	err = loadObjectsByType(s.Objects, s, &resourceByType)
 	if err != nil {
 		return nil, fmt.Errorf("unable to build service objects %q: %w", s, err)
 	}
 	ps := ParsedService{
 		Service:        s,
 		ResourceByType: resourceByType,
-		ObjectByType: objectByType,
 	}
 	return &ps, nil
 }
@@ -64,16 +62,16 @@ func ParsedResourceForObject(r *schema.Object, s *schema.Service) *ParsedResourc
 				Kind: r.Kind,
 				Properties: r.Properties,
 			},
+			IsResource: false,
 		}
 }
 
-func loadObjectsByType(o []*schema.Object, s *schema.Service) (map[string]*ParsedResource, error) {
-	objectByType := map[string]*ParsedResource{}
+func loadObjectsByType(o []*schema.Object, s *schema.Service, m *map[string]*ParsedResource) (error) {
 	for _, r := range o {
 		t := fmt.Sprintf("%s/%s", s.Name, r.Kind)
-		objectByType[t] = ParsedResourceForObject(r, s)
+		(*m)[t] = ParsedResourceForObject(r, s)
 	}
-	return objectByType, nil
+	return nil
 }
 
 func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
@@ -84,6 +82,7 @@ func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 			Resource: r,
 			Type:     t,
 			Parents:  []*ParsedResource{},
+			IsResource: true,
 		}
 	}
 	// populate resource parents
