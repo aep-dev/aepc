@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	bpb "github.com/aep-dev/aepc/example/bookstore/v1/bookstore"
+	bpb "github.com/aep-dev/aepc/example/bookstore/v1"
 )
 
 // gRPC server endpoint
@@ -37,7 +37,7 @@ func Run(grpcServerEndpoint string) {
 	}
 
 	// Construct the relative path to the data file
-	dataFilePath := filepath.Join("example/bookstore/bookstore.yaml.output.openapi.json")
+	dataFilePath := filepath.Join("example/bookstore/v1/bookstore_openapi.json")
 
 	// Read the file contents
 	data, err := os.ReadFile(dataFilePath)

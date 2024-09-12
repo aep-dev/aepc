@@ -5,6 +5,7 @@ package parser
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/aep-dev/aepc/constants"
@@ -77,23 +78,28 @@ func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 	return resourceByType, nil
 }
 
+func (pr *ParsedResource) GetPropertiesSortedByNumber() []*ParsedProperty {
+	// to ensure idempotency of generators, fields are ordered by
+	// field number
+	parsedProperties := []*ParsedProperty{}
+	for name, p := range pr.Properties {
+		parsedProperties = append(parsedProperties, &ParsedProperty{
+			Property: p,
+			Name:     name,
+		})
+	}
+	sort.Slice(parsedProperties, func(i, j int) bool {
+		return parsedProperties[i].Number < parsedProperties[j].Number
+	})
+	return parsedProperties
+}
+
 // addGetToResource adds a Get method to a resource,
 // since all resources must have a Get method.
 func addGetToResource(pr *ParsedResource) {
 	if pr.Methods.Read == nil {
 		pr.Methods.Read = &schema.Methods_ReadMethod{}
 	}
-}
-
-func (r *ParsedResource) GetFieldsSortedByNumber() []*ParsedProperty {
-	fields := []*ParsedProperty{}
-	for name, p := range r.Properties {
-		fields = append(fields, &ParsedProperty{
-			Property: p,
-			Name:     name,
-		})
-	}
-	return fields
 }
 
 // add an id field to the resource.

@@ -91,7 +91,7 @@ func AddResource(r *parser.ParsedResource, fb *builder.FileBuilder, sb *builder.
 // GenerateResourceMesssage adds the resource message.
 func GeneratedResourceMessage(r *parser.ParsedResource) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
-	for _, p := range r.GetFieldsSortedByNumber() {
+	for _, p := range r.GetPropertiesSortedByNumber() {
 		typ := builder.FieldTypeBool()
 		switch p.Type {
 		case schema.Type_STRING:
@@ -207,7 +207,7 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	mb.AddField(builder.NewField(constants.FIELD_UPDATE_MASK_NAME, builder.FieldTypeImportedMessage(fieldMaskDescriptor)).
 		SetNumber(constants.FIELD_UPDATE_MASK_NUMBER).
 		SetComments(builder.Comments{
-			LeadingComment: fmt.Sprintf("The update mask for the resource"),
+			LeadingComment: "The update mask for the resource",
 		}))
 
 	fb.AddMessage(mb)
@@ -221,7 +221,7 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Patch{
-			Patch: fmt.Sprintf("/{%v.path=%v}", strings.ToLower(r.Kind), generateHTTPPath(r)),
+			Patch: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
 		},
 		Body: strings.ToLower(r.Kind),
 	})

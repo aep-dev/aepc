@@ -19,7 +19,7 @@ func init() {
 
 func WriteServiceToOpenAPI(ps *parser.ParsedService) ([]byte, error) {
 	openAPI, err := convertToOpenAPI(ps)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -35,10 +35,10 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 	definitions := Definitions{}
 	for _, r := range service.ResourceByType {
 		d, err := resourceToSchema(r)
-		if(err != nil) {
+		if err != nil {
 			return nil, err
 		}
-		definitions[r.Kind] = d;
+		definitions[r.Kind] = d
 		schemaRef := fmt.Sprintf("#/definitions/%v", r.Kind)
 		if r.Methods.List != nil {
 			log.Printf("resource plural: %s", r.Plural)
@@ -166,19 +166,19 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 	properties := Properties{}
 	required := []string{}
-	for name, p := range r.Properties {
-		t, err := openAPIType(p)
-		if(err != nil ) {
+	for _, f := range r.GetPropertiesSortedByNumber() {
+		t, err := openAPIType(f)
+		if err != nil {
 			return Schema{}, err
 		}
-		properties[name] = Schema{
+		properties[f.Name] = Schema{
 			Type:         t.openapi_type,
 			Format:       t.openapi_format,
-			XTerraformID: name == constants.FIELD_ID_NAME,
-			ReadOnly:     p.ReadOnly,
+			XTerraformID: f.Name == constants.FIELD_ID_NAME,
+			ReadOnly:     f.ReadOnly,
 		}
-		if p.Required {
-			required = append(required, name)
+		if f.Required {
+			required = append(required, f.Name)
 		}
 	}
 	return Schema{

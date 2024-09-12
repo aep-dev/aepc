@@ -12,15 +12,29 @@ aepc works off of an internal "hub" representation of a resource, while each of 
 
 ```mermaid
 flowchart LR
-    hub("unified service and resource hub")
-    protoResources("proto messages")
+    hub("aepc: unified service and resource hub")
+    resources("AEP Resource Definitions")
     proto("protobuf")
-    crd("Custom Resource Definitions (K8S)")
-    http("HTTP REST APIs")
-    protoResources --> hub
+    crd("Kubernetes Custom Resource Definitions and operators (planned)")
+    http_planned("HTTP Rest APIs (planned)")
+    http("HTTP REST APIs via gRPC-gateway")
+    openapi("OpenAPI Schema")
+    terraform("Fully Generated Terraform Provider")
+    cli("command-line interface (planned)")
+    docs("API documentation (planned)")
+    sdks("Language-specific libraries (planned)")
+    ui("interactive website to create, edit, list, and modify resources (planned)")
+    resources --> hub
     hub  --> proto
-    hub  --> http
-    hub  --> crd
+    hub  --> openapi
+    hub  --> http_planned
+    proto --> http
+    http --> terraform
+    http --> cli
+    http --> crd
+    openapi --> docs
+    openapi --> sdks
+    openapi --> ui
 ```
 
 ## User Guide

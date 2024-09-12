@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	bpb "github.com/aep-dev/aepc/example/bookstore/v1/bookstore"
+	bpb "github.com/aep-dev/aepc/example/bookstore/v1"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -26,7 +26,8 @@ func NewBookstoreServer() *BookstoreServer {
 }
 
 func (BookstoreServer) CreateBook(_ context.Context, r *bpb.CreateBookRequest) (*bpb.Book, error) {
-	book := proto.Clone(r.Resource).(*bpb.Book)
+	book := proto.Clone(r.Book).(*bpb.Book)
+	log.Printf("creating book %q", r)
 	if r.Id == "" {
 		r.Id = fmt.Sprintf("%v", len(bookDatabase)+1)
 	}
@@ -41,11 +42,19 @@ func (BookstoreServer) CreateBook(_ context.Context, r *bpb.CreateBookRequest) (
 func (BookstoreServer) ApplyBook(_ context.Context, r *bpb.ApplyBookRequest) (*bpb.Book, error) {
 	log.Printf("applying book request: %v", r)
 	originalResource := bookDatabase[r.Path]
-	book := proto.Clone(r.Resource).(*bpb.Book)
+	book := proto.Clone(r.Book).(*bpb.Book)
 	book.Id = originalResource.Id
 	book.Path = originalResource.Path
 	bookDatabase[r.Path] = book
 	log.Printf("applied book %q", book.Path)
+	return book, nil
+}
+
+func (BookstoreServer) UpdateBook(_ context.Context, r *bpb.UpdateBookRequest) (*bpb.Book, error) {
+	book := proto.Clone(r.Book).(*bpb.Book)
+	book.Path = r.Path
+	bookDatabase[r.Path] = book
+	log.Printf("updated book %q at path %q", book, r.Path)
 	return book, nil
 }
 
@@ -55,7 +64,7 @@ func (BookstoreServer) DeleteBook(_ context.Context, r *bpb.DeleteBookRequest) (
 	return &emptypb.Empty{}, nil
 }
 
-func (BookstoreServer) ReadBook(_ context.Context, r *bpb.ReadBookRequest) (*bpb.Book, error) {
+func (BookstoreServer) GetBook(_ context.Context, r *bpb.GetBookRequest) (*bpb.Book, error) {
 	if b, found := bookDatabase[r.Path]; found {
 		return b, nil
 	}
