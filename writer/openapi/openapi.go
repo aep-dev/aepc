@@ -170,7 +170,7 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 	properties := Properties{}
 	required := []string{}
 	for _, f := range r.GetPropertiesSortedByNumber() {
-		t, err := openAPIType(f)
+		t, err := openAPIType(f.Property)
 		if err != nil {
 			return Schema{}, err
 		}

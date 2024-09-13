@@ -16,70 +16,6 @@
     "application/json"
   ],
   "paths": {
-    "/{book.path}": {
-      "patch": {
-        "summary": "An aep-compliant Update method for Book.",
-        "operationId": "Bookstore_UpdateBook",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Book"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "book.path",
-            "description": "Field for path.",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "books/[^/]+"
-          },
-          {
-            "name": "book",
-            "description": "The resource to perform the operation on.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "Field for id."
-                },
-                "details": {
-                  "$ref": "#/definitions/v1Details",
-                  "description": "Field for details."
-                },
-                "isbn": {
-                  "type": "string",
-                  "description": "Field for isbn."
-                }
-              },
-              "title": "The resource to perform the operation on."
-            }
-          },
-          {
-            "name": "path",
-            "description": "The globally unique identifier for the resource",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Bookstore"
-        ]
-      }
-    },
     "/{parent}": {
       "get": {
         "summary": "An aep-compliant List method for books.",
@@ -284,6 +220,49 @@
         "tags": [
           "Bookstore"
         ]
+      },
+      "patch": {
+        "summary": "An aep-compliant Update method for Book.",
+        "operationId": "Bookstore_UpdateBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Book"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "books/[^/]+"
+          },
+          {
+            "name": "book",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Book",
+              "required": [
+                "book"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
       }
     }
   },
@@ -319,21 +298,21 @@
     "v1Book": {
       "type": "object",
       "properties": {
-        "id": {
+        "isbn": {
           "type": "string",
-          "description": "Field for id."
+          "description": "Field for isbn."
         },
         "details": {
           "$ref": "#/definitions/v1Details",
           "description": "Field for details."
         },
-        "isbn": {
-          "type": "string",
-          "description": "Field for isbn."
-        },
         "path": {
           "type": "string",
           "description": "Field for path."
+        },
+        "id": {
+          "type": "string",
+          "description": "Field for id."
         }
       },
       "description": "A Book resource."
@@ -341,13 +320,13 @@
     "v1Details": {
       "type": "object",
       "properties": {
-        "supportedEreaders": {
-          "type": "string",
-          "description": "Field for supported_ereaders."
-        },
         "edition": {
           "type": "string",
           "description": "Field for edition."
+        },
+        "supportedEreaders": {
+          "type": "string",
+          "description": "Field for supported_ereaders."
         }
       },
       "description": "A Details resource."
