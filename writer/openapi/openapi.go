@@ -38,7 +38,10 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 		if err != nil {
 			return nil, err
 		}
-		definitions[r.Kind] = d
+		definitions[r.Kind] = d;
+		if(!r.IsResource) {
+			continue;
+		}
 		schemaRef := fmt.Sprintf("#/definitions/%v", r.Kind)
 		if r.Methods.List != nil {
 			log.Printf("resource plural: %s", r.Plural)
@@ -167,13 +170,14 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 	properties := Properties{}
 	required := []string{}
 	for _, f := range r.GetPropertiesSortedByNumber() {
-		t, err := openAPIType(f)
+		t, err := openAPIType(f.Property)
 		if err != nil {
 			return Schema{}, err
 		}
 		properties[f.Name] = Schema{
 			Type:         t.openapi_type,
 			Format:       t.openapi_format,
+			Ref:          t.openapi_ref,
 			XTerraformID: f.Name == constants.FIELD_ID_NAME,
 			ReadOnly:     f.ReadOnly,
 		}

@@ -111,13 +111,11 @@
       "type": "object",
       "required": [
         "isbn",
-        "price",
-        "published"
+        "details"
       ],
       "properties": {
-        "edition": {
-          "type": "integer",
-          "format": "int32"
+        "details": {
+          "$ref": "#/components/schemas/Details"
         },
         "id": {
           "type": "string",
@@ -130,13 +128,17 @@
         "path": {
           "type": "string",
           "readOnly": true
+        }
+      }
+    },
+    "Details": {
+      "type": "object",
+      "properties": {
+        "edition": {
+          "type": "string"
         },
-        "price": {
-          "type": "number",
-          "format": "float"
-        },
-        "published": {
-          "type": "boolean"
+        "supported_ereaders": {
+          "type": "string"
         }
       }
     }

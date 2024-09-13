@@ -29,6 +29,8 @@ type ParsedResource struct {
 	*schema.Resource
 	Type    string
 	Parents []*ParsedResource
+
+	IsResource bool
 }
 
 type ParsedProperty struct {
@@ -41,11 +43,35 @@ func NewParsedService(s *schema.Service) (*ParsedService, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to build service %q: %w", s, err)
 	}
+	err = loadObjectsByType(s.Objects, s, &resourceByType)
+	if err != nil {
+		return nil, fmt.Errorf("unable to build service objects %q: %w", s, err)
+	}
 	ps := ParsedService{
 		Service:        s,
 		ResourceByType: resourceByType,
 	}
 	return &ps, nil
+}
+
+func ParsedResourceForObject(r *schema.Object, s *schema.Service) *ParsedResource {
+	t := fmt.Sprintf("%s/%s", s.Name, r.Kind)
+	return &ParsedResource{
+			Type: t,
+			Resource: &schema.Resource{
+				Kind: r.Kind,
+				Properties: r.Properties,
+			},
+			IsResource: false,
+		}
+}
+
+func loadObjectsByType(o []*schema.Object, s *schema.Service, m *map[string]*ParsedResource) (error) {
+	for _, r := range o {
+		t := fmt.Sprintf("%s/%s", s.Name, r.Kind)
+		(*m)[t] = ParsedResourceForObject(r, s)
+	}
+	return nil
 }
 
 func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
@@ -56,6 +82,7 @@ func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 			Resource: r,
 			Type:     t,
 			Parents:  []*ParsedResource{},
+			IsResource: true,
 		}
 	}
 	// populate resource parents

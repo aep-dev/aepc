@@ -103,7 +103,7 @@
           },
           {
             "name": "id",
-            "description": "An id that uniquely identifies the resource within the collection%!(EXTRA string=Book)",
+            "description": "An id that uniquely identifies the resource within the collection",
             "in": "query",
             "required": false,
             "type": "string"
@@ -302,19 +302,9 @@
           "type": "string",
           "description": "Field for isbn."
         },
-        "price": {
-          "type": "number",
-          "format": "float",
-          "description": "Field for price."
-        },
-        "published": {
-          "type": "boolean",
-          "description": "Field for published."
-        },
-        "edition": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Field for edition."
+        "details": {
+          "$ref": "#/definitions/v1Details",
+          "description": "Field for details."
         },
         "path": {
           "type": "string",
@@ -326,6 +316,20 @@
         }
       },
       "description": "A Book resource."
+    },
+    "v1Details": {
+      "type": "object",
+      "properties": {
+        "edition": {
+          "type": "string",
+          "description": "Field for edition."
+        },
+        "supportedEreaders": {
+          "type": "string",
+          "description": "Field for supported_ereaders."
+        }
+      },
+      "description": "A Details resource."
     },
     "v1ListBookResponse": {
       "type": "object",

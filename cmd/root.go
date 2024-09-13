@@ -73,14 +73,20 @@ func ProcessInput(inputFile, outputFilePrefix string) error {
 	if err != nil {
 		return fmt.Errorf("error parsing service: %w", err)
 	}
-	proto, _ := proto.WriteServiceToProto(ps, outputDir)
+	proto, err := proto.WriteServiceToProto(ps, outputDir)
+	if(err != nil) {
+		return fmt.Errorf("error writing service proto %w", err)
+	}
 	protoFile := fmt.Sprintf("%s.proto", outputFilePrefix)
 	err = WriteFile(protoFile, proto)
 	if err != nil {
 		return fmt.Errorf("error writing file: %w", err)
 	}
 	fmt.Printf("output proto file: %s\n", protoFile)
-	openapi, _ := openapi.WriteServiceToOpenAPI(ps)
+	openapi, err := openapi.WriteServiceToOpenAPI(ps)
+	if err != nil {
+		return fmt.Errorf("error building openapi %s", err)
+	}
 	openapiFile := fmt.Sprintf("%s_openapi.json", outputFilePrefix)
 	err = WriteFile(openapiFile, openapi)
 	if err != nil {

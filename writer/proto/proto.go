@@ -35,7 +35,12 @@ func init() {
 	capitalizer = cases.Title(language.AmericanEnglish)
 }
 
+type MessageStorage struct {
+	Messages map[string]*builder.MessageBuilder
+}
+
 func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, error) {
+	m := &MessageStorage{Messages: map[string]*builder.MessageBuilder{}}
 	dir, file := filepath.Split(outputDir)
 	packageParts := []string{file}
 	for dir != "." {
@@ -64,8 +69,15 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 	sb.SetComments(builder.Comments{
 		LeadingComment: "A service.",
 	})
+
+	// Add resources to MessageStorage.
+	err := GenerateResourceMessages(ps.ResourceByType, ps, m)
+	if(err != nil) {
+		return nil, err
+	}
+
 	for _, r := range getSortedResources(ps.ResourceByType) {
-		err := AddResource(r, fb, sb)
+		err := AddResource(r, ps, fb, sb, m)
 		if err != nil {
 			return []byte{}, fmt.Errorf("adding resource %v failed: %w", r.Kind, err)
 		}
@@ -75,6 +87,16 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 	if err != nil {
 		return []byte{}, fmt.Errorf("unable to build service file %v: %w", fb.GetName(), err)
 	}
+
+	// protoreflect sometimes adds "import {generated-file-0001}.proto" unnecessarily.
+	d := []string{}
+	for _, v := range fd.AsFileDescriptorProto().Dependency {
+		if !strings.Contains(v, "generated-file") {
+			d = append(d, v)
+		}
+	}
+	fd.AsFileDescriptorProto().Dependency = d
+
 	printer := protoprint.Printer{
 		CustomSortFunction: compareProtoElements,
 	}
@@ -84,6 +106,17 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 		return []byte{}, err
 	}
 	return output.Bytes(), nil
+}
+
+func GenerateResourceMessages(r map[string]*parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (error) {
+	// Generate Resource messages on combined map
+	for _, r := range getSortedResources(r) {
+		_, err := GeneratedResourceMessage(r, s, m)
+		if(err != nil) {
+			return err
+		}
+	}
+	return nil
 }
 
 func toProtoServiceName(serviceName string) string {

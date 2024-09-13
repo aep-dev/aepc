@@ -10,6 +10,9 @@ option go_package = "/schema";
 message Service {
   string name = 1;
   repeated Resource resources = 2;
+
+  // These are additional objects (list of properties) that may be referenced from another property.
+  repeated Object objects = 3;
 }
 
 message Resource {
@@ -24,6 +27,11 @@ message Resource {
   map<string, Property> properties = 4;
   // method support
   Methods methods = 5;
+}
+
+message Object {
+  string kind = 1;
+  map<string, Property> properties = 2;
 }
 
 message Methods {
@@ -52,6 +60,7 @@ enum Type {
   DOUBLE = 4;
   FLOAT = 5;
   BOOLEAN = 6;
+  OBJECT = 7;
 }
 
 message Property {
@@ -61,4 +70,7 @@ message Property {
   int32 number = 2;
   bool readOnly = 3;
   bool required = 4;
+
+  // If type is OBJECT, this is the name of the object in `messages`.
+  string object_type = 5;
 }
