@@ -15,8 +15,8 @@ type TypeInfo struct {
 }
 
 func openAPIType(p *schema.Property) (TypeInfo, error) {
-	if(p.Repeated) {
-		at, err := openAPIType_helper(p.Type)
+	if(p.Type == schema.Type_ARRAY) {
+		at, err := openAPIType_helper(p.GetArrayPrimitiveType(), p.GetArrayObjectType())
 		if(err != nil) {
 			return TypeInfo{}, nil
 		}
@@ -25,10 +25,10 @@ func openAPIType(p *schema.Property) (TypeInfo, error) {
 			array_type: &at,
 		}, nil
 	}
-	return openAPIType_helper(p.Type)
+	return openAPIType_helper(p.Type, p.ObjectType)
 }
 
-func openAPIType_helper(p schema.Type) (TypeInfo, error) {
+func openAPIType_helper(p schema.Type, object_type string) (TypeInfo, error) {
 	t := "";
 	f := "";
 	r := "";
@@ -51,7 +51,7 @@ func openAPIType_helper(p schema.Type) (TypeInfo, error) {
 		case schema.Type_BOOLEAN:
 			t = "boolean"
 		case schema.Type_OBJECT:
-			r = fmt.Sprintf("#/components/schemas/%s", p.ObjectType)
+			r = fmt.Sprintf("#/components/schemas/%s", object_type)
 		default:
 			return TypeInfo{}, fmt.Errorf("%s does not have openapi type support", p.Type)
 	}

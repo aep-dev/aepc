@@ -95,12 +95,12 @@ func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder
 	return nil
 }
 
-// GenerateResourceMesssage adds the resource message.
-func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (*builder.MessageBuilder, error) {
-	mb := builder.NewMessage(r.Kind)
-	for _, p := range r.GetPropertiesSortedByNumber() {
+func protoType(t schema.Type, ot string, s *parser.ParsedService, m *MessageStorage, p *parser.ParsedProperty) (*builder.FieldType, error) {
+		if(t == schema.Type_ARRAY) {
+			return protoType(p.GetArrayPrimitiveType(), p.GetArrayObjectType(), s, m, nil)
+		}
 		typ := builder.FieldTypeBool()
-		switch p.Type {
+		switch t {
 		case schema.Type_STRING:
 			typ = builder.FieldTypeString()
 		case schema.Type_INT32:
@@ -114,7 +114,7 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService,
 		case schema.Type_FLOAT:
 			typ = builder.FieldTypeFloat()
 		case schema.Type_OBJECT:
-			wantedType := fmt.Sprintf("%s/%s", s.Name, p.ObjectType)
+			wantedType := fmt.Sprintf("%s/%s", s.Name, ot)
 			_, ok := m.Messages[wantedType]
 			if(!ok) {
 				// Resource has not been generated yet.
@@ -132,15 +132,25 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService,
 				return nil, fmt.Errorf("could not find message %s after recursive create", wantedType)
 			}
 			typ = builder.FieldTypeMessage(resourceMb);
-		default:
-			return nil, fmt.Errorf("proto mapping for type %s not found", p.Type)
 		}
+		return typ, nil
+}
+
+// GenerateResourceMesssage adds the resource message.
+func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (*builder.MessageBuilder, error) {
+	mb := builder.NewMessage(r.Kind)
+	for _, p := range r.GetPropertiesSortedByNumber() {
+		typ, err := protoType(p.Type, p.ObjectType, s, m, p)
+		if(err != nil) {
+			return nil, err
+		}
+
 		f := builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
 			builder.Comments{
 				LeadingComment: fmt.Sprintf("Field for %v.", p.Name),
 			},
 		)
-		if(p.Repeated) {
+		if(p.Type == schema.Type_ARRAY) {
 			f.SetRepeated()
 		}
 		o := &descriptorpb.FieldOptions{}

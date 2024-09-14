@@ -110,9 +110,9 @@
     "Book": {
       "type": "object",
       "required": [
-        "published",
         "isbn",
-        "price"
+        "price",
+        "published"
       ],
       "properties": {
         "edition": {

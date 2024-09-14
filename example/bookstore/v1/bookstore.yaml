@@ -5,10 +5,10 @@ resources:
     plural: "books"
     properties:
       isbn:
-        type: STRING
+        type: ARRAY
+        array_primitive_type: STRING
         number: 1
         required: true
-        repeated: true
       price:
         type: FLOAT
         number: 2

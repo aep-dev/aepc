@@ -34,7 +34,7 @@ service Bookstore {
 
   // An aep-compliant Update method for Book.
   rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { patch: "/{book.path=books/*}", body: "book" };
+    option (google.api.http) = { patch: "/{path=books/*}", body: "book" };
 
     option (google.api.method_signature) = "book,update_mask";
   }
@@ -61,15 +61,6 @@ service Bookstore {
 
 // A Book resource.
 message Book {
-  // Field for path.
-  string path = 10000;
-
-  // Field for id.
-  string id = 10001;
-
-  // Field for edition.
-  int32 edition = 4;
-
   // Field for isbn.
   repeated string isbn = 1 [(google.api.field_behavior) = REQUIRED];
 
@@ -78,6 +69,15 @@ message Book {
 
   // Field for published.
   bool published = 3 [(google.api.field_behavior) = REQUIRED];
+
+  // Field for edition.
+  int32 edition = 4;
+
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
 }
 
 // A Create request for a  Book resource.
@@ -88,7 +88,7 @@ message CreateBookRequest {
     (google.api.resource_reference) = { }
   ];
 
-  // An id that uniquely identifies the resource within the collection%!(EXTRA string=Book)
+  // An id that uniquely identifies the resource within the collection
   string id = 10014;
 
   // The resource to perform the operation on.
