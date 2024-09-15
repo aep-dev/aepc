@@ -299,12 +299,25 @@
       "type": "object",
       "properties": {
         "isbn": {
-          "type": "string",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "description": "Field for isbn."
         },
-        "details": {
-          "$ref": "#/definitions/v1Details",
-          "description": "Field for details."
+        "price": {
+          "type": "number",
+          "format": "float",
+          "description": "Field for price."
+        },
+        "published": {
+          "type": "boolean",
+          "description": "Field for published."
+        },
+        "edition": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Field for edition."
         },
         "path": {
           "type": "string",
@@ -315,21 +328,12 @@
           "description": "Field for id."
         }
       },
-      "description": "A Book resource."
-    },
-    "v1Details": {
-      "type": "object",
-      "properties": {
-        "edition": {
-          "type": "string",
-          "description": "Field for edition."
-        },
-        "supportedEreaders": {
-          "type": "string",
-          "description": "Field for supported_ereaders."
-        }
-      },
-      "description": "A Details resource."
+      "description": "A Book resource.",
+      "required": [
+        "isbn",
+        "price",
+        "published"
+      ]
     },
     "v1ListBookResponse": {
       "type": "object",

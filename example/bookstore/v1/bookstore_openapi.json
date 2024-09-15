@@ -111,11 +111,13 @@
       "type": "object",
       "required": [
         "isbn",
-        "details"
+        "price",
+        "published"
       ],
       "properties": {
-        "details": {
-          "$ref": "#/components/schemas/Details"
+        "edition": {
+          "type": "integer",
+          "format": "int32"
         },
         "id": {
           "type": "string",
@@ -123,22 +125,21 @@
           "x-terraform-id": true
         },
         "isbn": {
-          "type": "string"
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "path": {
           "type": "string",
           "readOnly": true
-        }
-      }
-    },
-    "Details": {
-      "type": "object",
-      "properties": {
-        "edition": {
-          "type": "string"
         },
-        "supported_ereaders": {
-          "type": "string"
+        "price": {
+          "type": "number",
+          "format": "float"
+        },
+        "published": {
+          "type": "boolean"
         }
       }
     }

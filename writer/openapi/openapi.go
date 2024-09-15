@@ -7,6 +7,7 @@ import (
 
 	"github.com/aep-dev/aepc/constants"
 	"github.com/aep-dev/aepc/parser"
+	"github.com/aep-dev/aepc/schema"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
@@ -174,7 +175,7 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 		if err != nil {
 			return Schema{}, err
 		}
-		properties[f.Name] = Schema{
+		s := Schema{
 			Type:         t.openapi_type,
 			Format:       t.openapi_format,
 			Ref:          t.openapi_ref,
@@ -184,6 +185,13 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 		if f.Required {
 			required = append(required, f.Name)
 		}
+		if f.Type == schema.Type_ARRAY {
+			s.Items = &Schema{
+				Type: t.array_type.openapi_type,
+				Format: t.array_type.openapi_format,
+			}
+		}
+		properties[f.Name] = s
 	}
 	return Schema{
 		Type:       "object",

@@ -61,6 +61,7 @@ enum Type {
   FLOAT = 5;
   BOOLEAN = 6;
   OBJECT = 7;
+  ARRAY = 8;
 }
 
 message Property {
@@ -73,4 +74,9 @@ message Property {
 
   // If type is OBJECT, this is the name of the object in `messages`.
   string object_type = 5;
+
+  oneof array_type {
+    string array_object_type = 6;
+    Type array_primitive_type = 7;
+  }
 }
