@@ -29,7 +29,7 @@ resources:
       update: {}
       delete: {}
       list: {}
-      apply: {}
+      apply: {} # do not uncomment until there is an AEP on apply.
 #   - kind: "Publisher"
 #     plural: "publishers"
 #     methods:
