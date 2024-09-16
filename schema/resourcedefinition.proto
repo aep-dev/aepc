@@ -60,23 +60,30 @@ enum Type {
   DOUBLE = 4;
   FLOAT = 5;
   BOOLEAN = 6;
-  OBJECT = 7;
-  ARRAY = 8;
 }
 
 message Property {
-  Type type = 1;
+  oneof types {
+    Type type = 1;
+    ObjectType object_type = 5;
+    ArrayType array_type = 6;
+  }
   // field number used for protobuf or other systems where fields must
   // be explicitly enumerated.
   int32 number = 2;
   bool readOnly = 3;
   bool required = 4;
+}
 
-  // If type is OBJECT, this is the name of the object in `messages`.
-  string object_type = 5;
+message ObjectType {
+  oneof object_details {
+    string message_name = 1;
+  }
+}
 
-  oneof array_type {
-    string array_object_type = 6;
-    Type array_primitive_type = 7;
+message ArrayType {
+  oneof array_details {
+    Type type = 1;
+    ObjectType object_type = 2;
   }
 }

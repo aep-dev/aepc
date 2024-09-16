@@ -185,11 +185,12 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 		if f.Required {
 			required = append(required, f.Name)
 		}
-		if f.Type == schema.Type_ARRAY {
-			s.Items = &Schema{
-				Type: t.array_type.openapi_type,
-				Format: t.array_type.openapi_format,
-			}
+		switch f.GetTypes().(type) {
+			case *schema.Property_ArrayType:
+				s.Items = &Schema{
+					Type: t.array_type.openapi_type,
+					Format: t.array_type.openapi_format,
+				}
 		}
 		properties[f.Name] = s
 	}

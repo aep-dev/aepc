@@ -15,23 +15,51 @@ type TypeInfo struct {
 }
 
 func openAPIType(p *schema.Property) (TypeInfo, error) {
-	if(p.Type == schema.Type_ARRAY) {
-		at, err := openAPIType_helper(p.GetArrayPrimitiveType(), p.GetArrayObjectType())
-		if(err != nil) {
-			return TypeInfo{}, nil
-		}
-		return TypeInfo{
-			openapi_type: "array",
-			array_type: &at,
-		}, nil
+	switch p.GetTypes().(type) {
+		case *schema.Property_ArrayType:
+			return openAPITypeArray(p.GetArrayType())
+		case *schema.Property_ObjectType:
+			return openAPITypeObject(p.GetObjectType())
+		case *schema.Property_Type:
+			return openAPITypePrimitive(p.GetType())
+		default:
+			return TypeInfo{}, fmt.Errorf("reached end of openapi type switch statement")
 	}
-	return openAPIType_helper(p.Type, p.ObjectType)
 }
 
-func openAPIType_helper(p schema.Type, object_type string) (TypeInfo, error) {
+func openAPITypeArray(a *schema.ArrayType) (TypeInfo, error) {
+	switch a.GetArrayDetails().(type) {
+		case *schema.ArrayType_Type: 
+			at, err := openAPITypePrimitive(a.GetType())
+			if(err != nil) {
+				return TypeInfo{}, nil
+			}
+			return TypeInfo{
+				openapi_type: "array",
+				array_type: &at,
+			}, nil
+		case *schema.ArrayType_ObjectType:
+			ot, err := openAPITypeObject(a.GetObjectType())
+			if(err != nil) {
+				return TypeInfo{}, nil
+			}
+			ot.openapi_type = "array"
+			return ot, nil
+		
+		default:
+			return TypeInfo{} , fmt.Errorf("reached end of openAPITypeArray switch")
+	}
+}
+
+func openAPITypeObject(o *schema.ObjectType) (TypeInfo, error) {
+	return TypeInfo{
+		openapi_ref: fmt.Sprintf("#/components/schemas/%s", o.GetMessageName()),
+	}, nil
+}
+
+func openAPITypePrimitive(p schema.Type) (TypeInfo, error) {
 	t := "";
 	f := "";
-	r := "";
 
 	switch(p) {
 		case schema.Type_STRING:
@@ -50,8 +78,6 @@ func openAPIType_helper(p schema.Type, object_type string) (TypeInfo, error) {
 			f = "int64"
 		case schema.Type_BOOLEAN:
 			t = "boolean"
-		case schema.Type_OBJECT:
-			r = fmt.Sprintf("#/components/schemas/%s", object_type)
 		default:
 			return TypeInfo{}, fmt.Errorf("%s does not have openapi type support", p.Type)
 	}
@@ -59,6 +85,5 @@ func openAPIType_helper(p schema.Type, object_type string) (TypeInfo, error) {
 	return TypeInfo{
 		openapi_type:   t,
 		openapi_format: f,
-		openapi_ref: r,
 	}, nil
 }
