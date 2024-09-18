@@ -47,7 +47,7 @@ func openAPITypeArray(a *schema.ArrayType) (TypeInfo, error) {
 			return ot, nil
 		
 		default:
-			return TypeInfo{} , fmt.Errorf("reached end of openAPITypeArray switch")
+			return TypeInfo{} , fmt.Errorf("OpenAPI type for %q not found", a.GetArrayDetails().(type))
 	}
 }
 
