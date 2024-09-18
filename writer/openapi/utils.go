@@ -23,7 +23,7 @@ func openAPIType(p *schema.Property) (TypeInfo, error) {
 		case *schema.Property_Type:
 			return openAPITypePrimitive(p.GetType())
 		default:
-			return TypeInfo{}, fmt.Errorf("openapi type for %q not found", p.GetTypes().(type))
+			return TypeInfo{}, fmt.Errorf("openapi type for %q not found", p.GetTypes())
 	}
 }
 
@@ -47,7 +47,7 @@ func openAPITypeArray(a *schema.ArrayType) (TypeInfo, error) {
 			return ot, nil
 		
 		default:
-			return TypeInfo{} , fmt.Errorf("OpenAPI type for %q not found", a.GetArrayDetails().(type))
+			return TypeInfo{} , fmt.Errorf("OpenAPI type for %q not found", a.GetArrayDetails())
 	}
 }
 

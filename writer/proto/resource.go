@@ -137,7 +137,7 @@ func protoTypeArray(a *schema.ArrayType, s *parser.ParsedService, m *MessageStor
 		case *schema.ArrayType_ObjectType:
 			return protoTypeObject(a.GetObjectType(), s, m)
 		default:
-			return nil, fmt.Errorf("reached outside of protobuf array switch.")
+			return nil, fmt.Errorf("Proto type for %q not found ", a)
 	}
 }
 
@@ -156,33 +156,41 @@ func protoTypePrimitive(t schema.Type) (*builder.FieldType, error) {
 		case schema.Type_FLOAT:
 			return builder.FieldTypeFloat(), nil
 		default:
-			return nil, fmt.Errorf("could not find proto type for %s", t)
+			return nil, fmt.Errorf("Proto type for %q not found", t)
 		}
+}
+
+func protoField(p *parser.ParsedProperty, s *parser.ParsedService, m *MessageStorage) (*builder.FieldBuilder, error) {
+		typ, err := protoType(p, s, m)
+		if(err != nil) {
+			return nil, err
+		}
+	f := builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
+		builder.Comments{
+			LeadingComment: fmt.Sprintf("Field for %v.", p.Name),
+		},
+	)
+	switch p.GetTypes().(type) {
+		case *schema.Property_ArrayType:
+			f.SetRepeated();
+	}
+	o := &descriptorpb.FieldOptions{}
+	if(p.Required) {
+		proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
+	}
+	f.SetOptions(o)
+	return f, nil
 }
 
 // GenerateResourceMesssage adds the resource message.
 func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
 	for _, p := range r.GetPropertiesSortedByNumber() {
-		typ, err := protoType(p, s, m)
+		f, err := protoField(p, s, m)
 		if(err != nil) {
 			return nil, err
 		}
 
-		f := builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
-			builder.Comments{
-				LeadingComment: fmt.Sprintf("Field for %v.", p.Name),
-			},
-		)
-		switch p.GetTypes().(type) {
-			case *schema.Property_ArrayType:
-				f.SetRepeated();
-		}
-		o := &descriptorpb.FieldOptions{}
-		if(p.Required) {
-			proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
-		}
-		f.SetOptions(o)
 		mb.AddField(f)
 	}
 	m.Messages[fmt.Sprintf("%s/%s", s.Name, r.Kind)] = mb
