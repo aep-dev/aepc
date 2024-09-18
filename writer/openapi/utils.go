@@ -23,7 +23,7 @@ func openAPIType(p *schema.Property) (TypeInfo, error) {
 		case *schema.Property_Type:
 			return openAPITypePrimitive(p.GetType())
 		default:
-			return TypeInfo{}, fmt.Errorf("reached end of openapi type switch statement")
+			return TypeInfo{}, fmt.Errorf("openapi type for %q not found", p.GetTypes().(type))
 	}
 }
 
