@@ -32,7 +32,7 @@ func openAPITypeArray(a *schema.ArrayType) (TypeInfo, error) {
 		case *schema.ArrayType_Type: 
 			at, err := openAPITypePrimitive(a.GetType())
 			if(err != nil) {
-				return TypeInfo{}, nil
+				return TypeInfo{}, err
 			}
 			return TypeInfo{
 				openapi_type: "array",
