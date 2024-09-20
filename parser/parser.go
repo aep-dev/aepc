@@ -134,12 +134,12 @@ func addGetToResource(pr *ParsedResource) {
 // existence of path.
 func addCommonFieldsToResource(pr *ParsedResource) {
 	pr.Properties[constants.FIELD_PATH_NAME] = &schema.Property{
-		Type:     schema.Type_STRING,
+		Types: &schema.Property_Type{Type: schema.Type_STRING},
 		Number:   10000,
 		ReadOnly: true,
 	}
 	pr.Properties[constants.FIELD_ID_NAME] = &schema.Property{
-		Type:     schema.Type_STRING,
+		Types: &schema.Property_Type{Type: schema.Type_STRING},
 		Number:   10001,
 		ReadOnly: true,
 	}

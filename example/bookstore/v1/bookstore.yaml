@@ -5,8 +5,8 @@ resources:
     plural: "books"
     properties:
       isbn:
-        type: ARRAY
-        array_primitive_type: STRING
+        array_type:
+          type: STRING
         number: 1
         required: true
       price:

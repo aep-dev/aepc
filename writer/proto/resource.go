@@ -95,69 +95,102 @@ func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder
 	return nil
 }
 
-func protoType(t schema.Type, ot string, s *parser.ParsedService, m *MessageStorage, p *parser.ParsedProperty) (*builder.FieldType, error) {
-		if(t == schema.Type_ARRAY) {
-			return protoType(p.GetArrayPrimitiveType(), p.GetArrayObjectType(), s, m, nil)
+func protoType(p *parser.ParsedProperty, s *parser.ParsedService, m *MessageStorage) (*builder.FieldType, error) {
+	switch p.GetTypes().(type) {
+		case *schema.Property_Type:
+			return protoTypePrimitive(p.GetType())
+		case *schema.Property_ObjectType:
+			return protoTypeObject(p.GetObjectType(), s, m)
+		case *schema.Property_ArrayType:
+			return protoTypeArray(p.GetArrayType(), s, m)
+		default:
+			return nil, fmt.Errorf("reached outside of prototype switch statement.")
+	}
+}
+
+func protoTypeObject(o *schema.ObjectType, s *parser.ParsedService, m *MessageStorage) (*builder.FieldType, error) {
+	wantedType := fmt.Sprintf("%s/%s", s.Name, o.GetMessageName())
+	_, ok := m.Messages[wantedType]
+	if(!ok) {
+		// Resource has not been generated yet.
+		n, ok := s.ResourceByType[wantedType]
+		if(!ok) {
+			return nil, fmt.Errorf("could not find %s in full object list", wantedType)
 		}
-		typ := builder.FieldTypeBool()
+		_, err := GeneratedResourceMessage(n, s, m)
+		if (err != nil) {
+			return nil, err;
+		}
+	}
+	resourceMb, ok := m.Messages[wantedType]
+	if(!ok) {
+		return nil, fmt.Errorf("could not find message %s after recursive create", wantedType)
+	}
+	return builder.FieldTypeMessage(resourceMb), nil
+}
+
+func protoTypeArray(a *schema.ArrayType, s *parser.ParsedService, m *MessageStorage) (*builder.FieldType, error) {
+	switch a.GetArrayDetails().(type) {
+		case *schema.ArrayType_Type:
+			// Repeated will be set later on.
+			return protoTypePrimitive(a.GetType())
+		case *schema.ArrayType_ObjectType:
+			return protoTypeObject(a.GetObjectType(), s, m)
+		default:
+			return nil, fmt.Errorf("Proto type for %q not found ", a)
+	}
+}
+
+func protoTypePrimitive(t schema.Type) (*builder.FieldType, error) {
 		switch t {
 		case schema.Type_STRING:
-			typ = builder.FieldTypeString()
+			return builder.FieldTypeString(), nil
 		case schema.Type_INT32:
-			typ = builder.FieldTypeInt32()
+			return builder.FieldTypeInt32(), nil
 		case schema.Type_INT64:
-			typ = builder.FieldTypeInt64()
+			return builder.FieldTypeInt64(), nil
 		case schema.Type_BOOLEAN:
-			typ = builder.FieldTypeBool()
+			return builder.FieldTypeBool(), nil
 		case schema.Type_DOUBLE:
-			typ = builder.FieldTypeDouble()
+			return builder.FieldTypeDouble(), nil
 		case schema.Type_FLOAT:
-			typ = builder.FieldTypeFloat()
-		case schema.Type_OBJECT:
-			wantedType := fmt.Sprintf("%s/%s", s.Name, ot)
-			_, ok := m.Messages[wantedType]
-			if(!ok) {
-				// Resource has not been generated yet.
-				n, ok := s.ResourceByType[wantedType]
-				if(!ok) {
-					return nil, fmt.Errorf("could not find %s in full object list", wantedType)
-				}
-				_, err := GeneratedResourceMessage(n, s, m)
-				if (err != nil) {
-					return nil, err;
-				}
-			}
-			resourceMb, ok := m.Messages[wantedType]
-			if(!ok) {
-				return nil, fmt.Errorf("could not find message %s after recursive create", wantedType)
-			}
-			typ = builder.FieldTypeMessage(resourceMb);
+			return builder.FieldTypeFloat(), nil
+		default:
+			return nil, fmt.Errorf("Proto type for %q not found", t)
 		}
-		return typ, nil
+}
+
+func protoField(p *parser.ParsedProperty, s *parser.ParsedService, m *MessageStorage) (*builder.FieldBuilder, error) {
+		typ, err := protoType(p, s, m)
+		if(err != nil) {
+			return nil, err
+		}
+	f := builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
+		builder.Comments{
+			LeadingComment: fmt.Sprintf("Field for %v.", p.Name),
+		},
+	)
+	switch p.GetTypes().(type) {
+		case *schema.Property_ArrayType:
+			f.SetRepeated();
+	}
+	o := &descriptorpb.FieldOptions{}
+	if(p.Required) {
+		proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
+	}
+	f.SetOptions(o)
+	return f, nil
 }
 
 // GenerateResourceMesssage adds the resource message.
 func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(r.Kind)
 	for _, p := range r.GetPropertiesSortedByNumber() {
-		typ, err := protoType(p.Type, p.ObjectType, s, m, p)
+		f, err := protoField(p, s, m)
 		if(err != nil) {
 			return nil, err
 		}
 
-		f := builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
-			builder.Comments{
-				LeadingComment: fmt.Sprintf("Field for %v.", p.Name),
-			},
-		)
-		if(p.Type == schema.Type_ARRAY) {
-			f.SetRepeated()
-		}
-		o := &descriptorpb.FieldOptions{}
-		if(p.Required) {
-			proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
-		}
-		f.SetOptions(o)
 		mb.AddField(f)
 	}
 	m.Messages[fmt.Sprintf("%s/%s", s.Name, r.Kind)] = mb

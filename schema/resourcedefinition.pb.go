@@ -37,8 +37,6 @@ const (
 	Type_DOUBLE      Type = 4
 	Type_FLOAT       Type = 5
 	Type_BOOLEAN     Type = 6
-	Type_OBJECT      Type = 7
-	Type_ARRAY       Type = 8
 )
 
 // Enum value maps for Type.
@@ -51,8 +49,6 @@ var (
 		4: "DOUBLE",
 		5: "FLOAT",
 		6: "BOOLEAN",
-		7: "OBJECT",
-		8: "ARRAY",
 	}
 	Type_value = map[string]int32{
 		"UNSPECIFIED": 0,
@@ -62,8 +58,6 @@ var (
 		"DOUBLE":      4,
 		"FLOAT":       5,
 		"BOOLEAN":     6,
-		"OBJECT":      7,
-		"ARRAY":       8,
 	}
 )
 
@@ -398,19 +392,17 @@ type Property struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type Type `protobuf:"varint,1,opt,name=type,proto3,enum=Type" json:"type,omitempty"`
+	// Types that are assignable to Types:
+	//
+	//	*Property_Type
+	//	*Property_ObjectType
+	//	*Property_ArrayType
+	Types isProperty_Types `protobuf_oneof:"types"`
 	// field number used for protobuf or other systems where fields must
 	// be explicitly enumerated.
 	Number   int32 `protobuf:"varint,2,opt,name=number,proto3" json:"number,omitempty"`
 	ReadOnly bool  `protobuf:"varint,3,opt,name=readOnly,proto3" json:"readOnly,omitempty"`
 	Required bool  `protobuf:"varint,4,opt,name=required,proto3" json:"required,omitempty"`
-	// If type is OBJECT, this is the name of the object in `messages`.
-	ObjectType string `protobuf:"bytes,5,opt,name=object_type,json=objectType,proto3" json:"object_type,omitempty"`
-	// Types that are assignable to ArrayType:
-	//
-	//	*Property_ArrayObjectType
-	//	*Property_ArrayPrimitiveType
-	ArrayType isProperty_ArrayType `protobuf_oneof:"array_type"`
 }
 
 func (x *Property) Reset() {
@@ -445,11 +437,32 @@ func (*Property) Descriptor() ([]byte, []int) {
 	return file_schema_resourcedefinition_proto_rawDescGZIP(), []int{4}
 }
 
+func (m *Property) GetTypes() isProperty_Types {
+	if m != nil {
+		return m.Types
+	}
+	return nil
+}
+
 func (x *Property) GetType() Type {
-	if x != nil {
+	if x, ok := x.GetTypes().(*Property_Type); ok {
 		return x.Type
 	}
 	return Type_UNSPECIFIED
+}
+
+func (x *Property) GetObjectType() *ObjectType {
+	if x, ok := x.GetTypes().(*Property_ObjectType); ok {
+		return x.ObjectType
+	}
+	return nil
+}
+
+func (x *Property) GetArrayType() *ArrayType {
+	if x, ok := x.GetTypes().(*Property_ArrayType); ok {
+		return x.ArrayType
+	}
+	return nil
 }
 
 func (x *Property) GetNumber() int32 {
@@ -473,49 +486,175 @@ func (x *Property) GetRequired() bool {
 	return false
 }
 
-func (x *Property) GetObjectType() string {
-	if x != nil {
-		return x.ObjectType
-	}
-	return ""
+type isProperty_Types interface {
+	isProperty_Types()
 }
 
-func (m *Property) GetArrayType() isProperty_ArrayType {
+type Property_Type struct {
+	Type Type `protobuf:"varint,1,opt,name=type,proto3,enum=Type,oneof"`
+}
+
+type Property_ObjectType struct {
+	ObjectType *ObjectType `protobuf:"bytes,5,opt,name=object_type,json=objectType,proto3,oneof"`
+}
+
+type Property_ArrayType struct {
+	ArrayType *ArrayType `protobuf:"bytes,6,opt,name=array_type,json=arrayType,proto3,oneof"`
+}
+
+func (*Property_Type) isProperty_Types() {}
+
+func (*Property_ObjectType) isProperty_Types() {}
+
+func (*Property_ArrayType) isProperty_Types() {}
+
+type ObjectType struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Types that are assignable to ObjectDetails:
+	//
+	//	*ObjectType_MessageName
+	ObjectDetails isObjectType_ObjectDetails `protobuf_oneof:"object_details"`
+}
+
+func (x *ObjectType) Reset() {
+	*x = ObjectType{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_schema_resourcedefinition_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ObjectType) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ObjectType) ProtoMessage() {}
+
+func (x *ObjectType) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_resourcedefinition_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ObjectType.ProtoReflect.Descriptor instead.
+func (*ObjectType) Descriptor() ([]byte, []int) {
+	return file_schema_resourcedefinition_proto_rawDescGZIP(), []int{5}
+}
+
+func (m *ObjectType) GetObjectDetails() isObjectType_ObjectDetails {
 	if m != nil {
-		return m.ArrayType
+		return m.ObjectDetails
 	}
 	return nil
 }
 
-func (x *Property) GetArrayObjectType() string {
-	if x, ok := x.GetArrayType().(*Property_ArrayObjectType); ok {
-		return x.ArrayObjectType
+func (x *ObjectType) GetMessageName() string {
+	if x, ok := x.GetObjectDetails().(*ObjectType_MessageName); ok {
+		return x.MessageName
 	}
 	return ""
 }
 
-func (x *Property) GetArrayPrimitiveType() Type {
-	if x, ok := x.GetArrayType().(*Property_ArrayPrimitiveType); ok {
-		return x.ArrayPrimitiveType
+type isObjectType_ObjectDetails interface {
+	isObjectType_ObjectDetails()
+}
+
+type ObjectType_MessageName struct {
+	MessageName string `protobuf:"bytes,1,opt,name=message_name,json=messageName,proto3,oneof"`
+}
+
+func (*ObjectType_MessageName) isObjectType_ObjectDetails() {}
+
+type ArrayType struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Types that are assignable to ArrayDetails:
+	//
+	//	*ArrayType_Type
+	//	*ArrayType_ObjectType
+	ArrayDetails isArrayType_ArrayDetails `protobuf_oneof:"array_details"`
+}
+
+func (x *ArrayType) Reset() {
+	*x = ArrayType{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_schema_resourcedefinition_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ArrayType) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ArrayType) ProtoMessage() {}
+
+func (x *ArrayType) ProtoReflect() protoreflect.Message {
+	mi := &file_schema_resourcedefinition_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ArrayType.ProtoReflect.Descriptor instead.
+func (*ArrayType) Descriptor() ([]byte, []int) {
+	return file_schema_resourcedefinition_proto_rawDescGZIP(), []int{6}
+}
+
+func (m *ArrayType) GetArrayDetails() isArrayType_ArrayDetails {
+	if m != nil {
+		return m.ArrayDetails
+	}
+	return nil
+}
+
+func (x *ArrayType) GetType() Type {
+	if x, ok := x.GetArrayDetails().(*ArrayType_Type); ok {
+		return x.Type
 	}
 	return Type_UNSPECIFIED
 }
 
-type isProperty_ArrayType interface {
-	isProperty_ArrayType()
+func (x *ArrayType) GetObjectType() *ObjectType {
+	if x, ok := x.GetArrayDetails().(*ArrayType_ObjectType); ok {
+		return x.ObjectType
+	}
+	return nil
 }
 
-type Property_ArrayObjectType struct {
-	ArrayObjectType string `protobuf:"bytes,6,opt,name=array_object_type,json=arrayObjectType,proto3,oneof"`
+type isArrayType_ArrayDetails interface {
+	isArrayType_ArrayDetails()
 }
 
-type Property_ArrayPrimitiveType struct {
-	ArrayPrimitiveType Type `protobuf:"varint,7,opt,name=array_primitive_type,json=arrayPrimitiveType,proto3,enum=Type,oneof"`
+type ArrayType_Type struct {
+	Type Type `protobuf:"varint,1,opt,name=type,proto3,enum=Type,oneof"`
 }
 
-func (*Property_ArrayObjectType) isProperty_ArrayType() {}
+type ArrayType_ObjectType struct {
+	ObjectType *ObjectType `protobuf:"bytes,2,opt,name=object_type,json=objectType,proto3,oneof"`
+}
 
-func (*Property_ArrayPrimitiveType) isProperty_ArrayType() {}
+func (*ArrayType_Type) isArrayType_ArrayDetails() {}
+
+func (*ArrayType_ObjectType) isArrayType_ArrayDetails() {}
 
 type Methods_CreateMethod struct {
 	state         protoimpl.MessageState
@@ -526,7 +665,7 @@ type Methods_CreateMethod struct {
 func (x *Methods_CreateMethod) Reset() {
 	*x = Methods_CreateMethod{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_resourcedefinition_proto_msgTypes[7]
+		mi := &file_schema_resourcedefinition_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -539,7 +678,7 @@ func (x *Methods_CreateMethod) String() string {
 func (*Methods_CreateMethod) ProtoMessage() {}
 
 func (x *Methods_CreateMethod) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_resourcedefinition_proto_msgTypes[7]
+	mi := &file_schema_resourcedefinition_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -564,7 +703,7 @@ type Methods_ReadMethod struct {
 func (x *Methods_ReadMethod) Reset() {
 	*x = Methods_ReadMethod{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_resourcedefinition_proto_msgTypes[8]
+		mi := &file_schema_resourcedefinition_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -577,7 +716,7 @@ func (x *Methods_ReadMethod) String() string {
 func (*Methods_ReadMethod) ProtoMessage() {}
 
 func (x *Methods_ReadMethod) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_resourcedefinition_proto_msgTypes[8]
+	mi := &file_schema_resourcedefinition_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -602,7 +741,7 @@ type Methods_UpdateMethod struct {
 func (x *Methods_UpdateMethod) Reset() {
 	*x = Methods_UpdateMethod{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_resourcedefinition_proto_msgTypes[9]
+		mi := &file_schema_resourcedefinition_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -615,7 +754,7 @@ func (x *Methods_UpdateMethod) String() string {
 func (*Methods_UpdateMethod) ProtoMessage() {}
 
 func (x *Methods_UpdateMethod) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_resourcedefinition_proto_msgTypes[9]
+	mi := &file_schema_resourcedefinition_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -640,7 +779,7 @@ type Methods_DeleteMethod struct {
 func (x *Methods_DeleteMethod) Reset() {
 	*x = Methods_DeleteMethod{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_resourcedefinition_proto_msgTypes[10]
+		mi := &file_schema_resourcedefinition_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -653,7 +792,7 @@ func (x *Methods_DeleteMethod) String() string {
 func (*Methods_DeleteMethod) ProtoMessage() {}
 
 func (x *Methods_DeleteMethod) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_resourcedefinition_proto_msgTypes[10]
+	mi := &file_schema_resourcedefinition_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -678,7 +817,7 @@ type Methods_ListMethod struct {
 func (x *Methods_ListMethod) Reset() {
 	*x = Methods_ListMethod{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_resourcedefinition_proto_msgTypes[11]
+		mi := &file_schema_resourcedefinition_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -691,7 +830,7 @@ func (x *Methods_ListMethod) String() string {
 func (*Methods_ListMethod) ProtoMessage() {}
 
 func (x *Methods_ListMethod) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_resourcedefinition_proto_msgTypes[11]
+	mi := &file_schema_resourcedefinition_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -716,7 +855,7 @@ type Methods_GlobalListMethod struct {
 func (x *Methods_GlobalListMethod) Reset() {
 	*x = Methods_GlobalListMethod{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_resourcedefinition_proto_msgTypes[12]
+		mi := &file_schema_resourcedefinition_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -729,7 +868,7 @@ func (x *Methods_GlobalListMethod) String() string {
 func (*Methods_GlobalListMethod) ProtoMessage() {}
 
 func (x *Methods_GlobalListMethod) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_resourcedefinition_proto_msgTypes[12]
+	mi := &file_schema_resourcedefinition_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -754,7 +893,7 @@ type Methods_ApplyMethod struct {
 func (x *Methods_ApplyMethod) Reset() {
 	*x = Methods_ApplyMethod{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_schema_resourcedefinition_proto_msgTypes[13]
+		mi := &file_schema_resourcedefinition_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -767,7 +906,7 @@ func (x *Methods_ApplyMethod) String() string {
 func (*Methods_ApplyMethod) ProtoMessage() {}
 
 func (x *Methods_ApplyMethod) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_resourcedefinition_proto_msgTypes[13]
+	mi := &file_schema_resourcedefinition_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -848,33 +987,39 @@ var file_schema_resourcedefinition_proto_rawDesc = []byte{
 	0x65, 0x6c, 0x65, 0x74, 0x65, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x0c, 0x0a, 0x0a, 0x4c,
 	0x69, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x12, 0x0a, 0x10, 0x47, 0x6c, 0x6f,
 	0x62, 0x61, 0x6c, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x1a, 0x0d, 0x0a,
-	0x0b, 0x41, 0x70, 0x70, 0x6c, 0x79, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x22, 0x8d, 0x02, 0x0a,
-	0x08, 0x50, 0x72, 0x6f, 0x70, 0x65, 0x72, 0x74, 0x79, 0x12, 0x19, 0x0a, 0x04, 0x74, 0x79, 0x70,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x05, 0x2e, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04,
-	0x74, 0x79, 0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x12, 0x1a, 0x0a, 0x08,
-	0x72, 0x65, 0x61, 0x64, 0x4f, 0x6e, 0x6c, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x08, 0x52, 0x08,
-	0x72, 0x65, 0x61, 0x64, 0x4f, 0x6e, 0x6c, 0x79, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x71, 0x75,
-	0x69, 0x72, 0x65, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x08, 0x52, 0x08, 0x72, 0x65, 0x71, 0x75,
-	0x69, 0x72, 0x65, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x5f, 0x74,
-	0x79, 0x70, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x6f, 0x62, 0x6a, 0x65, 0x63,
-	0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x2c, 0x0a, 0x11, 0x61, 0x72, 0x72, 0x61, 0x79, 0x5f, 0x6f,
-	0x62, 0x6a, 0x65, 0x63, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09,
-	0x48, 0x00, 0x52, 0x0f, 0x61, 0x72, 0x72, 0x61, 0x79, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x54,
-	0x79, 0x70, 0x65, 0x12, 0x39, 0x0a, 0x14, 0x61, 0x72, 0x72, 0x61, 0x79, 0x5f, 0x70, 0x72, 0x69,
-	0x6d, 0x69, 0x74, 0x69, 0x76, 0x65, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28,
-	0x0e, 0x32, 0x05, 0x2e, 0x54, 0x79, 0x70, 0x65, 0x48, 0x00, 0x52, 0x12, 0x61, 0x72, 0x72, 0x61,
-	0x79, 0x50, 0x72, 0x69, 0x6d, 0x69, 0x74, 0x69, 0x76, 0x65, 0x54, 0x79, 0x70, 0x65, 0x42, 0x0c,
-	0x0a, 0x0a, 0x61, 0x72, 0x72, 0x61, 0x79, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x2a, 0x74, 0x0a, 0x04,
+	0x0b, 0x41, 0x70, 0x70, 0x6c, 0x79, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x22, 0xdd, 0x01, 0x0a,
+	0x08, 0x50, 0x72, 0x6f, 0x70, 0x65, 0x72, 0x74, 0x79, 0x12, 0x1b, 0x0a, 0x04, 0x74, 0x79, 0x70,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x05, 0x2e, 0x54, 0x79, 0x70, 0x65, 0x48, 0x00,
+	0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x2e, 0x0a, 0x0b, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74,
+	0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x4f, 0x62,
+	0x6a, 0x65, 0x63, 0x74, 0x54, 0x79, 0x70, 0x65, 0x48, 0x00, 0x52, 0x0a, 0x6f, 0x62, 0x6a, 0x65,
+	0x63, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x2b, 0x0a, 0x0a, 0x61, 0x72, 0x72, 0x61, 0x79, 0x5f,
+	0x74, 0x79, 0x70, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x41, 0x72, 0x72,
+	0x61, 0x79, 0x54, 0x79, 0x70, 0x65, 0x48, 0x00, 0x52, 0x09, 0x61, 0x72, 0x72, 0x61, 0x79, 0x54,
+	0x79, 0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x05, 0x52, 0x06, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x12, 0x1a, 0x0a, 0x08, 0x72,
+	0x65, 0x61, 0x64, 0x4f, 0x6e, 0x6c, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x08, 0x52, 0x08, 0x72,
+	0x65, 0x61, 0x64, 0x4f, 0x6e, 0x6c, 0x79, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x71, 0x75, 0x69,
+	0x72, 0x65, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x08, 0x52, 0x08, 0x72, 0x65, 0x71, 0x75, 0x69,
+	0x72, 0x65, 0x64, 0x42, 0x07, 0x0a, 0x05, 0x74, 0x79, 0x70, 0x65, 0x73, 0x22, 0x43, 0x0a, 0x0a,
+	0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x23, 0x0a, 0x0c, 0x6d, 0x65,
+	0x73, 0x73, 0x61, 0x67, 0x65, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x48, 0x00, 0x52, 0x0b, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x4e, 0x61, 0x6d, 0x65, 0x42,
+	0x10, 0x0a, 0x0e, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x5f, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c,
+	0x73, 0x22, 0x69, 0x0a, 0x09, 0x41, 0x72, 0x72, 0x61, 0x79, 0x54, 0x79, 0x70, 0x65, 0x12, 0x1b,
+	0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x05, 0x2e, 0x54,
+	0x79, 0x70, 0x65, 0x48, 0x00, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x2e, 0x0a, 0x0b, 0x6f,
+	0x62, 0x6a, 0x65, 0x63, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x0b, 0x2e, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x54, 0x79, 0x70, 0x65, 0x48, 0x00, 0x52,
+	0x0a, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x54, 0x79, 0x70, 0x65, 0x42, 0x0f, 0x0a, 0x0d, 0x61,
+	0x72, 0x72, 0x61, 0x79, 0x5f, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x2a, 0x5d, 0x0a, 0x04,
 	0x54, 0x79, 0x70, 0x65, 0x12, 0x0f, 0x0a, 0x0b, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46,
 	0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x53, 0x54, 0x52, 0x49, 0x4e, 0x47, 0x10,
 	0x01, 0x12, 0x09, 0x0a, 0x05, 0x49, 0x4e, 0x54, 0x33, 0x32, 0x10, 0x02, 0x12, 0x09, 0x0a, 0x05,
 	0x49, 0x4e, 0x54, 0x36, 0x34, 0x10, 0x03, 0x12, 0x0a, 0x0a, 0x06, 0x44, 0x4f, 0x55, 0x42, 0x4c,
 	0x45, 0x10, 0x04, 0x12, 0x09, 0x0a, 0x05, 0x46, 0x4c, 0x4f, 0x41, 0x54, 0x10, 0x05, 0x12, 0x0b,
-	0x0a, 0x07, 0x42, 0x4f, 0x4f, 0x4c, 0x45, 0x41, 0x4e, 0x10, 0x06, 0x12, 0x0a, 0x0a, 0x06, 0x4f,
-	0x42, 0x4a, 0x45, 0x43, 0x54, 0x10, 0x07, 0x12, 0x09, 0x0a, 0x05, 0x41, 0x52, 0x52, 0x41, 0x59,
-	0x10, 0x08, 0x42, 0x09, 0x5a, 0x07, 0x2f, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x0a, 0x07, 0x42, 0x4f, 0x4f, 0x4c, 0x45, 0x41, 0x4e, 0x10, 0x06, 0x42, 0x09, 0x5a, 0x07, 0x2f,
+	0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -890,7 +1035,7 @@ func file_schema_resourcedefinition_proto_rawDescGZIP() []byte {
 }
 
 var file_schema_resourcedefinition_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_schema_resourcedefinition_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_schema_resourcedefinition_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_schema_resourcedefinition_proto_goTypes = []interface{}{
 	(Type)(0),                        // 0: Type
 	(*Service)(nil),                  // 1: Service
@@ -898,38 +1043,43 @@ var file_schema_resourcedefinition_proto_goTypes = []interface{}{
 	(*Object)(nil),                   // 3: Object
 	(*Methods)(nil),                  // 4: Methods
 	(*Property)(nil),                 // 5: Property
-	nil,                              // 6: Resource.PropertiesEntry
-	nil,                              // 7: Object.PropertiesEntry
-	(*Methods_CreateMethod)(nil),     // 8: Methods.CreateMethod
-	(*Methods_ReadMethod)(nil),       // 9: Methods.ReadMethod
-	(*Methods_UpdateMethod)(nil),     // 10: Methods.UpdateMethod
-	(*Methods_DeleteMethod)(nil),     // 11: Methods.DeleteMethod
-	(*Methods_ListMethod)(nil),       // 12: Methods.ListMethod
-	(*Methods_GlobalListMethod)(nil), // 13: Methods.GlobalListMethod
-	(*Methods_ApplyMethod)(nil),      // 14: Methods.ApplyMethod
+	(*ObjectType)(nil),               // 6: ObjectType
+	(*ArrayType)(nil),                // 7: ArrayType
+	nil,                              // 8: Resource.PropertiesEntry
+	nil,                              // 9: Object.PropertiesEntry
+	(*Methods_CreateMethod)(nil),     // 10: Methods.CreateMethod
+	(*Methods_ReadMethod)(nil),       // 11: Methods.ReadMethod
+	(*Methods_UpdateMethod)(nil),     // 12: Methods.UpdateMethod
+	(*Methods_DeleteMethod)(nil),     // 13: Methods.DeleteMethod
+	(*Methods_ListMethod)(nil),       // 14: Methods.ListMethod
+	(*Methods_GlobalListMethod)(nil), // 15: Methods.GlobalListMethod
+	(*Methods_ApplyMethod)(nil),      // 16: Methods.ApplyMethod
 }
 var file_schema_resourcedefinition_proto_depIdxs = []int32{
 	2,  // 0: Service.resources:type_name -> Resource
 	3,  // 1: Service.objects:type_name -> Object
-	6,  // 2: Resource.properties:type_name -> Resource.PropertiesEntry
+	8,  // 2: Resource.properties:type_name -> Resource.PropertiesEntry
 	4,  // 3: Resource.methods:type_name -> Methods
-	7,  // 4: Object.properties:type_name -> Object.PropertiesEntry
-	8,  // 5: Methods.create:type_name -> Methods.CreateMethod
-	9,  // 6: Methods.read:type_name -> Methods.ReadMethod
-	10, // 7: Methods.update:type_name -> Methods.UpdateMethod
-	11, // 8: Methods.delete:type_name -> Methods.DeleteMethod
-	12, // 9: Methods.list:type_name -> Methods.ListMethod
-	13, // 10: Methods.global_list:type_name -> Methods.GlobalListMethod
-	14, // 11: Methods.apply:type_name -> Methods.ApplyMethod
+	9,  // 4: Object.properties:type_name -> Object.PropertiesEntry
+	10, // 5: Methods.create:type_name -> Methods.CreateMethod
+	11, // 6: Methods.read:type_name -> Methods.ReadMethod
+	12, // 7: Methods.update:type_name -> Methods.UpdateMethod
+	13, // 8: Methods.delete:type_name -> Methods.DeleteMethod
+	14, // 9: Methods.list:type_name -> Methods.ListMethod
+	15, // 10: Methods.global_list:type_name -> Methods.GlobalListMethod
+	16, // 11: Methods.apply:type_name -> Methods.ApplyMethod
 	0,  // 12: Property.type:type_name -> Type
-	0,  // 13: Property.array_primitive_type:type_name -> Type
-	5,  // 14: Resource.PropertiesEntry.value:type_name -> Property
-	5,  // 15: Object.PropertiesEntry.value:type_name -> Property
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	6,  // 13: Property.object_type:type_name -> ObjectType
+	7,  // 14: Property.array_type:type_name -> ArrayType
+	0,  // 15: ArrayType.type:type_name -> Type
+	6,  // 16: ArrayType.object_type:type_name -> ObjectType
+	5,  // 17: Resource.PropertiesEntry.value:type_name -> Property
+	5,  // 18: Object.PropertiesEntry.value:type_name -> Property
+	19, // [19:19] is the sub-list for method output_type
+	19, // [19:19] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_schema_resourcedefinition_proto_init() }
@@ -998,8 +1148,8 @@ func file_schema_resourcedefinition_proto_init() {
 				return nil
 			}
 		}
-		file_schema_resourcedefinition_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Methods_CreateMethod); i {
+		file_schema_resourcedefinition_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ObjectType); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1010,8 +1160,8 @@ func file_schema_resourcedefinition_proto_init() {
 				return nil
 			}
 		}
-		file_schema_resourcedefinition_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Methods_ReadMethod); i {
+		file_schema_resourcedefinition_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ArrayType); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1023,7 +1173,7 @@ func file_schema_resourcedefinition_proto_init() {
 			}
 		}
 		file_schema_resourcedefinition_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Methods_UpdateMethod); i {
+			switch v := v.(*Methods_CreateMethod); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1035,7 +1185,7 @@ func file_schema_resourcedefinition_proto_init() {
 			}
 		}
 		file_schema_resourcedefinition_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Methods_DeleteMethod); i {
+			switch v := v.(*Methods_ReadMethod); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1047,7 +1197,7 @@ func file_schema_resourcedefinition_proto_init() {
 			}
 		}
 		file_schema_resourcedefinition_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Methods_ListMethod); i {
+			switch v := v.(*Methods_UpdateMethod); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1059,7 +1209,7 @@ func file_schema_resourcedefinition_proto_init() {
 			}
 		}
 		file_schema_resourcedefinition_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Methods_GlobalListMethod); i {
+			switch v := v.(*Methods_DeleteMethod); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1071,6 +1221,30 @@ func file_schema_resourcedefinition_proto_init() {
 			}
 		}
 		file_schema_resourcedefinition_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Methods_ListMethod); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_schema_resourcedefinition_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Methods_GlobalListMethod); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_schema_resourcedefinition_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Methods_ApplyMethod); i {
 			case 0:
 				return &v.state
@@ -1084,8 +1258,16 @@ func file_schema_resourcedefinition_proto_init() {
 		}
 	}
 	file_schema_resourcedefinition_proto_msgTypes[4].OneofWrappers = []interface{}{
-		(*Property_ArrayObjectType)(nil),
-		(*Property_ArrayPrimitiveType)(nil),
+		(*Property_Type)(nil),
+		(*Property_ObjectType)(nil),
+		(*Property_ArrayType)(nil),
+	}
+	file_schema_resourcedefinition_proto_msgTypes[5].OneofWrappers = []interface{}{
+		(*ObjectType_MessageName)(nil),
+	}
+	file_schema_resourcedefinition_proto_msgTypes[6].OneofWrappers = []interface{}{
+		(*ArrayType_Type)(nil),
+		(*ArrayType_ObjectType)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1093,7 +1275,7 @@ func file_schema_resourcedefinition_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_schema_resourcedefinition_proto_rawDesc,
 			NumEnums:      1,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
