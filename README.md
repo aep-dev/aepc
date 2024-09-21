@@ -20,6 +20,9 @@ flowchart LR
     http("HTTP REST APIs via gRPC-gateway")
     openapi("OpenAPI Schema")
     terraform("Fully Generated Terraform Provider")
+    asset_inventory("Asset inventory and policy management tooling (external integration)")
+    llm("LLM plugin (external integration)")
+    graphql("GraphQL (planned)")
     cli("command-line interface (planned)")
     docs("API documentation (planned)")
     sdks("Language-specific libraries (planned)")
@@ -28,10 +31,13 @@ flowchart LR
     hub  --> proto
     hub  --> openapi
     hub  --> http_planned
+    hub --> graphql
     proto --> http
     http --> terraform
     http --> cli
     http --> crd
+    http --> llm
+    http --> asset_inventory
     openapi --> docs
     openapi --> sdks
     openapi --> ui
