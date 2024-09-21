@@ -267,6 +267,19 @@
     }
   },
   "definitions": {
+    "BookAuthor": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "description": "Field for firstName."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Field for lastName."
+        }
+      }
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -298,6 +311,14 @@
     "v1Book": {
       "type": "object",
       "properties": {
+        "author": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/BookAuthor"
+          },
+          "description": "Field for author."
+        },
         "isbn": {
           "type": "array",
           "items": {

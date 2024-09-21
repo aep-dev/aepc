@@ -76,9 +76,9 @@ message Property {
 }
 
 message ObjectType {
-  oneof object_details {
-    string message_name = 1;
-  }
+  // message_name and properties cannot both be set at the same time.
+  string message_name = 1;
+  map<string, Property> properties = 2;
 }
 
 message ArrayType {

@@ -57,16 +57,16 @@ func NewParsedService(s *schema.Service) (*ParsedService, error) {
 func ParsedResourceForObject(r *schema.Object, s *schema.Service) *ParsedResource {
 	t := fmt.Sprintf("%s/%s", s.Name, r.Kind)
 	return &ParsedResource{
-			Type: t,
-			Resource: &schema.Resource{
-				Kind: r.Kind,
-				Properties: r.Properties,
-			},
-			IsResource: false,
-		}
+		Type: t,
+		Resource: &schema.Resource{
+			Kind:       r.Kind,
+			Properties: r.Properties,
+		},
+		IsResource: false,
+	}
 }
 
-func loadObjectsByType(o []*schema.Object, s *schema.Service, m *map[string]*ParsedResource) (error) {
+func loadObjectsByType(o []*schema.Object, s *schema.Service, m *map[string]*ParsedResource) error {
 	for _, r := range o {
 		t := fmt.Sprintf("%s/%s", s.Name, r.Kind)
 		(*m)[t] = ParsedResourceForObject(r, s)
@@ -79,9 +79,9 @@ func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 	for _, r := range s.Resources {
 		t := fmt.Sprintf("%s/%s", s.Name, r.Kind)
 		resourceByType[t] = &ParsedResource{
-			Resource: r,
-			Type:     t,
-			Parents:  []*ParsedResource{},
+			Resource:   r,
+			Type:       t,
+			Parents:    []*ParsedResource{},
 			IsResource: true,
 		}
 	}
@@ -106,10 +106,14 @@ func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 }
 
 func (pr *ParsedResource) GetPropertiesSortedByNumber() []*ParsedProperty {
+	return PropertiesSortedByNumber(pr.Properties)
+}
+
+func PropertiesSortedByNumber(properties map[string]*schema.Property) []*ParsedProperty {
 	// to ensure idempotency of generators, fields are ordered by
 	// field number
 	parsedProperties := []*ParsedProperty{}
-	for name, p := range pr.Properties {
+	for name, p := range properties {
 		parsedProperties = append(parsedProperties, &ParsedProperty{
 			Property: p,
 			Name:     name,
@@ -134,12 +138,12 @@ func addGetToResource(pr *ParsedResource) {
 // existence of path.
 func addCommonFieldsToResource(pr *ParsedResource) {
 	pr.Properties[constants.FIELD_PATH_NAME] = &schema.Property{
-		Types: &schema.Property_Type{Type: schema.Type_STRING},
+		Types:    &schema.Property_Type{Type: schema.Type_STRING},
 		Number:   10000,
 		ReadOnly: true,
 	}
 	pr.Properties[constants.FIELD_ID_NAME] = &schema.Property{
-		Types: &schema.Property_Type{Type: schema.Type_STRING},
+		Types:    &schema.Property_Type{Type: schema.Type_STRING},
 		Number:   10001,
 		ReadOnly: true,
 	}
