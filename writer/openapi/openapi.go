@@ -39,9 +39,9 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 		if err != nil {
 			return nil, err
 		}
-		definitions[r.Kind] = d;
-		if(!r.IsResource) {
-			continue;
+		definitions[r.Kind] = d
+		if !r.IsResource {
+			continue
 		}
 		schemaRef := fmt.Sprintf("#/definitions/%v", r.Kind)
 		if r.Methods.List != nil {
@@ -167,13 +167,13 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 	return openAPI, nil
 }
 
-func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
+func buildProperties(props []*parser.ParsedProperty) (Properties, []string, error) {
 	properties := Properties{}
 	required := []string{}
-	for _, f := range r.GetPropertiesSortedByNumber() {
+	for _, f := range props {
 		t, err := openAPIType(f.Property)
 		if err != nil {
-			return Schema{}, err
+			return Properties{}, []string{}, err
 		}
 		s := Schema{
 			Type:         t.openapi_type,
@@ -186,13 +186,46 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 			required = append(required, f.Name)
 		}
 		switch f.GetTypes().(type) {
-			case *schema.Property_ArrayType:
+		case *schema.Property_ArrayType:
+			switch f.GetArrayType().GetArrayDetails().(type) {
+			case *schema.ArrayType_ObjectType:
 				s.Items = &Schema{
-					Type: t.array_type.openapi_type,
+					Type:   t.array_type.openapi_type,
 					Format: t.array_type.openapi_format,
 				}
+				if len(f.GetObjectType().GetProperties()) > 0 {
+					props, required, err := buildProperties(parser.PropertiesSortedByNumber(f.GetObjectType().GetProperties()))
+					if err != nil {
+						return Properties{}, []string{}, err
+					}
+					s.Items.Required = required
+					s.Items.Properties = &props
+				}
+			case *schema.ArrayType_Type:
+				s.Items = &Schema{
+					Type:   t.array_type.openapi_type,
+					Format: t.array_type.openapi_format,
+				}
+			}
+		case *schema.Property_ObjectType:
+			if len(f.GetObjectType().GetProperties()) > 0 {
+				props, required, err := buildProperties(parser.PropertiesSortedByNumber(f.GetObjectType().GetProperties()))
+				if err != nil {
+					return Properties{}, []string{}, err
+				}
+				s.Required = required
+				s.Properties = &props
+			}
 		}
 		properties[f.Name] = s
+	}
+	return properties, required, nil
+}
+
+func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
+	properties, required, err := buildProperties(r.GetPropertiesSortedByNumber())
+	if err != nil {
+		return Schema{}, err
 	}
 	return Schema{
 		Type:       "object",

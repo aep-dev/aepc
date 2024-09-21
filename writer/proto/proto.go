@@ -72,7 +72,7 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 
 	// Add resources to MessageStorage.
 	err := GenerateResourceMessages(ps.ResourceByType, ps, m)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -108,11 +108,11 @@ func WriteServiceToProto(ps *parser.ParsedService, outputDir string) ([]byte, er
 	return output.Bytes(), nil
 }
 
-func GenerateResourceMessages(r map[string]*parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (error) {
+func GenerateResourceMessages(r map[string]*parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) error {
 	// Generate Resource messages on combined map
 	for _, r := range getSortedResources(r) {
 		_, err := GeneratedResourceMessage(r, s, m)
-		if(err != nil) {
+		if err != nil {
 			return err
 		}
 	}
@@ -122,6 +122,10 @@ func GenerateResourceMessages(r map[string]*parser.ParsedResource, s *parser.Par
 func toProtoServiceName(serviceName string) string {
 	parts := strings.SplitN(serviceName, ".", 2)
 	return capitalizer.String(parts[0])
+}
+
+func toMessageName(resource string) string {
+	return capitalizer.String(resource)
 }
 
 func getSortedResources(prsByString map[string]*parser.ParsedResource) []*parser.ParsedResource {

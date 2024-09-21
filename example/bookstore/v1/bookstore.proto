@@ -61,6 +61,17 @@ service Bookstore {
 
 // A Book resource.
 message Book {
+  message Author {
+    // Field for firstName.
+    string firstName = 1;
+
+    // Field for lastName.
+    string lastName = 2;
+  }
+
+  // Field for author.
+  repeated Author author = 5;
+
   // Field for isbn.
   repeated string isbn = 1 [(google.api.field_behavior) = REQUIRED];
 
