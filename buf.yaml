@@ -1,9 +1,11 @@
-version: v1
+version: v2
 breaking:
   use:
     - FILE
 lint:
   use:
-    - DEFAULT
+    - AEP
+plugins:
+  - plugin: buf-plugin-aep
 deps:
   - buf.build/googleapis/googleapis:28151c0d0a1641bf938a7672c500e01d
