@@ -44,5 +44,23 @@ func validateResource(r *schema.Resource) []error {
 			fmt.Errorf("kind must match regex %q", RESOURCE_KIND_REGEX_STRING),
 		)
 	}
+
+	for _, p := range r.Properties {
+		errors = append(errors, validateProperty(p)...)
+	}
+	return errors
+}
+
+func validateProperty(p *schema.Property) []error {
+	errors := []error{}
+	switch p.GetTypes().(type) {
+	case *schema.Property_ObjectType:
+		if p.GetObjectType().GetMessageName() != "" && len(p.GetObjectType().GetProperties()) != 0 {
+			errors = append(errors, fmt.Errorf("cannot set both message_name and properties on object_type %q", p))
+		}
+		for _, p := range p.GetObjectType().GetProperties() {
+			errors = append(errors, validateProperty(p)...)
+		}
+	}
 	return errors
 }

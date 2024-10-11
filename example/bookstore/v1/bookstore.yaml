@@ -21,6 +21,16 @@ resources:
         type: INT32
         number: 4
         required: false
+      author:
+        array_type:
+          object_type:
+            properties:
+              firstName:
+                type: STRING
+                number: 1
+              lastName:
+                type: STRING
+                number: 2
     # parents:
     #   - "bookstore.example.com/Publisher"
     methods:
