@@ -21,13 +21,13 @@ jobs:
 
       - name: "test: no change to generated files."
         run: |
-          go install github.com/bufbuild/buf/cmd/buf@v1.38.0
+          go install github.com/bufbuild/buf/cmd/buf@v1.42.0
           ./scripts/verify-goldens.sh
 
       - name: "test: example server function"
         run: |
           ./scripts/test_http_api.sh
 
-      # - name: Run script
-      #   run: |
-      #     ./scripts/run-api-linter.sh
+      - name: run api-linter
+        run: |
+          ./scripts/run-api-linter.sh
