@@ -59,8 +59,9 @@ service Bookstore {
   }
 }
 
-// A Book resource.
+// A Book.
 message Book {
+  // A Author.
   message Author {
     // Field for firstName.
     string firstName = 1;

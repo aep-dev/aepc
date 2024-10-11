@@ -37,10 +37,6 @@ func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder
 		return fmt.Errorf("%s not found in message storage", r.Kind)
 	}
 
-	// set comments for resourceMB
-	resourceMb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("A %v resource.", r.Kind),
-	})
 	fb.AddMessage(resourceMb)
 
 	if !r.IsResource {
@@ -193,6 +189,9 @@ func protoField(p *parser.ParsedProperty, s *parser.ParsedService, m *MessageSto
 
 func GenerateMessage(properties []*parser.ParsedProperty, name string, s *parser.ParsedService, m *MessageStorage) (*builder.MessageBuilder, error) {
 	mb := builder.NewMessage(name)
+	mb.SetComments(builder.Comments{
+		LeadingComment: fmt.Sprintf("A %v.", name),
+	})
 	for _, p := range properties {
 		f, err := protoField(p, s, m, mb)
 		if err != nil {
