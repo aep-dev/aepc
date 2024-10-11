@@ -14,7 +14,7 @@
           "200": {
             "schema": {
               "items": {
-                "$ref": "#/definitions/Book"
+                "$ref": "#/components/schemas/Book"
               }
             }
           }
@@ -25,7 +25,7 @@
         "responses": {
           "200": {
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/components/schemas/Book"
             }
           }
         },
@@ -34,7 +34,7 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/components/schemas/Book"
             }
           },
           {
@@ -52,7 +52,7 @@
         "responses": {
           "200": {
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/components/schemas/Book"
             }
           }
         },
@@ -62,7 +62,7 @@
         "responses": {
           "200": {
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/components/schemas/Book"
             }
           }
         },
@@ -72,7 +72,7 @@
         "responses": {
           "200": {
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/components/schemas/Book"
             }
           }
         },
@@ -81,7 +81,7 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/components/schemas/Book"
             }
           }
         ]
@@ -90,7 +90,7 @@
         "responses": {
           "200": {
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/components/schemas/Book"
             }
           }
         },
@@ -99,53 +99,62 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/Book"
+              "$ref": "#/components/schemas/Book"
             }
           }
         ]
       }
     }
   },
-  "definitions": {
-    "Book": {
-      "type": "object",
-      "required": [
-        "isbn",
-        "price",
-        "published"
-      ],
-      "properties": {
-        "author": {
-          "type": "array",
-          "items": {
-            "type": "object"
+  "components": {
+    "schemas": {
+      "Book": {
+        "type": "object",
+        "required": [
+          "isbn",
+          "price",
+          "published"
+        ],
+        "properties": {
+          "author": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "edition": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "x-terraform-id": true
+          },
+          "isbn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "path": {
+            "type": "string",
+            "readOnly": true
+          },
+          "price": {
+            "type": "number",
+            "format": "float"
+          },
+          "published": {
+            "type": "boolean"
           }
         },
-        "edition": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "id": {
-          "type": "string",
-          "readOnly": true,
-          "x-terraform-id": true
-        },
-        "isbn": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "path": {
-          "type": "string",
-          "readOnly": true
-        },
-        "price": {
-          "type": "number",
-          "format": "float"
-        },
-        "published": {
-          "type": "boolean"
+        "x-aep-resource": {
+          "singular": "Book",
+          "plural": "books",
+          "patterns": [
+            "/books/{book}"
+          ]
         }
       }
     }

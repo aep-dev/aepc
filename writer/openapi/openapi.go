@@ -33,17 +33,19 @@ func WriteServiceToOpenAPI(ps *parser.ParsedService) ([]byte, error) {
 
 func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 	paths := Paths{}
-	definitions := Definitions{}
+	components := Components{
+		Schemas: Schemas{},
+	}
 	for _, r := range service.ResourceByType {
 		d, err := resourceToSchema(r)
 		if err != nil {
 			return nil, err
 		}
-		definitions[r.Kind] = d
+		components.Schemas[r.Kind] = d
 		if !r.IsResource {
 			continue
 		}
-		schemaRef := fmt.Sprintf("#/definitions/%v", r.Kind)
+		schemaRef := fmt.Sprintf("#/components/schemas/%v", r.Kind)
 		if r.Methods.List != nil {
 			log.Printf("resource plural: %s", r.Plural)
 			listPath := fmt.Sprintf("/%s", lowerizer.String(r.Plural))
@@ -160,9 +162,9 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			Title:   service.Service.Name,
 			Version: "version not set",
 		},
-		Schemes:     []string{"http"},
-		Paths:       paths,
-		Definitions: definitions,
+		Schemes:    []string{"http"},
+		Paths:      paths,
+		Components: components,
 	}
 	return openAPI, nil
 }
@@ -231,6 +233,13 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 		Type:       "object",
 		Properties: &properties,
 		Required:   required,
+		XAEPResource: &XAEPResource{
+			Singular: r.Kind,
+			Plural:   r.Plural,
+			Patterns: []string{
+				fmt.Sprintf("/%s/{%s}", lowerizer.String(r.Plural), lowerizer.String(r.Kind)),
+			},
+		},
 	}, nil
 }
 
@@ -244,11 +253,11 @@ func addMethodToPath(paths Paths, path, method string, methodInfo MethodInfo) {
 }
 
 type OpenAPI struct {
-	Swagger     string      `json:"swagger"`
-	Info        Info        `json:"info"`
-	Schemes     []string    `json:"schemes"`
-	Paths       Paths       `json:"paths"`
-	Definitions Definitions `json:"definitions"`
+	Swagger    string     `json:"swagger"`
+	Info       Info       `json:"info"`
+	Schemes    []string   `json:"schemes"`
+	Paths      Paths      `json:"paths"`
+	Components Components `json:"components"`
 }
 
 type Info struct {
@@ -258,7 +267,11 @@ type Info struct {
 
 type Paths map[string]Methods
 
-type Definitions map[string]Schema
+type Components struct {
+	Schemas Schemas `json:"schemas"`
+}
+
+type Schemas map[string]Schema
 
 type Methods map[string]MethodInfo
 
@@ -284,14 +297,21 @@ type ParameterInfo struct {
 }
 
 type Schema struct {
-	Ref          string      `json:"$ref,omitempty"`
-	Type         string      `json:"type,omitempty"`
-	Format       string      `json:"format,omitempty"`
-	Required     []string    `json:"required,omitempty"`
-	ReadOnly     bool        `json:"readOnly,omitempty"`
-	Items        *Schema     `json:"items,omitempty"`
-	Properties   *Properties `json:"properties,omitempty"`
-	XTerraformID bool        `json:"x-terraform-id,omitempty"`
+	Ref          string        `json:"$ref,omitempty"`
+	Type         string        `json:"type,omitempty"`
+	Format       string        `json:"format,omitempty"`
+	Required     []string      `json:"required,omitempty"`
+	ReadOnly     bool          `json:"readOnly,omitempty"`
+	Items        *Schema       `json:"items,omitempty"`
+	Properties   *Properties   `json:"properties,omitempty"`
+	XTerraformID bool          `json:"x-terraform-id,omitempty"`
+	XAEPResource *XAEPResource `json:"x-aep-resource,omitempty"`
 }
 
 type Properties map[string]Schema
+
+type XAEPResource struct {
+	Singular string   `json:"singular,omitempty"`
+	Plural   string   `json:"plural,omitempty"`
+	Patterns []string `json:"patterns,omitempty"`
+}
