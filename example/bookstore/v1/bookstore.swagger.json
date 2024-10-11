@@ -278,7 +278,8 @@
           "type": "string",
           "description": "Field for lastName."
         }
-      }
+      },
+      "description": "A Author."
     },
     "protobufAny": {
       "type": "object",
@@ -349,7 +350,7 @@
           "description": "Field for id."
         }
       },
-      "description": "A Book resource.",
+      "description": "A Book.",
       "required": [
         "isbn",
         "price",

@@ -23,7 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// A Book resource.
+// A Book.
 type Book struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -541,6 +541,7 @@ func (x *ApplyBookRequest) GetBook() *Book {
 	return nil
 }
 
+// A Author.
 type Book_Author struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
