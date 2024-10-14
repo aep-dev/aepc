@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/aep-dev/aepc/constants"
-	"github.com/aep-dev/aepc/internal/utils"
 	"github.com/aep-dev/aepc/parser"
 	"github.com/aep-dev/aepc/schema"
 	"github.com/aep-dev/aepc/writer/writer_utils"
@@ -58,7 +57,7 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 		}
 		patterns := []string{}
 		schemaRef := fmt.Sprintf("#/components/schemas/%v", r.Kind)
-		singular := utils.KebabToSnakeCase(r.Kind)
+		singular := r.Kind
 		collection := writer_utils.CollectionName(r)
 		// declare some commonly used objects, to be used later.
 		bodyParam := ParameterInfo{
@@ -70,7 +69,7 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 		}
 		idParam := ParameterInfo{
 			In:       "path",
-			Name:     fmt.Sprintf("%s_id", singular),
+			Name:     singular,
 			Required: true,
 			Type:     "string",
 		}
@@ -80,7 +79,7 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			},
 		}
 		for _, pwp := range *parentPWPS {
-			resourcePath := fmt.Sprintf("%s/%s/{%s_id}", pwp.Pattern, collection, singular)
+			resourcePath := fmt.Sprintf("%s/%s/{%s}", pwp.Pattern, collection, singular)
 			patterns = append(patterns, resourcePath)
 			if r.Methods.List != nil {
 				listPath := fmt.Sprintf("%s/%s", pwp.Pattern, collection)
@@ -269,10 +268,11 @@ func generateParentPatternsWithParams(r *parser.ParsedResource) *[]PathWithParam
 	}
 	pwps := []PathWithParams{}
 	for _, parent := range r.ParsedParents {
-		basePattern := fmt.Sprintf("/%s/{%s_id}", writer_utils.CollectionName(parent), lowerizer.String(parent.Kind))
+		singular := parent.Kind
+		basePattern := fmt.Sprintf("/%s/{%s}", writer_utils.CollectionName(parent), singular)
 		baseParam := ParameterInfo{
 			In:       "path",
-			Name:     fmt.Sprintf("%s_id", lowerizer.String(parent.Kind)),
+			Name:     singular,
 			Required: true,
 			Type:     "string",
 		}

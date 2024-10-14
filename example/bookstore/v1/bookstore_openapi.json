@@ -67,7 +67,7 @@
         ]
       }
     },
-    "/publishers/{publisher_id}": {
+    "/publishers/{publisher}": {
       "delete": {
         "responses": {
           "200": {
@@ -77,7 +77,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
@@ -95,7 +95,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
@@ -113,7 +113,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
@@ -146,7 +146,7 @@
         ]
       }
     },
-    "/publishers/{publisher_id}/books": {
+    "/publishers/{publisher}/books": {
       "get": {
         "responses": {
           "200": {
@@ -160,7 +160,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
@@ -192,7 +192,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
@@ -214,7 +214,7 @@
         ]
       }
     },
-    "/publishers/{publisher_id}/books/{book_id}": {
+    "/publishers/{publisher}/books/{book}": {
       "delete": {
         "responses": {
           "200": {
@@ -224,14 +224,14 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "book_id",
+            "name": "book",
             "schema": {},
             "required": true,
             "type": "string"
@@ -249,14 +249,14 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "book_id",
+            "name": "book",
             "schema": {},
             "required": true,
             "type": "string"
@@ -274,14 +274,14 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "book_id",
+            "name": "book",
             "schema": {},
             "required": true,
             "type": "string"
@@ -306,7 +306,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
@@ -321,7 +321,7 @@
         ]
       }
     },
-    "/publishers/{publisher_id}/books/{book_id}/editions": {
+    "/publishers/{publisher}/books/{book}/editions": {
       "get": {
         "responses": {
           "200": {
@@ -335,14 +335,14 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "book_id",
+            "name": "book",
             "schema": {},
             "required": true,
             "type": "string"
@@ -374,14 +374,14 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "book_id",
+            "name": "book",
             "schema": {},
             "required": true,
             "type": "string"
@@ -403,7 +403,7 @@
         ]
       }
     },
-    "/publishers/{publisher_id}/books/{book_id}/editions/{book_edition_id}": {
+    "/publishers/{publisher}/books/{book}/editions/{book-edition}": {
       "delete": {
         "responses": {
           "200": {
@@ -413,21 +413,21 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "book_id",
+            "name": "book",
             "schema": {},
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "book_edition_id",
+            "name": "book-edition",
             "schema": {},
             "required": true,
             "type": "string"
@@ -445,21 +445,21 @@
         "parameters": [
           {
             "in": "path",
-            "name": "publisher_id",
+            "name": "publisher",
             "schema": {},
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "book_id",
+            "name": "book",
             "schema": {},
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "book_edition_id",
+            "name": "book-edition",
             "schema": {},
             "required": true,
             "type": "string"
@@ -515,7 +515,7 @@
           "singular": "book",
           "plural": "books",
           "patterns": [
-            "/publishers/{publisher_id}/books/{book_id}"
+            "/publishers/{publisher}/books/{book}"
           ],
           "parents": [
             "publisher"
@@ -545,7 +545,7 @@
           "singular": "book-edition",
           "plural": "book-editions",
           "patterns": [
-            "/publishers/{publisher_id}/books/{book_id}/editions/{book_edition_id}"
+            "/publishers/{publisher}/books/{book}/editions/{book-edition}"
           ],
           "parents": [
             "book"
@@ -572,7 +572,7 @@
           "singular": "publisher",
           "plural": "publishers",
           "patterns": [
-            "/publishers/{publisher_id}"
+            "/publishers/{publisher}"
           ]
         }
       }
