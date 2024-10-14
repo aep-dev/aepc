@@ -1,0 +1,33 @@
+# normally this would be suffixed with the domain (.com)
+name: "cloud.roblox.com"
+url: "https://apis.roblox.com/cloud/v2"
+resources:
+  - kind: "User"
+    plural: "users"
+    properties:
+      displayName:
+        type: STRING
+        number: 2
+        required: true
+    methods:
+      read: {}
+  - kind: "CreatorStoreProduct"
+    plural: "creator-store-products"
+    properties: {}
+    methods:
+      read: {}
+      create: {}
+      update: {}
+  - kind: "Universe"
+    plural: "universes"
+    properties: {}
+    methods:
+      read: {}
+      create: {}
+      update: {}
+  # needs support for parents
+  # - kind: "DataStore"
+  #   plural: "data-stores"
+  #   properties: {}
+  #   methods:
+  #     list: {}

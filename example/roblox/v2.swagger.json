@@ -1,0 +1,388 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "example/roblox/v2.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Cloud"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/{parent_1}": {
+      "post": {
+        "summary": "An aep-compliant Create method for Universe.",
+        "operationId": "Cloud_CreateUniverse",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/robloxUniverse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent_1",
+            "description": "A field for the parent of Universe",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "universes"
+          },
+          {
+            "name": "universe",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/robloxUniverse",
+              "required": [
+                "universe"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "description": "An id that uniquely identifies the resource within the collection",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Cloud"
+        ]
+      }
+    },
+    "/{parent}": {
+      "post": {
+        "summary": "An aep-compliant Create method for CreatorStoreProduct.",
+        "operationId": "Cloud_CreateCreatorStoreProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/robloxCreatorStoreProduct"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "A field for the parent of CreatorStoreProduct",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "creator-store-products"
+          },
+          {
+            "name": "creatorstoreproduct",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/robloxCreatorStoreProduct",
+              "required": [
+                "creatorstoreproduct"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "description": "An id that uniquely identifies the resource within the collection",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Cloud"
+        ]
+      }
+    },
+    "/{path_1}": {
+      "get": {
+        "summary": "An aep-compliant Get method for Universe.",
+        "operationId": "Cloud_GetUniverse",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/robloxUniverse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_1",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "universes/[^/]+"
+          }
+        ],
+        "tags": [
+          "Cloud"
+        ]
+      },
+      "patch": {
+        "summary": "An aep-compliant Update method for Universe.",
+        "operationId": "Cloud_UpdateUniverse",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/robloxUniverse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_1",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "universes/[^/]+"
+          },
+          {
+            "name": "universe",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/robloxUniverse",
+              "required": [
+                "universe"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "Cloud"
+        ]
+      }
+    },
+    "/{path_2}": {
+      "get": {
+        "summary": "An aep-compliant Get method for User.",
+        "operationId": "Cloud_GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/robloxUser"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_2",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "users/[^/]+"
+          }
+        ],
+        "tags": [
+          "Cloud"
+        ]
+      }
+    },
+    "/{path}": {
+      "get": {
+        "summary": "An aep-compliant Get method for CreatorStoreProduct.",
+        "operationId": "Cloud_GetCreatorStoreProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/robloxCreatorStoreProduct"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "creator-store-products/[^/]+"
+          }
+        ],
+        "tags": [
+          "Cloud"
+        ]
+      },
+      "patch": {
+        "summary": "An aep-compliant Update method for CreatorStoreProduct.",
+        "operationId": "Cloud_UpdateCreatorStoreProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/robloxCreatorStoreProduct"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "creator-store-products/[^/]+"
+          },
+          {
+            "name": "creatorstoreproduct",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/robloxCreatorStoreProduct",
+              "required": [
+                "creatorstoreproduct"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "Cloud"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "robloxCreatorStoreProduct": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        },
+        "id": {
+          "type": "string",
+          "description": "Field for id."
+        }
+      },
+      "description": "A CreatorStoreProduct."
+    },
+    "robloxUniverse": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        },
+        "id": {
+          "type": "string",
+          "description": "Field for id."
+        }
+      },
+      "description": "A Universe."
+    },
+    "robloxUser": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "description": "Field for displayName."
+        },
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        },
+        "id": {
+          "type": "string",
+          "description": "Field for id."
+        }
+      },
+      "description": "A User.",
+      "required": [
+        "displayName"
+      ]
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

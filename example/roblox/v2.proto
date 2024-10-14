@@ -1,0 +1,190 @@
+syntax = "proto3";
+
+package example.roblox;
+
+import "google/api/annotations.proto";
+
+import "google/api/client.proto";
+
+import "google/api/field_behavior.proto";
+
+import "google/api/resource.proto";
+
+import "google/protobuf/field_mask.proto";
+
+option go_package = "/cloud";
+
+// A service.
+service Cloud {
+  // An aep-compliant Create method for CreatorStoreProduct.
+  rpc CreateCreatorStoreProduct ( CreateCreatorStoreProductRequest ) returns ( CreatorStoreProduct ) {
+    option (google.api.http) = {
+      post: "/{parent=creator-store-products}",
+      body: "creatorstoreproduct"
+    };
+
+    option (google.api.method_signature) = "parent,creatorstoreproduct";
+  }
+
+  // An aep-compliant Get method for CreatorStoreProduct.
+  rpc GetCreatorStoreProduct ( GetCreatorStoreProductRequest ) returns ( CreatorStoreProduct ) {
+    option (google.api.http) = { get: "/{path=creator-store-products/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant Update method for CreatorStoreProduct.
+  rpc UpdateCreatorStoreProduct ( UpdateCreatorStoreProductRequest ) returns ( CreatorStoreProduct ) {
+    option (google.api.http) = {
+      patch: "/{path=creator-store-products/*}",
+      body: "creatorstoreproduct"
+    };
+
+    option (google.api.method_signature) = "creatorstoreproduct,update_mask";
+  }
+
+  // An aep-compliant Create method for Universe.
+  rpc CreateUniverse ( CreateUniverseRequest ) returns ( Universe ) {
+    option (google.api.http) = { post: "/{parent=universes}", body: "universe" };
+
+    option (google.api.method_signature) = "parent,universe";
+  }
+
+  // An aep-compliant Get method for Universe.
+  rpc GetUniverse ( GetUniverseRequest ) returns ( Universe ) {
+    option (google.api.http) = { get: "/{path=universes/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant Update method for Universe.
+  rpc UpdateUniverse ( UpdateUniverseRequest ) returns ( Universe ) {
+    option (google.api.http) = { patch: "/{path=universes/*}", body: "universe" };
+
+    option (google.api.method_signature) = "universe,update_mask";
+  }
+
+  // An aep-compliant Get method for User.
+  rpc GetUser ( GetUserRequest ) returns ( User ) {
+    option (google.api.http) = { get: "/{path=users/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+}
+
+// A CreatorStoreProduct.
+message CreatorStoreProduct {
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// A Create request for a  CreatorStoreProduct resource.
+message CreateCreatorStoreProductRequest {
+  // A field for the parent of CreatorStoreProduct
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // An id that uniquely identifies the resource within the collection
+  string id = 10014;
+
+  // The resource to perform the operation on.
+  CreatorStoreProduct creatorstoreproduct = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for the GetCreatorStoreProduct method
+message GetCreatorStoreProductRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/CreatorStoreProduct" }
+  ];
+}
+
+// Request message for the UpdateCreatorStoreProduct method
+message UpdateCreatorStoreProductRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/CreatorStoreProduct" }
+  ];
+
+  // The resource to perform the operation on.
+  CreatorStoreProduct creatorstoreproduct = 10015 [(google.api.field_behavior) = REQUIRED];
+
+  // The update mask for the resource
+  google.protobuf.FieldMask update_mask = 10012;
+}
+
+// A Universe.
+message Universe {
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// A Create request for a  Universe resource.
+message CreateUniverseRequest {
+  // A field for the parent of Universe
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // An id that uniquely identifies the resource within the collection
+  string id = 10014;
+
+  // The resource to perform the operation on.
+  Universe universe = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for the GetUniverse method
+message GetUniverseRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/Universe" }
+  ];
+}
+
+// Request message for the UpdateUniverse method
+message UpdateUniverseRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/Universe" }
+  ];
+
+  // The resource to perform the operation on.
+  Universe universe = 10015 [(google.api.field_behavior) = REQUIRED];
+
+  // The update mask for the resource
+  google.protobuf.FieldMask update_mask = 10012;
+}
+
+// A User.
+message User {
+  // Field for displayName.
+  string displayName = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// Request message for the GetUser method
+message GetUserRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/User" }
+  ];
+}
