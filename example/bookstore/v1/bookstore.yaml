@@ -1,5 +1,6 @@
 # normally this would be suffixed with the domain (.com)
 name: "bookstore.example.com"
+url: "http://localhost:8081"
 resources:
   - kind: "Book"
     plural: "books"

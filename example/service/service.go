@@ -71,6 +71,16 @@ func (BookstoreServer) GetBook(_ context.Context, r *bpb.GetBookRequest) (*bpb.B
 	return nil, status.Errorf(codes.NotFound, "book %q not found", r.Path)
 }
 
+func (BookstoreServer) ListBook(_ context.Context, r *bpb.ListBookRequest) (*bpb.ListBookResponse, error) {
+	var books []*bpb.Book
+	for _, book := range bookDatabase {
+		books = append(books, book)
+	}
+	return &bpb.ListBookResponse{
+		Results: books,
+	}, nil
+}
+
 func StartServer(targetPort int) {
 	bookDatabase = make(map[string]*bpb.Book)
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", targetPort))

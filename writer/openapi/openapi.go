@@ -154,10 +154,12 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 				},
 			})
 		}
-
 	}
 	openAPI := &OpenAPI{
 		Swagger: "2.0",
+		Servers: []Server{
+			{URL: service.Service.Url},
+		},
 		Info: Info{
 			Title:   service.Service.Name,
 			Version: "version not set",
@@ -254,10 +256,17 @@ func addMethodToPath(paths Paths, path, method string, methodInfo MethodInfo) {
 
 type OpenAPI struct {
 	Swagger    string     `json:"swagger"`
+	Servers    []Server   `json:"servers,omitempty"`
 	Info       Info       `json:"info"`
 	Schemes    []string   `json:"schemes"`
 	Paths      Paths      `json:"paths"`
 	Components Components `json:"components"`
+}
+
+type Server struct {
+	URL         string            `json:"url"`
+	Description string            `json:"description,omitempty"`
+	Variables   map[string]string `json:"variables,omitempty"`
 }
 
 type Info struct {
