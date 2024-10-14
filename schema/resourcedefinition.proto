@@ -8,14 +8,17 @@ option go_package = "/schema";
 
 // An API service.
 message Service {
-  // The name of the API service.
+  // The name of the API.
   string name = 1;
 
+  // The URL of the API service.
+  string url = 2;
+
   // The resources that the API service exposes.
-  repeated Resource resources = 2;
+  repeated Resource resources = 3;
 
   // These are additional objects (list of properties) that may be referenced from another property.
-  repeated Object objects = 3;
+  repeated Object objects = 4;
 }
 
 // A resource.
