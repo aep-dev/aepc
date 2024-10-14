@@ -20,42 +20,97 @@ option go_package = "/bookstore";
 service Bookstore {
   // An aep-compliant Create method for Book.
   rpc CreateBook ( CreateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { post: "/{parent=books}", body: "book" };
+    option (google.api.http) = {
+      post: "/{parent=publishers/*}/books",
+      body: "book"
+    };
 
     option (google.api.method_signature) = "parent,book";
   }
 
   // An aep-compliant Get method for Book.
   rpc GetBook ( GetBookRequest ) returns ( Book ) {
-    option (google.api.http) = { get: "/{path=books/*}" };
+    option (google.api.http) = { get: "/{path=publishers/*/books/*}" };
 
     option (google.api.method_signature) = "path";
   }
 
   // An aep-compliant Update method for Book.
   rpc UpdateBook ( UpdateBookRequest ) returns ( Book ) {
-    option (google.api.http) = { patch: "/{path=books/*}", body: "book" };
+    option (google.api.http) = {
+      patch: "/{path=publishers/*/books/*}",
+      body: "book"
+    };
 
     option (google.api.method_signature) = "book,update_mask";
   }
 
   // An aep-compliant Delete method for Book.
   rpc DeleteBook ( DeleteBookRequest ) returns ( google.protobuf.Empty ) {
-    option (google.api.http) = { delete: "/{path=books/*}" };
+    option (google.api.http) = { delete: "/{path=publishers/*/books/*}" };
 
     option (google.api.method_signature) = "path";
   }
 
   // An aep-compliant List method for books.
   rpc ListBook ( ListBookRequest ) returns ( ListBookResponse ) {
-    option (google.api.http) = { get: "/{parent=books}" };
+    option (google.api.http) = { get: "/{parent=publishers/*}/books" };
 
     option (google.api.method_signature) = "parent";
   }
 
   // An aep-compliant Apply method for books.
   rpc ApplyBook ( ApplyBookRequest ) returns ( Book ) {
-    option (google.api.http) = { put: "/{path=books/*}", body: "book" };
+    option (google.api.http) = {
+      put: "/{path=publishers/*/books/*}",
+      body: "book"
+    };
+  }
+
+  // An aep-compliant Create method for Publisher.
+  rpc CreatePublisher ( CreatePublisherRequest ) returns ( Publisher ) {
+    option (google.api.http) = {
+      post: "/{parent=publishers}",
+      body: "publisher"
+    };
+
+    option (google.api.method_signature) = "parent,publisher";
+  }
+
+  // An aep-compliant Get method for Publisher.
+  rpc GetPublisher ( GetPublisherRequest ) returns ( Publisher ) {
+    option (google.api.http) = { get: "/{path=publishers/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant Update method for Publisher.
+  rpc UpdatePublisher ( UpdatePublisherRequest ) returns ( Publisher ) {
+    option (google.api.http) = {
+      patch: "/{path=publishers/*}",
+      body: "publisher"
+    };
+
+    option (google.api.method_signature) = "publisher,update_mask";
+  }
+
+  // An aep-compliant Delete method for Publisher.
+  rpc DeletePublisher ( DeletePublisherRequest ) returns ( google.protobuf.Empty ) {
+    option (google.api.http) = { delete: "/{path=publishers/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant List method for publishers.
+  rpc ListPublisher ( ListPublisherRequest ) returns ( ListPublisherResponse ) {
+    option (google.api.http) = { get: "/{parent=publishers}" };
+
+    option (google.api.method_signature) = "parent";
+  }
+
+  // An aep-compliant Apply method for publishers.
+  rpc ApplyPublisher ( ApplyPublisherRequest ) returns ( Publisher ) {
+    option (google.api.http) = { put: "/{path=publishers/*}", body: "publisher" };
   }
 }
 
@@ -174,4 +229,100 @@ message ApplyBookRequest {
 
   // The resource to perform the operation on.
   Book book = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// A Publisher.
+message Publisher {
+  // Field for description.
+  string description = 1;
+
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// A Create request for a  Publisher resource.
+message CreatePublisherRequest {
+  // A field for the parent of Publisher
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // An id that uniquely identifies the resource within the collection
+  string id = 10014;
+
+  // The resource to perform the operation on.
+  Publisher publisher = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for the GetPublisher method
+message GetPublisherRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/Publisher" }
+  ];
+}
+
+// Request message for the UpdatePublisher method
+message UpdatePublisherRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/Publisher" }
+  ];
+
+  // The resource to perform the operation on.
+  Publisher publisher = 10015 [(google.api.field_behavior) = REQUIRED];
+
+  // The update mask for the resource
+  google.protobuf.FieldMask update_mask = 10012;
+}
+
+// Request message for the DeletePublisher method
+message DeletePublisherRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/Publisher" }
+  ];
+}
+
+// Request message for the ListPublisher method
+message ListPublisherRequest {
+  // A field for the parent of Publisher
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // The page token indicating the starting point of the page
+  string page_token = 10010;
+
+  // The maximum number of resources to return in a single page.
+  int32 max_page_size = 10017;
+}
+
+// Response message for the ListPublisher method
+message ListPublisherResponse {
+  // A list of publishers
+  repeated Publisher results = 10016;
+
+  // The page token indicating the ending point of this response.
+  string next_page_token = 10011;
+}
+
+// Request message for the ApplyPublisher method
+message ApplyPublisherRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/Publisher" }
+  ];
+
+  // The resource to perform the operation on.
+  Publisher publisher = 10015 [(google.api.field_behavior) = REQUIRED];
 }
