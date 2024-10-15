@@ -16,6 +16,7 @@ import (
 )
 
 var bookDatabase map[string]*bpb.Book
+var publisherDatabase map[string]*bpb.Publisher
 
 type BookstoreServer struct {
 	bpb.UnimplementedBookstoreServer
@@ -29,9 +30,9 @@ func (BookstoreServer) CreateBook(_ context.Context, r *bpb.CreateBookRequest) (
 	book := proto.Clone(r.Book).(*bpb.Book)
 	log.Printf("creating book %q", r)
 	if r.Id == "" {
-		r.Id = fmt.Sprintf("%v", len(bookDatabase)+1)
+		r.Id = fmt.Sprintf("%v/books/%v", r.Parent, len(bookDatabase)+1)
 	}
-	path := fmt.Sprintf("books/%v", r.Id)
+	path := fmt.Sprintf("%v/books/%v", r.Parent, r.Id)
 	book.Id = r.Id
 	book.Path = path
 	bookDatabase[path] = book
@@ -81,8 +82,65 @@ func (BookstoreServer) ListBook(_ context.Context, r *bpb.ListBookRequest) (*bpb
 	}, nil
 }
 
+func (BookstoreServer) CreatePublisher(_ context.Context, r *bpb.CreatePublisherRequest) (*bpb.Publisher, error) {
+	publisher := proto.Clone(r.Publisher).(*bpb.Publisher)
+	log.Printf("creating publisher %q", r)
+	if r.Id == "" {
+		r.Id = fmt.Sprintf("%v", len(bookDatabase)+1)
+	}
+	path := fmt.Sprintf("publishers/%v", r.Id)
+	publisher.Id = r.Id
+	publisher.Path = path
+	publisherDatabase[path] = publisher
+	log.Printf("created publisher %q", path)
+	return publisher, nil
+}
+
+func (BookstoreServer) ApplyPublisher(_ context.Context, r *bpb.ApplyPublisherRequest) (*bpb.Publisher, error) {
+	log.Printf("applying publisher request: %v", r)
+	originalResource := bookDatabase[r.Path]
+	publisher := proto.Clone(r.Publisher).(*bpb.Publisher)
+	publisher.Id = originalResource.Id
+	publisher.Path = originalResource.Path
+	publisherDatabase[r.Path] = publisher
+	log.Printf("applied publisher %q", publisher.Path)
+	return publisher, nil
+}
+
+func (BookstoreServer) UpdatePublisher(_ context.Context, r *bpb.UpdatePublisherRequest) (*bpb.Publisher, error) {
+	publisher := proto.Clone(r.Publisher).(*bpb.Publisher)
+	publisher.Path = r.Path
+	publisherDatabase[r.Path] = publisher
+	log.Printf("updated publisher %q at path %q", publisher, r.Path)
+	return publisher, nil
+}
+
+func (BookstoreServer) DeletePublisher(_ context.Context, r *bpb.DeletePublisherRequest) (*emptypb.Empty, error) {
+	delete(publisherDatabase, r.Path)
+	log.Printf("deleted publisher %q", r.Path)
+	return &emptypb.Empty{}, nil
+}
+
+func (BookstoreServer) GetPublisher(_ context.Context, r *bpb.GetPublisherRequest) (*bpb.Publisher, error) {
+	if p, found := publisherDatabase[r.Path]; found {
+		return p, nil
+	}
+	return nil, status.Errorf(codes.NotFound, "publisher %q not found", r.Path)
+}
+
+func (BookstoreServer) ListPublisher(_ context.Context, r *bpb.ListPublisherRequest) (*bpb.ListPublisherResponse, error) {
+	var publishers []*bpb.Publisher
+	for _, p := range publisherDatabase {
+		publishers = append(publishers, p)
+	}
+	return &bpb.ListPublisherResponse{
+		Results: publishers,
+	}, nil
+}
+
 func StartServer(targetPort int) {
 	bookDatabase = make(map[string]*bpb.Book)
+	publisherDatabase = make(map[string]*bpb.Publisher)
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", targetPort))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

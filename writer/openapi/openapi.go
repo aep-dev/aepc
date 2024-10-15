@@ -3,7 +3,6 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/aep-dev/aepc/constants"
 	"github.com/aep-dev/aepc/parser"
@@ -41,119 +40,115 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 		if err != nil {
 			return nil, err
 		}
-		components.Schemas[r.Kind] = d
 		if !r.IsResource {
+			components.Schemas[r.Kind] = d
 			continue
 		}
+		// if it is a resource, add paths
+		parentPWPS := generateParentPatternsWithParams(r)
+		// add an empty PathWithParam, if there are no parents.
+		// This will add paths for the simple resource case.
+		if len(*parentPWPS) == 0 {
+			*parentPWPS = append(*parentPWPS, PathWithParams{
+				Pattern: "", Params: []ParameterInfo{},
+			})
+		}
+		patterns := []string{}
 		schemaRef := fmt.Sprintf("#/components/schemas/%v", r.Kind)
-		if r.Methods.List != nil {
-			log.Printf("resource plural: %s", r.Plural)
-			listPath := fmt.Sprintf("/%s", lowerizer.String(r.Plural))
-			addMethodToPath(paths, listPath, "get", MethodInfo{
-				Responses: Responses{
-					"200": ResponseInfo{
-						Schema: Schema{
-							Items: &Schema{
-								Ref: schemaRef,
+		// declare some commonly used objects, to be used later.
+		bodyParam := ParameterInfo{
+			In:   "body",
+			Name: "body",
+			Schema: Schema{
+				Ref: schemaRef,
+			},
+		}
+		idParam := ParameterInfo{
+			In:       "path",
+			Name:     fmt.Sprintf("%s_id", lowerizer.String(r.Kind)),
+			Required: true,
+			Type:     "string",
+		}
+		resourceResponse := ResponseInfo{
+			Schema: Schema{
+				Ref: schemaRef,
+			},
+		}
+		for _, pwp := range *parentPWPS {
+			resourcePath := fmt.Sprintf("%s/%s/{%s_id}", pwp.Pattern, lowerizer.String(r.Plural), lowerizer.String(r.Kind))
+			patterns = append(patterns, resourcePath)
+			if r.Methods.List != nil {
+				listPath := fmt.Sprintf("%s/%s", pwp.Pattern, lowerizer.String(r.Plural))
+				addMethodToPath(paths, listPath, "get", MethodInfo{
+					Parameters: pwp.Params,
+					Responses: Responses{
+						"200": ResponseInfo{
+							Schema: Schema{
+								Items: &Schema{
+									Ref: schemaRef,
+								},
 							},
 						},
 					},
-				},
-			})
-		}
-		if r.Methods.Create != nil {
-			getPath := fmt.Sprintf("/%s", lowerizer.String(r.Plural))
-			addMethodToPath(paths, getPath, "post", MethodInfo{
-				Parameters: Parameters{
+				})
+			}
+			if r.Methods.Create != nil {
+				createPath := fmt.Sprintf("%s/%s", pwp.Pattern, lowerizer.String(r.Plural))
+				params := append(pwp.Params, bodyParam,
 					ParameterInfo{
-						In:   "body",
-						Name: "body",
-						Schema: Schema{
-							Ref: schemaRef,
-						},
-					},
-					ParameterInfo{
-						In:       "path",
+						In:       "query",
 						Name:     "id",
 						Required: true,
 						Type:     "string",
 					},
-				},
-				Responses: Responses{
-					"200": ResponseInfo{
-						Schema: Schema{
-							Ref: schemaRef,
-						},
+				)
+				addMethodToPath(paths, createPath, "post", MethodInfo{
+					Parameters: params,
+					Responses: Responses{
+						"200": resourceResponse,
 					},
-				},
-			})
+				})
+			}
+			if r.Methods.Read != nil {
+				addMethodToPath(paths, resourcePath, "get", MethodInfo{
+					Parameters: append(pwp.Params, idParam),
+					Responses: Responses{
+						"200": resourceResponse,
+					},
+				})
+			}
+			if r.Methods.Update != nil {
+				addMethodToPath(paths, resourcePath, "patch", MethodInfo{
+					Parameters: append(pwp.Params, idParam, bodyParam),
+					Responses: Responses{
+						"200": resourceResponse,
+					},
+				})
+			}
+			if r.Methods.Delete != nil {
+				addMethodToPath(paths, resourcePath, "delete", MethodInfo{
+					Parameters: append(pwp.Params, idParam),
+					Responses: Responses{
+						"200": ResponseInfo{},
+					},
+				})
+			}
+			if r.Methods.Apply != nil {
+				addMethodToPath(paths, resourcePath, "put", MethodInfo{
+					Parameters: append(pwp.Params, bodyParam),
+					Responses: Responses{
+						"200": resourceResponse,
+					},
+				})
+			}
 		}
-		if r.Methods.Read != nil {
-			getPath := fmt.Sprintf("/%s/{id}", lowerizer.String(r.Plural))
-			addMethodToPath(paths, getPath, "get", MethodInfo{
-				Responses: Responses{
-					"200": ResponseInfo{
-						Schema: Schema{
-							Ref: schemaRef,
-						},
-					},
-				},
-			})
+		d.XAEPResource = &XAEPResource{
+			Singular: r.Kind,
+			Plural:   r.Plural,
+			Patterns: patterns,
+			Parents:  r.Parents,
 		}
-		if r.Methods.Update != nil {
-			getPath := fmt.Sprintf("/%s/{id}", lowerizer.String(r.Plural))
-			addMethodToPath(paths, getPath, "patch", MethodInfo{
-				Parameters: Parameters{
-					ParameterInfo{
-						In:   "body",
-						Name: "body",
-						Schema: Schema{
-							Ref: schemaRef,
-						},
-					},
-				},
-				Responses: Responses{
-					"200": ResponseInfo{
-						Schema: Schema{
-							Ref: schemaRef,
-						},
-					},
-				},
-			})
-		}
-		if r.Methods.Delete != nil {
-			getPath := fmt.Sprintf("/%s/{id}", lowerizer.String(r.Plural))
-			addMethodToPath(paths, getPath, "delete", MethodInfo{
-				Responses: Responses{
-					"200": ResponseInfo{
-						Schema: Schema{
-							Ref: schemaRef,
-						},
-					},
-				},
-			})
-		}
-		if r.Methods.Apply != nil {
-			getPath := fmt.Sprintf("/%s/{id}", lowerizer.String(r.Plural))
-			addMethodToPath(paths, getPath, "put", MethodInfo{
-				Parameters: Parameters{
-					ParameterInfo{
-						In:   "body",
-						Name: "body",
-						Schema: Schema{
-							Ref: schemaRef,
-						},
-					},
-				},
-				Responses: Responses{
-					"200": ResponseInfo{
-						Schema: Schema{
-							Ref: schemaRef,
-						},
-					},
-				},
-			})
-		}
+		components.Schemas[r.Kind] = d
 	}
 	openAPI := &OpenAPI{
 		Swagger: "2.0",
@@ -235,14 +230,48 @@ func resourceToSchema(r *parser.ParsedResource) (Schema, error) {
 		Type:       "object",
 		Properties: &properties,
 		Required:   required,
-		XAEPResource: &XAEPResource{
-			Singular: r.Kind,
-			Plural:   r.Plural,
-			Patterns: []string{
-				fmt.Sprintf("/%s/{%s}", lowerizer.String(r.Plural), lowerizer.String(r.Kind)),
-			},
-		},
 	}, nil
+}
+
+// PathWithParams passes an http path
+// with the OpenAPI parameters it contains.
+// helpful to bundle them both when iterating.
+type PathWithParams struct {
+	Pattern string
+	Params  []ParameterInfo
+}
+
+// generate the x-aep-patterns for the parent resources, along with the patterns
+// they need.
+//
+// This is helpful when you're constructing methods on resources with a parent.
+func generateParentPatternsWithParams(r *parser.ParsedResource) *[]PathWithParams {
+	if len(r.ParsedParents) == 0 {
+		return &[]PathWithParams{}
+	}
+	pwps := []PathWithParams{}
+	for _, parent := range r.ParsedParents {
+		basePattern := fmt.Sprintf("/%s/{%s_id}", lowerizer.String(parent.Plural), lowerizer.String(parent.Kind))
+		baseParam := ParameterInfo{
+			In:       "path",
+			Name:     fmt.Sprintf("%s_id", lowerizer.String(parent.Kind)),
+			Required: true,
+			Type:     "string",
+		}
+		if len(parent.ParsedParents) == 0 {
+			pwps = append(pwps, PathWithParams{
+				Pattern: basePattern,
+				Params:  []ParameterInfo{baseParam},
+			})
+		} else {
+			for _, parentPWP := range *generateParentPatternsWithParams(parent) {
+				params := append(parentPWP.Params, baseParam)
+				pattern := fmt.Sprintf("{%s}{%s}", parentPWP.Pattern, basePattern)
+				pwps = append(pwps, PathWithParams{Pattern: pattern, Params: params})
+			}
+		}
+	}
+	return &pwps
 }
 
 func addMethodToPath(paths Paths, path, method string, methodInfo MethodInfo) {
@@ -323,4 +352,5 @@ type XAEPResource struct {
 	Singular string   `json:"singular,omitempty"`
 	Plural   string   `json:"plural,omitempty"`
 	Patterns []string `json:"patterns,omitempty"`
+	Parents  []string `json:"parents,omitempty"`
 }

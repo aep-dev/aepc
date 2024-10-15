@@ -27,8 +27,8 @@ func (ps *ParsedService) GetShortName() string {
 
 type ParsedResource struct {
 	*schema.Resource
-	Type    string
-	Parents []*ParsedResource
+	Type          string
+	ParsedParents []*ParsedResource
 
 	IsResource bool
 }
@@ -79,10 +79,10 @@ func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 	for _, r := range s.Resources {
 		t := fmt.Sprintf("%s/%s", s.Name, r.Kind)
 		resourceByType[t] = &ParsedResource{
-			Resource:   r,
-			Type:       t,
-			Parents:    []*ParsedResource{},
-			IsResource: true,
+			Resource:      r,
+			Type:          t,
+			ParsedParents: []*ParsedResource{},
+			IsResource:    true,
 		}
 	}
 	// populate resource parents
@@ -97,7 +97,7 @@ func loadResourceByType(s *schema.Service) (map[string]*ParsedResource, error) {
 			if !exists {
 				return nil, fmt.Errorf("parent %q for resource %q not found", p, r.Kind)
 			}
-			r.Parents = append(r.Parents, parentResource)
+			r.ParsedParents = append(r.ParsedParents, parentResource)
 		}
 		addGetToResource(r)
 		addCommonFieldsToResource(r)
