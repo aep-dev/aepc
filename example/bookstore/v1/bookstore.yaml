@@ -2,8 +2,27 @@
 name: "bookstore.example.com"
 url: "http://localhost:8081"
 resources:
+  # example of a simple resource
+  - kind: "Publisher"
+    plural: "publishers"
+    properties:
+      description:
+        type: STRING
+        number: 1
+    methods:
+      create: {}
+      read: {}
+      update: {}
+      delete: {}
+      list: {}
+      apply: {}
+  # example of a child resource
   - kind: "Book"
     plural: "books"
+    # the parents should specify the parents of the resource. It takes in the
+    # kind.
+    parents:
+      - "Publisher"
     properties:
       isbn:
         array_type:
@@ -32,8 +51,6 @@ resources:
               lastName:
                 type: STRING
                 number: 2
-    # parents:
-    #   - "bookstore.example.com/Publisher"
     methods:
       create: {}
       read: {}
@@ -41,18 +58,6 @@ resources:
       delete: {}
       list: {}
       apply: {} # do not uncomment until there is an AEP on apply.
-#   - kind: "Publisher"
-#     plural: "publishers"
-#     methods:
-#       read: {}
-#       list: {}
-#   - kind: "Author"
-#     plural: "authors"
-#     properties:
-#       name:
-#         type: STRING
-#         number: 1
-#     parents:
-#       - "Publisher"
-#     methods:
-#       read: {}
+    # other example resources that might be interesting to add:
+    # authors, which could be a reference for book
+    # authors could have a reference to publishers too

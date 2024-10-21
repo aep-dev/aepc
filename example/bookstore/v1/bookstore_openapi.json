@@ -13,7 +13,125 @@
     "http"
   ],
   "paths": {
-    "/books": {
+    "/publishers": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "items": {
+                "$ref": "#/components/schemas/Publisher"
+              }
+            }
+          }
+        },
+        "parameters": []
+      },
+      "post": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/components/schemas/Publisher"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/components/schemas/Publisher"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/publishers/{publisher_id}": {
+      "delete": {
+        "responses": {
+          "200": {
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/components/schemas/Publisher"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      "patch": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/components/schemas/Publisher"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/components/schemas/Publisher"
+            }
+          }
+        ]
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/components/schemas/Publisher"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/components/schemas/Publisher"
+            }
+          }
+        ]
+      }
+    },
+    "/publishers/{publisher_id}/books": {
       "get": {
         "responses": {
           "200": {
@@ -24,7 +142,15 @@
             }
           }
         },
-        "parameters": null
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
       },
       "post": {
         "responses": {
@@ -36,6 +162,13 @@
         },
         "parameters": [
           {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
             "in": "body",
             "name": "body",
             "schema": {
@@ -43,7 +176,7 @@
             }
           },
           {
-            "in": "path",
+            "in": "query",
             "name": "id",
             "schema": {},
             "required": true,
@@ -52,16 +185,29 @@
         ]
       }
     },
-    "/books/{id}": {
+    "/publishers/{publisher_id}/books/{book_id}": {
       "delete": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/Book"
-            }
+            "schema": {}
           }
         },
-        "parameters": null
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "book_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
       },
       "get": {
         "responses": {
@@ -71,7 +217,22 @@
             }
           }
         },
-        "parameters": null
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "book_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
       },
       "patch": {
         "responses": {
@@ -82,6 +243,20 @@
           }
         },
         "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "book_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
           {
             "in": "body",
             "name": "body",
@@ -100,6 +275,13 @@
           }
         },
         "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
           {
             "in": "body",
             "name": "body",
@@ -158,7 +340,34 @@
           "singular": "Book",
           "plural": "books",
           "patterns": [
-            "/books/{book}"
+            "/publishers/{publisher_id}/books/{book_id}"
+          ],
+          "parents": [
+            "Publisher"
+          ]
+        }
+      },
+      "Publisher": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "x-terraform-id": true
+          },
+          "path": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "x-aep-resource": {
+          "singular": "Publisher",
+          "plural": "publishers",
+          "patterns": [
+            "/publishers/{publisher_id}"
           ]
         }
       }

@@ -458,12 +458,12 @@ func AddApply(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *
 
 func generateHTTPPath(r *parser.ParsedResource) string {
 	elements := []string{strings.ToLower(r.Plural)}
-	if len(r.Parents) > 0 {
+	if len(r.ParsedParents) > 0 {
 		// TODO: handle multiple parents
-		p := r.Parents[0]
+		p := r.ParsedParents[0]
 		for p != nil {
 			elements = append([]string{strings.ToLower(p.Plural)}, elements...)
-			if len(p.Parents) == 0 {
+			if len(p.ParsedParents) == 0 {
 				break
 			}
 		}
@@ -473,11 +473,13 @@ func generateHTTPPath(r *parser.ParsedResource) string {
 
 func generateParentHTTPPath(r *parser.ParsedResource) string {
 	parentPath := ""
-	if len(r.Parents) > 0 {
-		parentPath = generateHTTPPath(r.Parents[0])
-		// parentPath = fmt.Sprintf("{parent=%v/}", generateHTTPPath(r.Parents[0]))
+	if len(r.ParsedParents) == 0 {
+		return fmt.Sprintf("/{parent=%v}", strings.ToLower(r.Plural))
 	}
-	return fmt.Sprintf("/{parent=%v%v}", parentPath, strings.ToLower(r.Plural))
+	if len(r.ParsedParents) > 0 {
+		parentPath = fmt.Sprintf("%v", generateHTTPPath(r.ParsedParents[0]))
+	}
+	return fmt.Sprintf("/{parent=%v}/%v", parentPath, strings.ToLower(r.Plural))
 }
 
 func addParentField(r *parser.ParsedResource, mb *builder.MessageBuilder) {

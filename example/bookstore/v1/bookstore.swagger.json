@@ -18,6 +18,104 @@
   "paths": {
     "/{parent}": {
       "get": {
+        "summary": "An aep-compliant List method for publishers.",
+        "operationId": "Bookstore_ListPublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListPublisherResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "A field for the parent of Publisher",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers"
+          },
+          {
+            "name": "pageToken",
+            "description": "The page token indicating the starting point of the page",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "description": "The maximum number of resources to return in a single page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "post": {
+        "summary": "An aep-compliant Create method for Publisher.",
+        "operationId": "Bookstore_CreatePublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Publisher"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "A field for the parent of Publisher",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers"
+          },
+          {
+            "name": "publisher",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Publisher",
+              "required": [
+                "publisher"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "description": "An id that uniquely identifies the resource within the collection",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/{parent}/books": {
+      "get": {
         "summary": "An aep-compliant List method for books.",
         "operationId": "Bookstore_ListBook",
         "responses": {
@@ -41,7 +139,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "books"
+            "pattern": "publishers/[^/]+"
           },
           {
             "name": "pageToken",
@@ -87,7 +185,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "books"
+            "pattern": "publishers/[^/]+"
           },
           {
             "name": "book",
@@ -107,6 +205,157 @@
             "in": "query",
             "required": false,
             "type": "string"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/{path_1}": {
+      "get": {
+        "summary": "An aep-compliant Get method for Publisher.",
+        "operationId": "Bookstore_GetPublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Publisher"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_1",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers/[^/]+"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "delete": {
+        "summary": "An aep-compliant Delete method for Publisher.",
+        "operationId": "Bookstore_DeletePublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_1",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers/[^/]+"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "put": {
+        "summary": "An aep-compliant Apply method for publishers.",
+        "operationId": "Bookstore_ApplyPublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Publisher"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_1",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers/[^/]+"
+          },
+          {
+            "name": "publisher",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Publisher",
+              "required": [
+                "publisher"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "patch": {
+        "summary": "An aep-compliant Update method for Publisher.",
+        "operationId": "Bookstore_UpdatePublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Publisher"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_1",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers/[^/]+"
+          },
+          {
+            "name": "publisher",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Publisher",
+              "required": [
+                "publisher"
+              ]
+            }
           }
         ],
         "tags": [
@@ -139,7 +388,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "books/[^/]+"
+            "pattern": "publishers/[^/]+/books/[^/]+"
           }
         ],
         "tags": [
@@ -171,7 +420,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "books/[^/]+"
+            "pattern": "publishers/[^/]+/books/[^/]+"
           }
         ],
         "tags": [
@@ -202,7 +451,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "books/[^/]+"
+            "pattern": "publishers/[^/]+/books/[^/]+"
           },
           {
             "name": "book",
@@ -245,7 +494,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "books/[^/]+"
+            "pattern": "publishers/[^/]+/books/[^/]+"
           },
           {
             "name": "book",
@@ -374,6 +623,42 @@
         }
       },
       "title": "Response message for the ListBook method"
+    },
+    "v1ListPublisherResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Publisher"
+          },
+          "title": "A list of publishers"
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token indicating the ending point of this response."
+        }
+      },
+      "title": "Response message for the ListPublisher method"
+    },
+    "v1Publisher": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Field for description."
+        },
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        },
+        "id": {
+          "type": "string",
+          "description": "Field for id."
+        }
+      },
+      "description": "A Publisher."
     }
   }
 }
