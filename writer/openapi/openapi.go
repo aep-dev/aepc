@@ -80,7 +80,20 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			if r.Methods.List != nil {
 				listPath := fmt.Sprintf("%s/%s", pwp.Pattern, lowerizer.String(r.Plural))
 				addMethodToPath(paths, listPath, "get", MethodInfo{
-					Parameters: pwp.Params,
+					Parameters: append(pwp.Params,
+						ParameterInfo{
+							In:       "query",
+							Name:     "max_page_size",
+							Required: true,
+							Type:     "integer",
+						},
+						ParameterInfo{
+							In:       "query",
+							Name:     "page_token",
+							Required: true,
+							Type:     "string",
+						},
+					),
 					Responses: Responses{
 						"200": ResponseInfo{
 							Schema: Schema{

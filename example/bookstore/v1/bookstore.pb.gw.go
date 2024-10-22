@@ -32,11 +32,11 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 var (
-	filter_Bookstore_CreateBook_0 = &utilities.DoubleArray{Encoding: map[string]int{"book": 0, "parent": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
+	filter_Bookstore_Createbook_0 = &utilities.DoubleArray{Encoding: map[string]int{"book": 0, "parent": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
 )
 
-func request_Bookstore_CreateBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CreateBookRequest
+func request_Bookstore_Createbook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq CreatebookRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -67,17 +67,17 @@ func request_Bookstore_CreateBook_0(ctx context.Context, marshaler runtime.Marsh
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_CreateBook_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Createbook_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.CreateBook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Createbook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_CreateBook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CreateBookRequest
+func local_request_Bookstore_Createbook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq CreatebookRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -108,17 +108,17 @@ func local_request_Bookstore_CreateBook_0(ctx context.Context, marshaler runtime
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_CreateBook_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Createbook_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.CreateBook(ctx, &protoReq)
+	msg, err := server.Createbook(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_Bookstore_GetBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetBookRequest
+func request_Bookstore_Getbook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetbookRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -138,13 +138,13 @@ func request_Bookstore_GetBook_0(ctx context.Context, marshaler runtime.Marshale
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := client.GetBook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Getbook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_GetBook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetBookRequest
+func local_request_Bookstore_Getbook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetbookRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -164,17 +164,17 @@ func local_request_Bookstore_GetBook_0(ctx context.Context, marshaler runtime.Ma
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := server.GetBook(ctx, &protoReq)
+	msg, err := server.Getbook(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_Bookstore_UpdateBook_0 = &utilities.DoubleArray{Encoding: map[string]int{"book": 0, "path": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
+	filter_Bookstore_Updatebook_0 = &utilities.DoubleArray{Encoding: map[string]int{"book": 0, "path": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
 )
 
-func request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UpdateBookRequest
+func request_Bookstore_Updatebook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UpdatebookRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -212,17 +212,17 @@ func request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime.Marsh
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_UpdateBook_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Updatebook_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.UpdateBook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Updatebook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UpdateBookRequest
+func local_request_Bookstore_Updatebook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UpdatebookRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -260,17 +260,17 @@ func local_request_Bookstore_UpdateBook_0(ctx context.Context, marshaler runtime
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_UpdateBook_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Updatebook_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.UpdateBook(ctx, &protoReq)
+	msg, err := server.Updatebook(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_Bookstore_DeleteBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq DeleteBookRequest
+func request_Bookstore_Deletebook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq DeletebookRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -290,13 +290,13 @@ func request_Bookstore_DeleteBook_0(ctx context.Context, marshaler runtime.Marsh
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := client.DeleteBook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Deletebook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_DeleteBook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq DeleteBookRequest
+func local_request_Bookstore_Deletebook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq DeletebookRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -316,17 +316,17 @@ func local_request_Bookstore_DeleteBook_0(ctx context.Context, marshaler runtime
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := server.DeleteBook(ctx, &protoReq)
+	msg, err := server.Deletebook(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_Bookstore_ListBook_0 = &utilities.DoubleArray{Encoding: map[string]int{"parent": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
+	filter_Bookstore_Listbook_0 = &utilities.DoubleArray{Encoding: map[string]int{"parent": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
 )
 
-func request_Bookstore_ListBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListBookRequest
+func request_Bookstore_Listbook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListbookRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -349,17 +349,17 @@ func request_Bookstore_ListBook_0(ctx context.Context, marshaler runtime.Marshal
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_ListBook_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Listbook_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.ListBook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Listbook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_ListBook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListBookRequest
+func local_request_Bookstore_Listbook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListbookRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -382,17 +382,17 @@ func local_request_Bookstore_ListBook_0(ctx context.Context, marshaler runtime.M
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_ListBook_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Listbook_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.ListBook(ctx, &protoReq)
+	msg, err := server.Listbook(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_Bookstore_ApplyBook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ApplyBookRequest
+func request_Bookstore_Applybook_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ApplybookRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -420,13 +420,13 @@ func request_Bookstore_ApplyBook_0(ctx context.Context, marshaler runtime.Marsha
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := client.ApplyBook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Applybook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_ApplyBook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ApplyBookRequest
+func local_request_Bookstore_Applybook_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ApplybookRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -454,17 +454,17 @@ func local_request_Bookstore_ApplyBook_0(ctx context.Context, marshaler runtime.
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := server.ApplyBook(ctx, &protoReq)
+	msg, err := server.Applybook(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_Bookstore_CreatePublisher_0 = &utilities.DoubleArray{Encoding: map[string]int{"publisher": 0, "parent": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
+	filter_Bookstore_Createpublisher_0 = &utilities.DoubleArray{Encoding: map[string]int{"publisher": 0, "parent": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
 )
 
-func request_Bookstore_CreatePublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CreatePublisherRequest
+func request_Bookstore_Createpublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq CreatepublisherRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -495,17 +495,17 @@ func request_Bookstore_CreatePublisher_0(ctx context.Context, marshaler runtime.
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_CreatePublisher_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Createpublisher_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.CreatePublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Createpublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_CreatePublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CreatePublisherRequest
+func local_request_Bookstore_Createpublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq CreatepublisherRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -536,17 +536,17 @@ func local_request_Bookstore_CreatePublisher_0(ctx context.Context, marshaler ru
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_CreatePublisher_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Createpublisher_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.CreatePublisher(ctx, &protoReq)
+	msg, err := server.Createpublisher(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_Bookstore_GetPublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetPublisherRequest
+func request_Bookstore_Getpublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetpublisherRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -566,13 +566,13 @@ func request_Bookstore_GetPublisher_0(ctx context.Context, marshaler runtime.Mar
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := client.GetPublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Getpublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_GetPublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetPublisherRequest
+func local_request_Bookstore_Getpublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetpublisherRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -592,17 +592,17 @@ func local_request_Bookstore_GetPublisher_0(ctx context.Context, marshaler runti
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := server.GetPublisher(ctx, &protoReq)
+	msg, err := server.Getpublisher(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_Bookstore_UpdatePublisher_0 = &utilities.DoubleArray{Encoding: map[string]int{"publisher": 0, "path": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
+	filter_Bookstore_Updatepublisher_0 = &utilities.DoubleArray{Encoding: map[string]int{"publisher": 0, "path": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
 )
 
-func request_Bookstore_UpdatePublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UpdatePublisherRequest
+func request_Bookstore_Updatepublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UpdatepublisherRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -640,17 +640,17 @@ func request_Bookstore_UpdatePublisher_0(ctx context.Context, marshaler runtime.
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_UpdatePublisher_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Updatepublisher_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.UpdatePublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Updatepublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_UpdatePublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq UpdatePublisherRequest
+func local_request_Bookstore_Updatepublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UpdatepublisherRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -688,17 +688,17 @@ func local_request_Bookstore_UpdatePublisher_0(ctx context.Context, marshaler ru
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_UpdatePublisher_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Updatepublisher_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.UpdatePublisher(ctx, &protoReq)
+	msg, err := server.Updatepublisher(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_Bookstore_DeletePublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq DeletePublisherRequest
+func request_Bookstore_Deletepublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq DeletepublisherRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -718,13 +718,13 @@ func request_Bookstore_DeletePublisher_0(ctx context.Context, marshaler runtime.
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := client.DeletePublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Deletepublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_DeletePublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq DeletePublisherRequest
+func local_request_Bookstore_Deletepublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq DeletepublisherRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -744,17 +744,17 @@ func local_request_Bookstore_DeletePublisher_0(ctx context.Context, marshaler ru
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := server.DeletePublisher(ctx, &protoReq)
+	msg, err := server.Deletepublisher(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
 var (
-	filter_Bookstore_ListPublisher_0 = &utilities.DoubleArray{Encoding: map[string]int{"parent": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
+	filter_Bookstore_Listpublisher_0 = &utilities.DoubleArray{Encoding: map[string]int{"parent": 0}, Base: []int{1, 2, 0, 0}, Check: []int{0, 1, 2, 2}}
 )
 
-func request_Bookstore_ListPublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListPublisherRequest
+func request_Bookstore_Listpublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListpublisherRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -777,17 +777,17 @@ func request_Bookstore_ListPublisher_0(ctx context.Context, marshaler runtime.Ma
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_ListPublisher_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Listpublisher_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.ListPublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Listpublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_ListPublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ListPublisherRequest
+func local_request_Bookstore_Listpublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ListpublisherRequest
 	var metadata runtime.ServerMetadata
 
 	var (
@@ -810,17 +810,17 @@ func local_request_Bookstore_ListPublisher_0(ctx context.Context, marshaler runt
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_ListPublisher_0); err != nil {
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Bookstore_Listpublisher_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.ListPublisher(ctx, &protoReq)
+	msg, err := server.Listpublisher(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_Bookstore_ApplyPublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ApplyPublisherRequest
+func request_Bookstore_Applypublisher_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ApplypublisherRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -848,13 +848,13 @@ func request_Bookstore_ApplyPublisher_0(ctx context.Context, marshaler runtime.M
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := client.ApplyPublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.Applypublisher(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_Bookstore_ApplyPublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq ApplyPublisherRequest
+func local_request_Bookstore_Applypublisher_0(ctx context.Context, marshaler runtime.Marshaler, server BookstoreServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq ApplypublisherRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -882,7 +882,7 @@ func local_request_Bookstore_ApplyPublisher_0(ctx context.Context, marshaler run
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "path", err)
 	}
 
-	msg, err := server.ApplyPublisher(ctx, &protoReq)
+	msg, err := server.Applypublisher(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -893,7 +893,7 @@ func local_request_Bookstore_ApplyPublisher_0(ctx context.Context, marshaler run
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterBookstoreHandlerFromEndpoint instead.
 func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, server BookstoreServer) error {
 
-	mux.Handle("POST", pattern_Bookstore_CreateBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Bookstore_Createbook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -901,12 +901,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/CreateBook", runtime.WithHTTPPathPattern("/{parent=publishers/*}/books"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Createbook", runtime.WithHTTPPathPattern("/{parent=publishers/*}/books"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_CreateBook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Createbook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -914,11 +914,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_CreateBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Createbook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_GetBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_Getbook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -926,12 +926,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/GetBook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Getbook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_GetBook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Getbook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -939,11 +939,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_GetBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Getbook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_Bookstore_UpdateBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PATCH", pattern_Bookstore_Updatebook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -951,12 +951,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Updatebook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_UpdateBook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Updatebook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -964,11 +964,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_UpdateBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Updatebook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Bookstore_DeleteBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_Bookstore_Deletebook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -976,12 +976,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/DeleteBook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Deletebook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_DeleteBook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Deletebook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -989,11 +989,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_DeleteBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Deletebook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_ListBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_Listbook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1001,12 +1001,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/ListBook", runtime.WithHTTPPathPattern("/{parent=publishers/*}/books"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Listbook", runtime.WithHTTPPathPattern("/{parent=publishers/*}/books"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_ListBook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Listbook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -1014,11 +1014,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_ListBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Listbook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Bookstore_ApplyBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_Bookstore_Applybook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1026,12 +1026,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/ApplyBook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Applybook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_ApplyBook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Applybook_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -1039,11 +1039,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_ApplyBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Applybook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_Bookstore_CreatePublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Bookstore_Createpublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1051,12 +1051,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/CreatePublisher", runtime.WithHTTPPathPattern("/{parent=publishers}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Createpublisher", runtime.WithHTTPPathPattern("/{parent=publishers}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_CreatePublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Createpublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -1064,11 +1064,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_CreatePublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Createpublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_GetPublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_Getpublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1076,12 +1076,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/GetPublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Getpublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_GetPublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Getpublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -1089,11 +1089,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_GetPublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Getpublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_Bookstore_UpdatePublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PATCH", pattern_Bookstore_Updatepublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1101,12 +1101,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/UpdatePublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Updatepublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_UpdatePublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Updatepublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -1114,11 +1114,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_UpdatePublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Updatepublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Bookstore_DeletePublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_Bookstore_Deletepublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1126,12 +1126,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/DeletePublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Deletepublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_DeletePublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Deletepublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -1139,11 +1139,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_DeletePublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Deletepublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_ListPublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_Listpublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1151,12 +1151,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/ListPublisher", runtime.WithHTTPPathPattern("/{parent=publishers}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Listpublisher", runtime.WithHTTPPathPattern("/{parent=publishers}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_ListPublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Listpublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -1164,11 +1164,11 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_ListPublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Listpublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Bookstore_ApplyPublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_Bookstore_Applypublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -1176,12 +1176,12 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/ApplyPublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Applypublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Bookstore_ApplyPublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_Bookstore_Applypublisher_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -1189,7 +1189,7 @@ func RegisterBookstoreHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 			return
 		}
 
-		forward_Bookstore_ApplyPublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Applypublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -1234,267 +1234,267 @@ func RegisterBookstoreHandler(ctx context.Context, mux *runtime.ServeMux, conn *
 // "BookstoreClient" to call the correct interceptors.
 func RegisterBookstoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, client BookstoreClient) error {
 
-	mux.Handle("POST", pattern_Bookstore_CreateBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Bookstore_Createbook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/CreateBook", runtime.WithHTTPPathPattern("/{parent=publishers/*}/books"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Createbook", runtime.WithHTTPPathPattern("/{parent=publishers/*}/books"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_CreateBook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Createbook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_CreateBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Createbook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_GetBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_Getbook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/GetBook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Getbook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_GetBook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Getbook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_GetBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Getbook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_Bookstore_UpdateBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PATCH", pattern_Bookstore_Updatebook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/UpdateBook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Updatebook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_UpdateBook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Updatebook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_UpdateBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Updatebook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Bookstore_DeleteBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_Bookstore_Deletebook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/DeleteBook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Deletebook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_DeleteBook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Deletebook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_DeleteBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Deletebook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_ListBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_Listbook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/ListBook", runtime.WithHTTPPathPattern("/{parent=publishers/*}/books"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Listbook", runtime.WithHTTPPathPattern("/{parent=publishers/*}/books"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_ListBook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Listbook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_ListBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Listbook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Bookstore_ApplyBook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_Bookstore_Applybook_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/ApplyBook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Applybook", runtime.WithHTTPPathPattern("/{path=publishers/*/books/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_ApplyBook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Applybook_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_ApplyBook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Applybook_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_Bookstore_CreatePublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_Bookstore_Createpublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/CreatePublisher", runtime.WithHTTPPathPattern("/{parent=publishers}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Createpublisher", runtime.WithHTTPPathPattern("/{parent=publishers}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_CreatePublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Createpublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_CreatePublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Createpublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_GetPublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_Getpublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/GetPublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Getpublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_GetPublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Getpublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_GetPublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Getpublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PATCH", pattern_Bookstore_UpdatePublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PATCH", pattern_Bookstore_Updatepublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/UpdatePublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Updatepublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_UpdatePublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Updatepublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_UpdatePublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Updatepublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Bookstore_DeletePublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_Bookstore_Deletepublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/DeletePublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Deletepublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_DeletePublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Deletepublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_DeletePublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Deletepublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Bookstore_ListPublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_Bookstore_Listpublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/ListPublisher", runtime.WithHTTPPathPattern("/{parent=publishers}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Listpublisher", runtime.WithHTTPPathPattern("/{parent=publishers}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_ListPublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Listpublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_ListPublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Listpublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("PUT", pattern_Bookstore_ApplyPublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("PUT", pattern_Bookstore_Applypublisher_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/ApplyPublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/example.bookstore.v1.Bookstore/Applypublisher", runtime.WithHTTPPathPattern("/{path=publishers/*}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Bookstore_ApplyPublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_Bookstore_Applypublisher_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Bookstore_ApplyPublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Bookstore_Applypublisher_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -1502,53 +1502,53 @@ func RegisterBookstoreHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 }
 
 var (
-	pattern_Bookstore_CreateBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1, 2, 2}, []string{"publishers", "parent", "books"}, ""))
+	pattern_Bookstore_Createbook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1, 2, 2}, []string{"publishers", "parent", "books"}, ""))
 
-	pattern_Bookstore_GetBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 2, 1, 1, 0, 4, 4, 5, 2}, []string{"publishers", "books", "path"}, ""))
+	pattern_Bookstore_Getbook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 2, 1, 1, 0, 4, 4, 5, 2}, []string{"publishers", "books", "path"}, ""))
 
-	pattern_Bookstore_UpdateBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 2, 1, 1, 0, 4, 4, 5, 2}, []string{"publishers", "books", "path"}, ""))
+	pattern_Bookstore_Updatebook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 2, 1, 1, 0, 4, 4, 5, 2}, []string{"publishers", "books", "path"}, ""))
 
-	pattern_Bookstore_DeleteBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 2, 1, 1, 0, 4, 4, 5, 2}, []string{"publishers", "books", "path"}, ""))
+	pattern_Bookstore_Deletebook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 2, 1, 1, 0, 4, 4, 5, 2}, []string{"publishers", "books", "path"}, ""))
 
-	pattern_Bookstore_ListBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1, 2, 2}, []string{"publishers", "parent", "books"}, ""))
+	pattern_Bookstore_Listbook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1, 2, 2}, []string{"publishers", "parent", "books"}, ""))
 
-	pattern_Bookstore_ApplyBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 2, 1, 1, 0, 4, 4, 5, 2}, []string{"publishers", "books", "path"}, ""))
+	pattern_Bookstore_Applybook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 2, 1, 1, 0, 4, 4, 5, 2}, []string{"publishers", "books", "path"}, ""))
 
-	pattern_Bookstore_CreatePublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 4, 1, 5, 1}, []string{"publishers", "parent"}, ""))
+	pattern_Bookstore_Createpublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 4, 1, 5, 1}, []string{"publishers", "parent"}, ""))
 
-	pattern_Bookstore_GetPublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"publishers", "path"}, ""))
+	pattern_Bookstore_Getpublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"publishers", "path"}, ""))
 
-	pattern_Bookstore_UpdatePublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"publishers", "path"}, ""))
+	pattern_Bookstore_Updatepublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"publishers", "path"}, ""))
 
-	pattern_Bookstore_DeletePublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"publishers", "path"}, ""))
+	pattern_Bookstore_Deletepublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"publishers", "path"}, ""))
 
-	pattern_Bookstore_ListPublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 4, 1, 5, 1}, []string{"publishers", "parent"}, ""))
+	pattern_Bookstore_Listpublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 4, 1, 5, 1}, []string{"publishers", "parent"}, ""))
 
-	pattern_Bookstore_ApplyPublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"publishers", "path"}, ""))
+	pattern_Bookstore_Applypublisher_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 2, 5, 1}, []string{"publishers", "path"}, ""))
 )
 
 var (
-	forward_Bookstore_CreateBook_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Createbook_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_GetBook_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Getbook_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_UpdateBook_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Updatebook_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_DeleteBook_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Deletebook_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_ListBook_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Listbook_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_ApplyBook_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Applybook_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_CreatePublisher_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Createpublisher_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_GetPublisher_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Getpublisher_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_UpdatePublisher_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Updatepublisher_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_DeletePublisher_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Deletepublisher_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_ListPublisher_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Listpublisher_0 = runtime.ForwardResponseMessage
 
-	forward_Bookstore_ApplyPublisher_0 = runtime.ForwardResponseMessage
+	forward_Bookstore_Applypublisher_0 = runtime.ForwardResponseMessage
 )

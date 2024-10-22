@@ -19,12 +19,12 @@
     "/{parent}": {
       "get": {
         "summary": "An aep-compliant List method for publishers.",
-        "operationId": "Bookstore_ListPublisher",
+        "operationId": "Bookstore_Listpublisher",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListPublisherResponse"
+              "$ref": "#/definitions/v1ListpublisherResponse"
             }
           },
           "default": {
@@ -37,7 +37,7 @@
         "parameters": [
           {
             "name": "parent",
-            "description": "A field for the parent of Publisher",
+            "description": "A field for the parent of publisher",
             "in": "path",
             "required": true,
             "type": "string",
@@ -64,13 +64,13 @@
         ]
       },
       "post": {
-        "summary": "An aep-compliant Create method for Publisher.",
-        "operationId": "Bookstore_CreatePublisher",
+        "summary": "An aep-compliant Create method for publisher.",
+        "operationId": "Bookstore_Createpublisher",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Publisher"
+              "$ref": "#/definitions/v1publisher"
             }
           },
           "default": {
@@ -83,7 +83,7 @@
         "parameters": [
           {
             "name": "parent",
-            "description": "A field for the parent of Publisher",
+            "description": "A field for the parent of publisher",
             "in": "path",
             "required": true,
             "type": "string",
@@ -95,7 +95,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Publisher",
+              "$ref": "#/definitions/v1publisher",
               "required": [
                 "publisher"
               ]
@@ -117,12 +117,12 @@
     "/{parent}/books": {
       "get": {
         "summary": "An aep-compliant List method for books.",
-        "operationId": "Bookstore_ListBook",
+        "operationId": "Bookstore_Listbook",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListBookResponse"
+              "$ref": "#/definitions/v1ListbookResponse"
             }
           },
           "default": {
@@ -135,7 +135,7 @@
         "parameters": [
           {
             "name": "parent",
-            "description": "A field for the parent of Book",
+            "description": "A field for the parent of book",
             "in": "path",
             "required": true,
             "type": "string",
@@ -162,13 +162,13 @@
         ]
       },
       "post": {
-        "summary": "An aep-compliant Create method for Book.",
-        "operationId": "Bookstore_CreateBook",
+        "summary": "An aep-compliant Create method for book.",
+        "operationId": "Bookstore_Createbook",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Book"
+              "$ref": "#/definitions/v1book"
             }
           },
           "default": {
@@ -181,7 +181,7 @@
         "parameters": [
           {
             "name": "parent",
-            "description": "A field for the parent of Book",
+            "description": "A field for the parent of book",
             "in": "path",
             "required": true,
             "type": "string",
@@ -193,7 +193,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Book",
+              "$ref": "#/definitions/v1book",
               "required": [
                 "book"
               ]
@@ -214,13 +214,13 @@
     },
     "/{path_1}": {
       "get": {
-        "summary": "An aep-compliant Get method for Publisher.",
-        "operationId": "Bookstore_GetPublisher",
+        "summary": "An aep-compliant Get method for publisher.",
+        "operationId": "Bookstore_Getpublisher",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Publisher"
+              "$ref": "#/definitions/v1publisher"
             }
           },
           "default": {
@@ -245,8 +245,8 @@
         ]
       },
       "delete": {
-        "summary": "An aep-compliant Delete method for Publisher.",
-        "operationId": "Bookstore_DeletePublisher",
+        "summary": "An aep-compliant Delete method for publisher.",
+        "operationId": "Bookstore_Deletepublisher",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -278,12 +278,12 @@
       },
       "put": {
         "summary": "An aep-compliant Apply method for publishers.",
-        "operationId": "Bookstore_ApplyPublisher",
+        "operationId": "Bookstore_Applypublisher",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Publisher"
+              "$ref": "#/definitions/v1publisher"
             }
           },
           "default": {
@@ -308,7 +308,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Publisher",
+              "$ref": "#/definitions/v1publisher",
               "required": [
                 "publisher"
               ]
@@ -320,13 +320,13 @@
         ]
       },
       "patch": {
-        "summary": "An aep-compliant Update method for Publisher.",
-        "operationId": "Bookstore_UpdatePublisher",
+        "summary": "An aep-compliant Update method for publisher.",
+        "operationId": "Bookstore_Updatepublisher",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Publisher"
+              "$ref": "#/definitions/v1publisher"
             }
           },
           "default": {
@@ -351,7 +351,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Publisher",
+              "$ref": "#/definitions/v1publisher",
               "required": [
                 "publisher"
               ]
@@ -365,13 +365,13 @@
     },
     "/{path}": {
       "get": {
-        "summary": "An aep-compliant Get method for Book.",
-        "operationId": "Bookstore_GetBook",
+        "summary": "An aep-compliant Get method for book.",
+        "operationId": "Bookstore_Getbook",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Book"
+              "$ref": "#/definitions/v1book"
             }
           },
           "default": {
@@ -396,8 +396,8 @@
         ]
       },
       "delete": {
-        "summary": "An aep-compliant Delete method for Book.",
-        "operationId": "Bookstore_DeleteBook",
+        "summary": "An aep-compliant Delete method for book.",
+        "operationId": "Bookstore_Deletebook",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -429,12 +429,12 @@
       },
       "put": {
         "summary": "An aep-compliant Apply method for books.",
-        "operationId": "Bookstore_ApplyBook",
+        "operationId": "Bookstore_Applybook",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Book"
+              "$ref": "#/definitions/v1book"
             }
           },
           "default": {
@@ -459,7 +459,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Book",
+              "$ref": "#/definitions/v1book",
               "required": [
                 "book"
               ]
@@ -471,13 +471,13 @@
         ]
       },
       "patch": {
-        "summary": "An aep-compliant Update method for Book.",
-        "operationId": "Bookstore_UpdateBook",
+        "summary": "An aep-compliant Update method for book.",
+        "operationId": "Bookstore_Updatebook",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Book"
+              "$ref": "#/definitions/v1book"
             }
           },
           "default": {
@@ -502,7 +502,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Book",
+              "$ref": "#/definitions/v1book",
               "required": [
                 "book"
               ]
@@ -516,7 +516,7 @@
     }
   },
   "definitions": {
-    "BookAuthor": {
+    "bookAuthor": {
       "type": "object",
       "properties": {
         "firstName": {
@@ -558,14 +558,50 @@
         }
       }
     },
-    "v1Book": {
+    "v1ListbookResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1book"
+          },
+          "title": "A list of books"
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token indicating the ending point of this response."
+        }
+      },
+      "title": "Response message for the Listbook method"
+    },
+    "v1ListpublisherResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1publisher"
+          },
+          "title": "A list of publishers"
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token indicating the ending point of this response."
+        }
+      },
+      "title": "Response message for the Listpublisher method"
+    },
+    "v1book": {
       "type": "object",
       "properties": {
         "author": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/BookAuthor"
+            "$ref": "#/definitions/bookAuthor"
           },
           "description": "Field for author."
         },
@@ -599,50 +635,14 @@
           "description": "Field for id."
         }
       },
-      "description": "A Book.",
+      "description": "A book.",
       "required": [
         "isbn",
         "price",
         "published"
       ]
     },
-    "v1ListBookResponse": {
-      "type": "object",
-      "properties": {
-        "results": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1Book"
-          },
-          "title": "A list of books"
-        },
-        "nextPageToken": {
-          "type": "string",
-          "description": "The page token indicating the ending point of this response."
-        }
-      },
-      "title": "Response message for the ListBook method"
-    },
-    "v1ListPublisherResponse": {
-      "type": "object",
-      "properties": {
-        "results": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1Publisher"
-          },
-          "title": "A list of publishers"
-        },
-        "nextPageToken": {
-          "type": "string",
-          "description": "The page token indicating the ending point of this response."
-        }
-      },
-      "title": "Response message for the ListPublisher method"
-    },
-    "v1Publisher": {
+    "v1publisher": {
       "type": "object",
       "properties": {
         "description": {
@@ -658,7 +658,7 @@
           "description": "Field for id."
         }
       },
-      "description": "A Publisher."
+      "description": "A publisher."
     }
   }
 }

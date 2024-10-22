@@ -74,7 +74,7 @@ func ProcessInput(inputFile, outputFilePrefix string) error {
 		return fmt.Errorf("error parsing service: %w", err)
 	}
 	proto, err := proto.WriteServiceToProto(ps, outputDir)
-	if(err != nil) {
+	if err != nil {
 		return fmt.Errorf("error writing service proto %w", err)
 	}
 	protoFile := fmt.Sprintf("%s.proto", outputFilePrefix)
@@ -93,6 +93,16 @@ func ProcessInput(inputFile, outputFilePrefix string) error {
 		return fmt.Errorf("error writing file: %w", err)
 	}
 	fmt.Printf("output openapi file: %s\n", openapiFile)
+	yamlOpenAPI, err := yaml.JSONToYAML(openapi)
+	if err != nil {
+		return fmt.Errorf("error converting openapi json to yaml: %w", err)
+	}
+	yamlOpenAPIFile := fmt.Sprintf("%s_openapi.yaml", outputFilePrefix)
+	err = WriteFile(yamlOpenAPIFile, yamlOpenAPI)
+	if err != nil {
+		return fmt.Errorf("error writing yaml file: %w", err)
+	}
+	fmt.Printf("output openapi yaml file: %s\n", yamlOpenAPIFile)
 	return nil
 }
 

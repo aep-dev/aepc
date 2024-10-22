@@ -3,7 +3,7 @@ name: "bookstore.example.com"
 url: "http://localhost:8081"
 resources:
   # example of a simple resource
-  - kind: "Publisher"
+  - kind: "publisher"
     plural: "publishers"
     properties:
       description:
@@ -17,12 +17,12 @@ resources:
       list: {}
       apply: {}
   # example of a child resource
-  - kind: "Book"
+  - kind: "book"
     plural: "books"
     # the parents should specify the parents of the resource. It takes in the
     # kind.
     parents:
-      - "Publisher"
+      - "publisher"
     properties:
       isbn:
         array_type:
