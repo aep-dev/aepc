@@ -3,10 +3,13 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/aep-dev/aepc/constants"
+	"github.com/aep-dev/aepc/internal/utils"
 	"github.com/aep-dev/aepc/parser"
 	"github.com/aep-dev/aepc/schema"
+	"github.com/aep-dev/aepc/writer/writer_utils"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
@@ -55,6 +58,8 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 		}
 		patterns := []string{}
 		schemaRef := fmt.Sprintf("#/components/schemas/%v", r.Kind)
+		singular := utils.KebabToSnakeCase(r.Kind)
+		collection := writer_utils.CollectionName(r)
 		// declare some commonly used objects, to be used later.
 		bodyParam := ParameterInfo{
 			In:   "body",
@@ -65,7 +70,7 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 		}
 		idParam := ParameterInfo{
 			In:       "path",
-			Name:     fmt.Sprintf("%s_id", lowerizer.String(r.Kind)),
+			Name:     fmt.Sprintf("%s_id", singular),
 			Required: true,
 			Type:     "string",
 		}
@@ -75,10 +80,10 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			},
 		}
 		for _, pwp := range *parentPWPS {
-			resourcePath := fmt.Sprintf("%s/%s/{%s_id}", pwp.Pattern, lowerizer.String(r.Plural), lowerizer.String(r.Kind))
+			resourcePath := fmt.Sprintf("%s/%s/{%s_id}", pwp.Pattern, collection, singular)
 			patterns = append(patterns, resourcePath)
 			if r.Methods.List != nil {
-				listPath := fmt.Sprintf("%s/%s", pwp.Pattern, lowerizer.String(r.Plural))
+				listPath := fmt.Sprintf("%s/%s", pwp.Pattern, collection)
 				addMethodToPath(paths, listPath, "get", MethodInfo{
 					Parameters: append(pwp.Params,
 						ParameterInfo{
@@ -106,7 +111,7 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 				})
 			}
 			if r.Methods.Create != nil {
-				createPath := fmt.Sprintf("%s/%s", pwp.Pattern, lowerizer.String(r.Plural))
+				createPath := fmt.Sprintf("%s/%s", pwp.Pattern, collection)
 				params := append(pwp.Params, bodyParam,
 					ParameterInfo{
 						In:       "query",
@@ -264,7 +269,7 @@ func generateParentPatternsWithParams(r *parser.ParsedResource) *[]PathWithParam
 	}
 	pwps := []PathWithParams{}
 	for _, parent := range r.ParsedParents {
-		basePattern := fmt.Sprintf("/%s/{%s_id}", lowerizer.String(parent.Plural), lowerizer.String(parent.Kind))
+		basePattern := fmt.Sprintf("/%s/{%s_id}", writer_utils.CollectionName(parent), lowerizer.String(parent.Kind))
 		baseParam := ParameterInfo{
 			In:       "path",
 			Name:     fmt.Sprintf("%s_id", lowerizer.String(parent.Kind)),
@@ -279,7 +284,7 @@ func generateParentPatternsWithParams(r *parser.ParsedResource) *[]PathWithParam
 		} else {
 			for _, parentPWP := range *generateParentPatternsWithParams(parent) {
 				params := append(parentPWP.Params, baseParam)
-				pattern := fmt.Sprintf("{%s}{%s}", parentPWP.Pattern, basePattern)
+				pattern := fmt.Sprintf("%s%s", parentPWP.Pattern, basePattern)
 				pwps = append(pwps, PathWithParams{Pattern: pattern, Params: params})
 			}
 		}
@@ -294,6 +299,22 @@ func addMethodToPath(paths Paths, path, method string, methodInfo MethodInfo) {
 		paths[path] = methods
 	}
 	methods[method] = methodInfo
+}
+
+// return the collection name of the resource, but deduplicate
+// the name of the previous parent
+// e.g:
+// - book-editions becomes editions under the parent resource book.
+func collectionName(r *parser.ParsedResource) string {
+	collectionName := r.Plural
+	if len(r.ParsedParents) > 0 {
+		parent := r.ParsedParents[0].Kind
+		// if collectionName has a prefix of parent, remove it
+		if strings.HasPrefix(collectionName, parent) {
+			collectionName = strings.TrimPrefix(collectionName, parent+"-")
+		}
+	}
+	return collectionName
 }
 
 type OpenAPI struct {

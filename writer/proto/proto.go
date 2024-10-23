@@ -21,6 +21,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/aep-dev/aepc/internal/utils"
 	"github.com/aep-dev/aepc/parser"
 	"github.com/jhump/protoreflect/desc/builder"
 	"github.com/jhump/protoreflect/desc/protoprint"
@@ -125,7 +126,7 @@ func toProtoServiceName(serviceName string) string {
 }
 
 func toMessageName(resource string) string {
-	return capitalizer.String(resource)
+	return utils.KebabToCamelCase(resource)
 }
 
 func getSortedResources(prsByString map[string]*parser.ParsedResource) []*parser.ParsedResource {

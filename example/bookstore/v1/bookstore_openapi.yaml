@@ -37,6 +37,27 @@ components:
         - /publishers/{publisher_id}/books/{book_id}
         plural: books
         singular: book
+    book-edition:
+      properties:
+        displayname:
+          type: string
+        id:
+          readOnly: true
+          type: string
+          x-terraform-id: true
+        path:
+          readOnly: true
+          type: string
+      required:
+      - displayname
+      type: object
+      x-aep-resource:
+        parents:
+        - book
+        patterns:
+        - /publishers/{publisher_id}/books/{book_id}/editions/{book_edition_id}
+        plural: book-editions
+        singular: book-edition
     publisher:
       properties:
         description:
@@ -248,6 +269,101 @@ paths:
         "200":
           schema:
             $ref: '#/components/schemas/book'
+  /publishers/{publisher_id}/books/{book_id}/editions:
+    get:
+      parameters:
+      - in: path
+        name: publisher_id
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: book_id
+        required: true
+        schema: {}
+        type: string
+      - in: query
+        name: max_page_size
+        required: true
+        schema: {}
+        type: integer
+      - in: query
+        name: page_token
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            items:
+              $ref: '#/components/schemas/book-edition'
+    post:
+      parameters:
+      - in: path
+        name: publisher_id
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: book_id
+        required: true
+        schema: {}
+        type: string
+      - in: body
+        name: body
+        schema:
+          $ref: '#/components/schemas/book-edition'
+      - in: query
+        name: id
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/book-edition'
+  /publishers/{publisher_id}/books/{book_id}/editions/{book_edition_id}:
+    delete:
+      parameters:
+      - in: path
+        name: publisher_id
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: book_id
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: book_edition_id
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema: {}
+    get:
+      parameters:
+      - in: path
+        name: publisher_id
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: book_id
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: book_edition_id
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/book-edition'
 schemes:
 - http
 servers:

@@ -320,6 +320,152 @@
           }
         ]
       }
+    },
+    "/publishers/{publisher_id}/books/{book_id}/editions": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "items": {
+                "$ref": "#/components/schemas/book-edition"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "book_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "max_page_size",
+            "schema": {},
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "page_token",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      "post": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/components/schemas/book-edition"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "book_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/components/schemas/book-edition"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/publishers/{publisher_id}/books/{book_id}/editions/{book_edition_id}": {
+      "delete": {
+        "responses": {
+          "200": {
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "book_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "book_edition_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/components/schemas/book-edition"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisher_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "book_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "book_edition_id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -373,6 +519,36 @@
           ],
           "parents": [
             "publisher"
+          ]
+        }
+      },
+      "book-edition": {
+        "type": "object",
+        "required": [
+          "displayname"
+        ],
+        "properties": {
+          "displayname": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "x-terraform-id": true
+          },
+          "path": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "x-aep-resource": {
+          "singular": "book-edition",
+          "plural": "book-editions",
+          "patterns": [
+            "/publishers/{publisher_id}/books/{book_id}/editions/{book_edition_id}"
+          ],
+          "parents": [
+            "book"
           ]
         }
       },

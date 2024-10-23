@@ -58,6 +58,24 @@ resources:
       delete: {}
       list: {}
       apply: {} # do not uncomment until there is an AEP on apply.
-    # other example resources that might be interesting to add:
-    # authors, which could be a reference for book
-    # authors could have a reference to publishers too
+  # other example resources that might be interesting to add:
+  # authors, which could be a reference for book
+  # authors could have a reference to publishers too
+  # example of a child resource, with a redudant type name.
+  # aepc will remove the redundant component in the path pattern
+  - kind: "book-edition"
+    plural: "book-editions"
+    # the parents should specify the parents of the resource. It takes in the
+    # kind.
+    parents:
+      - "book"
+    properties:
+      displayname:
+        type: STRING
+        number: 1
+        required: true
+    methods:
+      create: {}
+      read: {}
+      list: {}
+      delete: {}
