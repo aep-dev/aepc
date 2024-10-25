@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	RESOURCE_KIND_REGEX_STRING = "[A-Z]+[a-zA-Z0-9]*"
+	RESOURCE_KIND_REGEX_STRING = "[a-z]+[a-zA-Z0-9]*"
 )
 
 var RESOURCE_KIND_REGEX regexp.Regexp

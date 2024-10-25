@@ -20,46 +20,58 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Bookstore_CreateBook_FullMethodName      = "/example.bookstore.v1.Bookstore/CreateBook"
-	Bookstore_GetBook_FullMethodName         = "/example.bookstore.v1.Bookstore/GetBook"
-	Bookstore_UpdateBook_FullMethodName      = "/example.bookstore.v1.Bookstore/UpdateBook"
-	Bookstore_DeleteBook_FullMethodName      = "/example.bookstore.v1.Bookstore/DeleteBook"
-	Bookstore_ListBook_FullMethodName        = "/example.bookstore.v1.Bookstore/ListBook"
-	Bookstore_ApplyBook_FullMethodName       = "/example.bookstore.v1.Bookstore/ApplyBook"
-	Bookstore_CreatePublisher_FullMethodName = "/example.bookstore.v1.Bookstore/CreatePublisher"
-	Bookstore_GetPublisher_FullMethodName    = "/example.bookstore.v1.Bookstore/GetPublisher"
-	Bookstore_UpdatePublisher_FullMethodName = "/example.bookstore.v1.Bookstore/UpdatePublisher"
-	Bookstore_DeletePublisher_FullMethodName = "/example.bookstore.v1.Bookstore/DeletePublisher"
-	Bookstore_ListPublisher_FullMethodName   = "/example.bookstore.v1.Bookstore/ListPublisher"
-	Bookstore_ApplyPublisher_FullMethodName  = "/example.bookstore.v1.Bookstore/ApplyPublisher"
+	Bookstore_CreateBook_FullMethodName        = "/example.bookstore.v1.Bookstore/CreateBook"
+	Bookstore_GetBook_FullMethodName           = "/example.bookstore.v1.Bookstore/GetBook"
+	Bookstore_UpdateBook_FullMethodName        = "/example.bookstore.v1.Bookstore/UpdateBook"
+	Bookstore_DeleteBook_FullMethodName        = "/example.bookstore.v1.Bookstore/DeleteBook"
+	Bookstore_ListBooks_FullMethodName         = "/example.bookstore.v1.Bookstore/ListBooks"
+	Bookstore_ApplyBook_FullMethodName         = "/example.bookstore.v1.Bookstore/ApplyBook"
+	Bookstore_CreateBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/CreateBookEdition"
+	Bookstore_GetBookEdition_FullMethodName    = "/example.bookstore.v1.Bookstore/GetBookEdition"
+	Bookstore_DeleteBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/DeleteBookEdition"
+	Bookstore_ListBookEditions_FullMethodName  = "/example.bookstore.v1.Bookstore/ListBookEditions"
+	Bookstore_CreatePublisher_FullMethodName   = "/example.bookstore.v1.Bookstore/CreatePublisher"
+	Bookstore_GetPublisher_FullMethodName      = "/example.bookstore.v1.Bookstore/GetPublisher"
+	Bookstore_UpdatePublisher_FullMethodName   = "/example.bookstore.v1.Bookstore/UpdatePublisher"
+	Bookstore_DeletePublisher_FullMethodName   = "/example.bookstore.v1.Bookstore/DeletePublisher"
+	Bookstore_ListPublishers_FullMethodName    = "/example.bookstore.v1.Bookstore/ListPublishers"
+	Bookstore_ApplyPublisher_FullMethodName    = "/example.bookstore.v1.Bookstore/ApplyPublisher"
 )
 
 // BookstoreClient is the client API for Bookstore service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BookstoreClient interface {
-	// An aep-compliant Create method for Book.
+	// An aep-compliant Create method for book.
 	CreateBook(ctx context.Context, in *CreateBookRequest, opts ...grpc.CallOption) (*Book, error)
-	// An aep-compliant Get method for Book.
+	// An aep-compliant Get method for book.
 	GetBook(ctx context.Context, in *GetBookRequest, opts ...grpc.CallOption) (*Book, error)
-	// An aep-compliant Update method for Book.
+	// An aep-compliant Update method for book.
 	UpdateBook(ctx context.Context, in *UpdateBookRequest, opts ...grpc.CallOption) (*Book, error)
-	// An aep-compliant Delete method for Book.
+	// An aep-compliant Delete method for book.
 	DeleteBook(ctx context.Context, in *DeleteBookRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// An aep-compliant List method for books.
-	ListBook(ctx context.Context, in *ListBookRequest, opts ...grpc.CallOption) (*ListBookResponse, error)
+	ListBooks(ctx context.Context, in *ListBooksRequest, opts ...grpc.CallOption) (*ListBooksResponse, error)
 	// An aep-compliant Apply method for books.
 	ApplyBook(ctx context.Context, in *ApplyBookRequest, opts ...grpc.CallOption) (*Book, error)
-	// An aep-compliant Create method for Publisher.
+	// An aep-compliant Create method for book-edition.
+	CreateBookEdition(ctx context.Context, in *CreateBookEditionRequest, opts ...grpc.CallOption) (*BookEdition, error)
+	// An aep-compliant Get method for book-edition.
+	GetBookEdition(ctx context.Context, in *GetBookEditionRequest, opts ...grpc.CallOption) (*BookEdition, error)
+	// An aep-compliant Delete method for book-edition.
+	DeleteBookEdition(ctx context.Context, in *DeleteBookEditionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// An aep-compliant List method for book-editions.
+	ListBookEditions(ctx context.Context, in *ListBookEditionsRequest, opts ...grpc.CallOption) (*ListBookEditionsResponse, error)
+	// An aep-compliant Create method for publisher.
 	CreatePublisher(ctx context.Context, in *CreatePublisherRequest, opts ...grpc.CallOption) (*Publisher, error)
-	// An aep-compliant Get method for Publisher.
+	// An aep-compliant Get method for publisher.
 	GetPublisher(ctx context.Context, in *GetPublisherRequest, opts ...grpc.CallOption) (*Publisher, error)
-	// An aep-compliant Update method for Publisher.
+	// An aep-compliant Update method for publisher.
 	UpdatePublisher(ctx context.Context, in *UpdatePublisherRequest, opts ...grpc.CallOption) (*Publisher, error)
-	// An aep-compliant Delete method for Publisher.
+	// An aep-compliant Delete method for publisher.
 	DeletePublisher(ctx context.Context, in *DeletePublisherRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// An aep-compliant List method for publishers.
-	ListPublisher(ctx context.Context, in *ListPublisherRequest, opts ...grpc.CallOption) (*ListPublisherResponse, error)
+	ListPublishers(ctx context.Context, in *ListPublishersRequest, opts ...grpc.CallOption) (*ListPublishersResponse, error)
 	// An aep-compliant Apply method for publishers.
 	ApplyPublisher(ctx context.Context, in *ApplyPublisherRequest, opts ...grpc.CallOption) (*Publisher, error)
 }
@@ -108,9 +120,9 @@ func (c *bookstoreClient) DeleteBook(ctx context.Context, in *DeleteBookRequest,
 	return out, nil
 }
 
-func (c *bookstoreClient) ListBook(ctx context.Context, in *ListBookRequest, opts ...grpc.CallOption) (*ListBookResponse, error) {
-	out := new(ListBookResponse)
-	err := c.cc.Invoke(ctx, Bookstore_ListBook_FullMethodName, in, out, opts...)
+func (c *bookstoreClient) ListBooks(ctx context.Context, in *ListBooksRequest, opts ...grpc.CallOption) (*ListBooksResponse, error) {
+	out := new(ListBooksResponse)
+	err := c.cc.Invoke(ctx, Bookstore_ListBooks_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -120,6 +132,42 @@ func (c *bookstoreClient) ListBook(ctx context.Context, in *ListBookRequest, opt
 func (c *bookstoreClient) ApplyBook(ctx context.Context, in *ApplyBookRequest, opts ...grpc.CallOption) (*Book, error) {
 	out := new(Book)
 	err := c.cc.Invoke(ctx, Bookstore_ApplyBook_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookstoreClient) CreateBookEdition(ctx context.Context, in *CreateBookEditionRequest, opts ...grpc.CallOption) (*BookEdition, error) {
+	out := new(BookEdition)
+	err := c.cc.Invoke(ctx, Bookstore_CreateBookEdition_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookstoreClient) GetBookEdition(ctx context.Context, in *GetBookEditionRequest, opts ...grpc.CallOption) (*BookEdition, error) {
+	out := new(BookEdition)
+	err := c.cc.Invoke(ctx, Bookstore_GetBookEdition_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookstoreClient) DeleteBookEdition(ctx context.Context, in *DeleteBookEditionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Bookstore_DeleteBookEdition_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookstoreClient) ListBookEditions(ctx context.Context, in *ListBookEditionsRequest, opts ...grpc.CallOption) (*ListBookEditionsResponse, error) {
+	out := new(ListBookEditionsResponse)
+	err := c.cc.Invoke(ctx, Bookstore_ListBookEditions_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -162,9 +210,9 @@ func (c *bookstoreClient) DeletePublisher(ctx context.Context, in *DeletePublish
 	return out, nil
 }
 
-func (c *bookstoreClient) ListPublisher(ctx context.Context, in *ListPublisherRequest, opts ...grpc.CallOption) (*ListPublisherResponse, error) {
-	out := new(ListPublisherResponse)
-	err := c.cc.Invoke(ctx, Bookstore_ListPublisher_FullMethodName, in, out, opts...)
+func (c *bookstoreClient) ListPublishers(ctx context.Context, in *ListPublishersRequest, opts ...grpc.CallOption) (*ListPublishersResponse, error) {
+	out := new(ListPublishersResponse)
+	err := c.cc.Invoke(ctx, Bookstore_ListPublishers_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -184,28 +232,36 @@ func (c *bookstoreClient) ApplyPublisher(ctx context.Context, in *ApplyPublisher
 // All implementations must embed UnimplementedBookstoreServer
 // for forward compatibility
 type BookstoreServer interface {
-	// An aep-compliant Create method for Book.
+	// An aep-compliant Create method for book.
 	CreateBook(context.Context, *CreateBookRequest) (*Book, error)
-	// An aep-compliant Get method for Book.
+	// An aep-compliant Get method for book.
 	GetBook(context.Context, *GetBookRequest) (*Book, error)
-	// An aep-compliant Update method for Book.
+	// An aep-compliant Update method for book.
 	UpdateBook(context.Context, *UpdateBookRequest) (*Book, error)
-	// An aep-compliant Delete method for Book.
+	// An aep-compliant Delete method for book.
 	DeleteBook(context.Context, *DeleteBookRequest) (*emptypb.Empty, error)
 	// An aep-compliant List method for books.
-	ListBook(context.Context, *ListBookRequest) (*ListBookResponse, error)
+	ListBooks(context.Context, *ListBooksRequest) (*ListBooksResponse, error)
 	// An aep-compliant Apply method for books.
 	ApplyBook(context.Context, *ApplyBookRequest) (*Book, error)
-	// An aep-compliant Create method for Publisher.
+	// An aep-compliant Create method for book-edition.
+	CreateBookEdition(context.Context, *CreateBookEditionRequest) (*BookEdition, error)
+	// An aep-compliant Get method for book-edition.
+	GetBookEdition(context.Context, *GetBookEditionRequest) (*BookEdition, error)
+	// An aep-compliant Delete method for book-edition.
+	DeleteBookEdition(context.Context, *DeleteBookEditionRequest) (*emptypb.Empty, error)
+	// An aep-compliant List method for book-editions.
+	ListBookEditions(context.Context, *ListBookEditionsRequest) (*ListBookEditionsResponse, error)
+	// An aep-compliant Create method for publisher.
 	CreatePublisher(context.Context, *CreatePublisherRequest) (*Publisher, error)
-	// An aep-compliant Get method for Publisher.
+	// An aep-compliant Get method for publisher.
 	GetPublisher(context.Context, *GetPublisherRequest) (*Publisher, error)
-	// An aep-compliant Update method for Publisher.
+	// An aep-compliant Update method for publisher.
 	UpdatePublisher(context.Context, *UpdatePublisherRequest) (*Publisher, error)
-	// An aep-compliant Delete method for Publisher.
+	// An aep-compliant Delete method for publisher.
 	DeletePublisher(context.Context, *DeletePublisherRequest) (*emptypb.Empty, error)
 	// An aep-compliant List method for publishers.
-	ListPublisher(context.Context, *ListPublisherRequest) (*ListPublisherResponse, error)
+	ListPublishers(context.Context, *ListPublishersRequest) (*ListPublishersResponse, error)
 	// An aep-compliant Apply method for publishers.
 	ApplyPublisher(context.Context, *ApplyPublisherRequest) (*Publisher, error)
 	mustEmbedUnimplementedBookstoreServer()
@@ -227,11 +283,23 @@ func (UnimplementedBookstoreServer) UpdateBook(context.Context, *UpdateBookReque
 func (UnimplementedBookstoreServer) DeleteBook(context.Context, *DeleteBookRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteBook not implemented")
 }
-func (UnimplementedBookstoreServer) ListBook(context.Context, *ListBookRequest) (*ListBookResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListBook not implemented")
+func (UnimplementedBookstoreServer) ListBooks(context.Context, *ListBooksRequest) (*ListBooksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListBooks not implemented")
 }
 func (UnimplementedBookstoreServer) ApplyBook(context.Context, *ApplyBookRequest) (*Book, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApplyBook not implemented")
+}
+func (UnimplementedBookstoreServer) CreateBookEdition(context.Context, *CreateBookEditionRequest) (*BookEdition, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBookEdition not implemented")
+}
+func (UnimplementedBookstoreServer) GetBookEdition(context.Context, *GetBookEditionRequest) (*BookEdition, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBookEdition not implemented")
+}
+func (UnimplementedBookstoreServer) DeleteBookEdition(context.Context, *DeleteBookEditionRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteBookEdition not implemented")
+}
+func (UnimplementedBookstoreServer) ListBookEditions(context.Context, *ListBookEditionsRequest) (*ListBookEditionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListBookEditions not implemented")
 }
 func (UnimplementedBookstoreServer) CreatePublisher(context.Context, *CreatePublisherRequest) (*Publisher, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePublisher not implemented")
@@ -245,8 +313,8 @@ func (UnimplementedBookstoreServer) UpdatePublisher(context.Context, *UpdatePubl
 func (UnimplementedBookstoreServer) DeletePublisher(context.Context, *DeletePublisherRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePublisher not implemented")
 }
-func (UnimplementedBookstoreServer) ListPublisher(context.Context, *ListPublisherRequest) (*ListPublisherResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListPublisher not implemented")
+func (UnimplementedBookstoreServer) ListPublishers(context.Context, *ListPublishersRequest) (*ListPublishersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPublishers not implemented")
 }
 func (UnimplementedBookstoreServer) ApplyPublisher(context.Context, *ApplyPublisherRequest) (*Publisher, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApplyPublisher not implemented")
@@ -336,20 +404,20 @@ func _Bookstore_DeleteBook_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Bookstore_ListBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListBookRequest)
+func _Bookstore_ListBooks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBooksRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BookstoreServer).ListBook(ctx, in)
+		return srv.(BookstoreServer).ListBooks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Bookstore_ListBook_FullMethodName,
+		FullMethod: Bookstore_ListBooks_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BookstoreServer).ListBook(ctx, req.(*ListBookRequest))
+		return srv.(BookstoreServer).ListBooks(ctx, req.(*ListBooksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -368,6 +436,78 @@ func _Bookstore_ApplyBook_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BookstoreServer).ApplyBook(ctx, req.(*ApplyBookRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bookstore_CreateBookEdition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBookEditionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).CreateBookEdition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_CreateBookEdition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).CreateBookEdition(ctx, req.(*CreateBookEditionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bookstore_GetBookEdition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBookEditionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).GetBookEdition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_GetBookEdition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).GetBookEdition(ctx, req.(*GetBookEditionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bookstore_DeleteBookEdition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBookEditionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).DeleteBookEdition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_DeleteBookEdition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).DeleteBookEdition(ctx, req.(*DeleteBookEditionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bookstore_ListBookEditions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBookEditionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).ListBookEditions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_ListBookEditions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).ListBookEditions(ctx, req.(*ListBookEditionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -444,20 +584,20 @@ func _Bookstore_DeletePublisher_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Bookstore_ListPublisher_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListPublisherRequest)
+func _Bookstore_ListPublishers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPublishersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BookstoreServer).ListPublisher(ctx, in)
+		return srv.(BookstoreServer).ListPublishers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Bookstore_ListPublisher_FullMethodName,
+		FullMethod: Bookstore_ListPublishers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BookstoreServer).ListPublisher(ctx, req.(*ListPublisherRequest))
+		return srv.(BookstoreServer).ListPublishers(ctx, req.(*ListPublishersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -504,12 +644,28 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bookstore_DeleteBook_Handler,
 		},
 		{
-			MethodName: "ListBook",
-			Handler:    _Bookstore_ListBook_Handler,
+			MethodName: "ListBooks",
+			Handler:    _Bookstore_ListBooks_Handler,
 		},
 		{
 			MethodName: "ApplyBook",
 			Handler:    _Bookstore_ApplyBook_Handler,
+		},
+		{
+			MethodName: "CreateBookEdition",
+			Handler:    _Bookstore_CreateBookEdition_Handler,
+		},
+		{
+			MethodName: "GetBookEdition",
+			Handler:    _Bookstore_GetBookEdition_Handler,
+		},
+		{
+			MethodName: "DeleteBookEdition",
+			Handler:    _Bookstore_DeleteBookEdition_Handler,
+		},
+		{
+			MethodName: "ListBookEditions",
+			Handler:    _Bookstore_ListBookEditions_Handler,
 		},
 		{
 			MethodName: "CreatePublisher",
@@ -528,8 +684,8 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bookstore_DeletePublisher_Handler,
 		},
 		{
-			MethodName: "ListPublisher",
-			Handler:    _Bookstore_ListPublisher_Handler,
+			MethodName: "ListPublishers",
+			Handler:    _Bookstore_ListPublishers_Handler,
 		},
 		{
 			MethodName: "ApplyPublisher",

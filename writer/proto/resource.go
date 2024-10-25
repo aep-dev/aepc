@@ -19,8 +19,10 @@ import (
 	"strings"
 
 	"github.com/aep-dev/aepc/constants"
+	"github.com/aep-dev/aepc/internal/utils"
 	"github.com/aep-dev/aepc/parser"
 	"github.com/aep-dev/aepc/schema"
+	"github.com/aep-dev/aepc/writer/writer_utils"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	"google.golang.org/genproto/googleapis/api/annotations"
@@ -204,7 +206,7 @@ func GenerateMessage(properties []*parser.ParsedProperty, name string, s *parser
 
 // GenerateResourceMesssage adds the resource message.
 func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (*builder.MessageBuilder, error) {
-	mb, err := GenerateMessage(r.GetPropertiesSortedByNumber(), r.Kind, s, m)
+	mb, err := GenerateMessage(r.GetPropertiesSortedByNumber(), toMessageName(r.Kind), s, m)
 	if err != nil {
 		return nil, err
 	}
@@ -215,7 +217,7 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService,
 func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
-	mb := builder.NewMessage("Create" + r.Kind + "Request")
+	mb := builder.NewMessage("Create" + toMessageName(r.Kind) + "Request")
 	mb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("A Create request for a  %v resource.", r.Kind),
 	})
@@ -223,7 +225,7 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	addIdField(r, mb)
 	addResourceField(r, resourceMb, mb)
 	fb.AddMessage(mb)
-	method := builder.NewMethod("Create"+r.Kind,
+	method := builder.NewMethod("Create"+toMessageName(r.Kind),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
 	)
@@ -231,15 +233,15 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		LeadingComment: fmt.Sprintf("An aep-compliant Create method for %v.", r.Kind),
 	})
 	options := &descriptorpb.MethodOptions{}
+	bodyField := utils.KebabToSnakeCase(r.Kind)
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Post{
-			// TODO(yft): switch this over to use "id" in the path.
 			Post: generateParentHTTPPath(r),
 		},
-		Body: strings.ToLower(r.Kind),
+		Body: bodyField,
 	})
 	proto.SetExtension(options, annotations.E_MethodSignature, []string{
-		strings.Join([]string{constants.FIELD_PARENT_NAME, strings.ToLower(r.Kind)}, ","),
+		strings.Join([]string{constants.FIELD_PARENT_NAME, bodyField}, ","),
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
@@ -249,13 +251,13 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 // AddGet adds a read method for the resource, along with
 // any required messages.
 func AddGet(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	mb := builder.NewMessage("Get" + r.Kind + "Request")
+	mb := builder.NewMessage("Get" + toMessageName(r.Kind) + "Request")
 	mb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("Request message for the Get%v method", r.Kind),
 	})
 	addPathField(r, mb)
 	fb.AddMessage(mb)
-	method := builder.NewMethod("Get"+r.Kind,
+	method := builder.NewMethod("Get"+toMessageName(r.Kind),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
 	)
@@ -279,9 +281,9 @@ func AddGet(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *bu
 // AddRead adds a read method for the resource, along with
 // any required messages.
 func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	mb := builder.NewMessage("Update" + r.Kind + "Request")
+	mb := builder.NewMessage("Update" + toMessageName(r.Kind) + "Request")
 	mb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Request message for the Update%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Request message for the Update%v method", toMessageName(r.Kind)),
 	})
 	addPathField(r, mb)
 	addResourceField(r, resourceMb, mb)
@@ -295,7 +297,7 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		}))
 
 	fb.AddMessage(mb)
-	method := builder.NewMethod("Update"+r.Kind,
+	method := builder.NewMethod("Update"+toMessageName(r.Kind),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
 	)
@@ -303,14 +305,15 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		LeadingComment: fmt.Sprintf("An aep-compliant Update method for %v.", r.Kind),
 	})
 	options := &descriptorpb.MethodOptions{}
+	body_field := utils.KebabToSnakeCase(r.Kind)
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Patch{
 			Patch: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
 		},
-		Body: strings.ToLower(r.Kind),
+		Body: body_field,
 	})
 	proto.SetExtension(options, annotations.E_MethodSignature, []string{
-		strings.Join([]string{strings.ToLower(r.Kind), constants.FIELD_UPDATE_MASK_NAME}, ","),
+		strings.Join([]string{body_field, constants.FIELD_UPDATE_MASK_NAME}, ","),
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
@@ -320,9 +323,9 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
-	mb := builder.NewMessage("Delete" + r.Kind + "Request")
+	mb := builder.NewMessage("Delete" + toMessageName(r.Kind) + "Request")
 	mb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Request message for the Delete%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Request message for the Delete%v method", toMessageName(r.Kind)),
 	})
 	addPathField(r, mb)
 	fb.AddMessage(mb)
@@ -330,7 +333,7 @@ func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	if err != nil {
 		return err
 	}
-	method := builder.NewMethod("Delete"+r.Kind,
+	method := builder.NewMethod("Delete"+toMessageName(r.Kind),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeImportedMessage(emptyMd, false),
 	)
@@ -354,7 +357,7 @@ func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
-	reqMb := builder.NewMessage("List" + r.Kind + "Request")
+	reqMb := builder.NewMessage("List" + toMessageName(r.Plural) + "Request")
 	reqMb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("Request message for the List%v method", r.Kind),
 	})
@@ -366,14 +369,14 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 			LeadingComment: fmt.Sprintf("The maximum number of resources to return in a single page."),
 		}))
 	fb.AddMessage(reqMb)
-	respMb := builder.NewMessage("List" + r.Kind + "Response")
+	respMb := builder.NewMessage("List" + toMessageName(r.Plural) + "Response")
 	respMb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("Response message for the List%v method", r.Kind),
 	})
 	addResourcesField(r, resourceMb, respMb)
 	addNextPageToken(r, respMb)
 	fb.AddMessage(respMb)
-	method := builder.NewMethod("List"+r.Kind,
+	method := builder.NewMethod("List"+toMessageName(r.Plural),
 		builder.RpcTypeMessage(reqMb, false),
 		builder.RpcTypeMessage(respMb, false),
 	)
@@ -429,14 +432,14 @@ func AddGlobalList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder,
 // AddApply adds a read method for the resource, along with
 // any required messages.
 func AddApply(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	mb := builder.NewMessage("Apply" + r.Kind + "Request")
+	mb := builder.NewMessage("Apply" + toMessageName(r.Kind) + "Request")
 	mb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("Request message for the Apply%v method", r.Kind),
 	})
 	addPathField(r, mb)
 	addResourceField(r, resourceMb, mb)
 	fb.AddMessage(mb)
-	method := builder.NewMethod("Apply"+r.Kind,
+	method := builder.NewMethod("Apply"+toMessageName(r.Kind),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
 	)
@@ -457,7 +460,7 @@ func AddApply(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *
 }
 
 func generateHTTPPath(r *parser.ParsedResource) string {
-	elements := []string{strings.ToLower(r.Plural)}
+	elements := []string{writer_utils.CollectionName(r)}
 	if len(r.ParsedParents) > 0 {
 		// TODO: handle multiple parents
 		p := r.ParsedParents[0]
@@ -466,6 +469,7 @@ func generateHTTPPath(r *parser.ParsedResource) string {
 			if len(p.ParsedParents) == 0 {
 				break
 			}
+			p = p.ParsedParents[0]
 		}
 	}
 	return fmt.Sprintf("%v/*", strings.Join(elements, "/*/"))
@@ -479,7 +483,7 @@ func generateParentHTTPPath(r *parser.ParsedResource) string {
 	if len(r.ParsedParents) > 0 {
 		parentPath = fmt.Sprintf("%v", generateHTTPPath(r.ParsedParents[0]))
 	}
-	return fmt.Sprintf("/{parent=%v}/%v", parentPath, strings.ToLower(r.Plural))
+	return fmt.Sprintf("/{parent=%v}/%v", parentPath, writer_utils.CollectionName(r))
 }
 
 func addParentField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
@@ -521,7 +525,7 @@ func addPathField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 func addResourceField(r *parser.ParsedResource, resourceMb, mb *builder.MessageBuilder) {
 	o := &descriptorpb.FieldOptions{}
 	proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
-	f := builder.NewField(strings.ToLower(r.Kind), builder.FieldTypeMessage(resourceMb)).
+	f := builder.NewField(utils.KebabToSnakeCase(r.Kind), builder.FieldTypeMessage(resourceMb)).
 		SetNumber(constants.FIELD_RESOURCE_NUMBER).
 		SetComments(builder.Comments{
 			LeadingComment: fmt.Sprintf("The resource to perform the operation on."),

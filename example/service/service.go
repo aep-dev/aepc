@@ -72,12 +72,12 @@ func (BookstoreServer) GetBook(_ context.Context, r *bpb.GetBookRequest) (*bpb.B
 	return nil, status.Errorf(codes.NotFound, "book %q not found", r.Path)
 }
 
-func (BookstoreServer) ListBook(_ context.Context, r *bpb.ListBookRequest) (*bpb.ListBookResponse, error) {
+func (BookstoreServer) ListBooks(_ context.Context, r *bpb.ListBooksRequest) (*bpb.ListBooksResponse, error) {
 	var books []*bpb.Book
 	for _, book := range bookDatabase {
 		books = append(books, book)
 	}
-	return &bpb.ListBookResponse{
+	return &bpb.ListBooksResponse{
 		Results: books,
 	}, nil
 }
@@ -128,12 +128,12 @@ func (BookstoreServer) GetPublisher(_ context.Context, r *bpb.GetPublisherReques
 	return nil, status.Errorf(codes.NotFound, "publisher %q not found", r.Path)
 }
 
-func (BookstoreServer) ListPublisher(_ context.Context, r *bpb.ListPublisherRequest) (*bpb.ListPublisherResponse, error) {
+func (BookstoreServer) ListPublishers(_ context.Context, r *bpb.ListPublishersRequest) (*bpb.ListPublishersResponse, error) {
 	var publishers []*bpb.Publisher
 	for _, p := range publisherDatabase {
 		publishers = append(publishers, p)
 	}
-	return &bpb.ListPublisherResponse{
+	return &bpb.ListPublishersResponse{
 		Results: publishers,
 	}, nil
 }
