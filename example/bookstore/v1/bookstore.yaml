@@ -79,3 +79,10 @@ resources:
       read: {}
       list: {}
       delete: {}
+  - kind: "isbn"
+    plural: "isbns"
+    properties: {}
+    methods:
+      create: {}
+      # blocked on https://github.com/aep-dev/api-linter/issues/97
+      # non_client_settable_id: true

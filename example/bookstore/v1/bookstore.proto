@@ -100,6 +100,20 @@ service Bookstore {
     option (google.api.method_signature) = "parent";
   }
 
+  // An aep-compliant Create method for isbn.
+  rpc CreateIsbn ( CreateIsbnRequest ) returns ( Isbn ) {
+    option (google.api.http) = { post: "/{parent=isbns}", body: "isbn" };
+
+    option (google.api.method_signature) = "parent,isbn";
+  }
+
+  // An aep-compliant Get method for isbn.
+  rpc GetIsbn ( GetIsbnRequest ) returns ( Isbn ) {
+    option (google.api.http) = { get: "/{path=isbns/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
   // An aep-compliant Create method for publisher.
   rpc CreatePublisher ( CreatePublisherRequest ) returns ( Publisher ) {
     option (google.api.http) = {
@@ -331,6 +345,39 @@ message ListBookEditionsResponse {
 
   // The page token indicating the ending point of this response.
   string next_page_token = 10011;
+}
+
+// A Isbn.
+message Isbn {
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// A Create request for a  isbn resource.
+message CreateIsbnRequest {
+  // A field for the parent of isbn
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // An id that uniquely identifies the resource within the collection
+  string id = 10014;
+
+  // The resource to perform the operation on.
+  Isbn isbn = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for the Getisbn method
+message GetIsbnRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/isbn" }
+  ];
 }
 
 // A Publisher.

@@ -222,7 +222,9 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		LeadingComment: fmt.Sprintf("A Create request for a  %v resource.", r.Kind),
 	})
 	addParentField(r, mb)
-	addIdField(r, mb)
+	if !r.Methods.Create.NonClientSettableId {
+		addIdField(r, mb)
+	}
 	addResourceField(r, resourceMb, mb)
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Create"+toMessageName(r.Kind),
