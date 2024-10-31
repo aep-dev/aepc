@@ -1,5 +1,5 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.1.0",
   "servers": [
     {
       "url": "http://localhost:8081"
@@ -9,27 +9,22 @@
     "title": "bookstore.example.com",
     "version": "version not set"
   },
-  "schemes": [
-    "http"
-  ],
   "paths": {
     "/isbns": {
       "post": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/isbn"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/isbn"
+                }
+              }
             }
           }
         },
         "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/components/schemas/isbn"
-            }
-          },
           {
             "in": "query",
             "name": "id",
@@ -37,15 +32,30 @@
             "required": true,
             "type": "string"
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/isbn"
+              }
+            }
+          }
+        }
       }
     },
     "/isbns/{isbn}": {
       "get": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/isbn"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/isbn"
+                }
+              }
             }
           }
         },
@@ -64,9 +74,20 @@
       "get": {
         "responses": {
           "200": {
-            "schema": {
-              "items": {
-                "$ref": "#/components/schemas/publisher"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/publisher"
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -91,19 +112,17 @@
       "post": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/publisher"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publisher"
+                }
+              }
             }
           }
         },
         "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/components/schemas/publisher"
-            }
-          },
           {
             "in": "query",
             "name": "id",
@@ -111,14 +130,25 @@
             "required": true,
             "type": "string"
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publisher"
+              }
+            }
+          }
+        }
       }
     },
     "/publishers/{publisher}": {
       "delete": {
         "responses": {
           "200": {
-            "schema": {}
+            "description": "",
+            "content": null
           }
         },
         "parameters": [
@@ -134,8 +164,13 @@
       "get": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/publisher"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publisher"
+                }
+              }
             }
           }
         },
@@ -152,8 +187,13 @@
       "patch": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/publisher"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publisher"
+                }
+              }
             }
           }
         },
@@ -164,42 +204,71 @@
             "schema": {},
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/components/schemas/publisher"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publisher"
+              }
             }
           }
-        ]
+        }
       },
       "put": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/publisher"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publisher"
+                }
+              }
             }
           }
         },
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/components/schemas/publisher"
+            "in": "path",
+            "name": "publisher",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publisher"
+              }
             }
           }
-        ]
+        }
       }
     },
     "/publishers/{publisher}/books": {
       "get": {
         "responses": {
           "200": {
-            "schema": {
-              "items": {
-                "$ref": "#/components/schemas/book"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/book"
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -231,8 +300,13 @@
       "post": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/book"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
             }
           }
         },
@@ -245,27 +319,31 @@
             "type": "string"
           },
           {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/components/schemas/book"
-            }
-          },
-          {
             "in": "query",
             "name": "id",
             "schema": {},
             "required": true,
             "type": "string"
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book"
+              }
+            }
+          }
+        }
       }
     },
     "/publishers/{publisher}/books/{book}": {
       "delete": {
         "responses": {
           "200": {
-            "schema": {}
+            "description": "",
+            "content": null
           }
         },
         "parameters": [
@@ -288,8 +366,13 @@
       "get": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/book"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
             }
           }
         },
@@ -313,8 +396,13 @@
       "patch": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/book"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
             }
           }
         },
@@ -332,21 +420,29 @@
             "schema": {},
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/components/schemas/book"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book"
+              }
             }
           }
-        ]
+        }
       },
       "put": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/book"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
             }
           }
         },
@@ -359,22 +455,43 @@
             "type": "string"
           },
           {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/components/schemas/book"
+            "in": "path",
+            "name": "book",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book"
+              }
             }
           }
-        ]
+        }
       }
     },
     "/publishers/{publisher}/books/{book}/editions": {
       "get": {
         "responses": {
           "200": {
-            "schema": {
-              "items": {
-                "$ref": "#/components/schemas/book-edition"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/book-edition"
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -413,8 +530,13 @@
       "post": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/book-edition"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book-edition"
+                }
+              }
             }
           }
         },
@@ -434,27 +556,31 @@
             "type": "string"
           },
           {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/components/schemas/book-edition"
-            }
-          },
-          {
             "in": "query",
             "name": "id",
             "schema": {},
             "required": true,
             "type": "string"
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book-edition"
+              }
+            }
+          }
+        }
       }
     },
     "/publishers/{publisher}/books/{book}/editions/{book-edition}": {
       "delete": {
         "responses": {
           "200": {
-            "schema": {}
+            "description": "",
+            "content": null
           }
         },
         "parameters": [
@@ -484,8 +610,13 @@
       "get": {
         "responses": {
           "200": {
-            "schema": {
-              "$ref": "#/components/schemas/book-edition"
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book-edition"
+                }
+              }
             }
           }
         },
