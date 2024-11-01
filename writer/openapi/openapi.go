@@ -3,7 +3,6 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"github.com/aep-dev/aepc/constants"
 	"github.com/aep-dev/aepc/parser"
@@ -60,11 +59,14 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 		singular := r.Kind
 		collection := writer_utils.CollectionName(r)
 		// declare some commonly used objects, to be used later.
-		bodyParam := ParameterInfo{
-			In:   "body",
-			Name: "body",
-			Schema: Schema{
-				Ref: schemaRef,
+		bodyParam := RequestBody{
+			Required: true,
+			Content: map[string]MediaType{
+				"application/json": {
+					Schema: Schema{
+						Ref: schemaRef,
+					},
+				},
 			},
 		}
 		idParam := ParameterInfo{
@@ -74,8 +76,13 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			Type:     "string",
 		}
 		resourceResponse := ResponseInfo{
-			Schema: Schema{
-				Ref: schemaRef,
+			Description: "Successful response",
+			Content: map[string]MediaType{
+				"application/json": {
+					Schema: Schema{
+						Ref: schemaRef,
+					},
+				},
 			},
 		}
 		for _, pwp := range *parentPWPS {
@@ -100,9 +107,20 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 					),
 					Responses: Responses{
 						"200": ResponseInfo{
-							Schema: Schema{
-								Items: &Schema{
-									Ref: schemaRef,
+							Description: "Successful response",
+							Content: map[string]MediaType{
+								"application/json": {
+									Schema: Schema{
+										Type: "object",
+										Properties: &Properties{
+											"results": {
+												Type: "array",
+												Items: &Schema{
+													Ref: schemaRef,
+												},
+											},
+										},
+									},
 								},
 							},
 						},
@@ -111,7 +129,7 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			}
 			if r.Methods.Create != nil {
 				createPath := fmt.Sprintf("%s/%s", pwp.Pattern, collection)
-				params := append(pwp.Params, bodyParam)
+				params := pwp.Params
 				if !r.Methods.Create.NonClientSettableId {
 					params = append(params, ParameterInfo{
 						In:       "query",
@@ -121,7 +139,8 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 					})
 				}
 				addMethodToPath(paths, createPath, "post", MethodInfo{
-					Parameters: params,
+					Parameters:  params,
+					RequestBody: &bodyParam,
 					Responses: Responses{
 						"200": resourceResponse,
 					},
@@ -137,7 +156,8 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			}
 			if r.Methods.Update != nil {
 				addMethodToPath(paths, resourcePath, "patch", MethodInfo{
-					Parameters: append(pwp.Params, idParam, bodyParam),
+					Parameters:  append(pwp.Params, idParam),
+					RequestBody: &bodyParam,
 					Responses: Responses{
 						"200": resourceResponse,
 					},
@@ -153,7 +173,8 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			}
 			if r.Methods.Apply != nil {
 				addMethodToPath(paths, resourcePath, "put", MethodInfo{
-					Parameters: append(pwp.Params, bodyParam),
+					Parameters:  append(pwp.Params, idParam),
+					RequestBody: &bodyParam,
 					Responses: Responses{
 						"200": resourceResponse,
 					},
@@ -169,7 +190,7 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 		components.Schemas[r.Kind] = d
 	}
 	openAPI := &OpenAPI{
-		Swagger: "2.0",
+		OpenAPI: "3.1.0",
 		Servers: []Server{
 			{URL: service.Service.Url},
 		},
@@ -177,7 +198,6 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			Title:   service.Service.Name,
 			Version: "version not set",
 		},
-		Schemes:    []string{"http"},
 		Paths:      paths,
 		Components: components,
 	}
@@ -302,27 +322,10 @@ func addMethodToPath(paths Paths, path, method string, methodInfo MethodInfo) {
 	methods[method] = methodInfo
 }
 
-// return the collection name of the resource, but deduplicate
-// the name of the previous parent
-// e.g:
-// - book-editions becomes editions under the parent resource book.
-func collectionName(r *parser.ParsedResource) string {
-	collectionName := r.Plural
-	if len(r.ParsedParents) > 0 {
-		parent := r.ParsedParents[0].Kind
-		// if collectionName has a prefix of parent, remove it
-		if strings.HasPrefix(collectionName, parent) {
-			collectionName = strings.TrimPrefix(collectionName, parent+"-")
-		}
-	}
-	return collectionName
-}
-
 type OpenAPI struct {
-	Swagger    string     `json:"swagger"`
+	OpenAPI    string     `json:"openapi"`
 	Servers    []Server   `json:"servers,omitempty"`
 	Info       Info       `json:"info"`
-	Schemes    []string   `json:"schemes"`
 	Paths      Paths      `json:"paths"`
 	Components Components `json:"components"`
 }
@@ -349,8 +352,9 @@ type Schemas map[string]Schema
 type Methods map[string]MethodInfo
 
 type MethodInfo struct {
-	Responses  Responses  `json:"responses"`
-	Parameters Parameters `json:"parameters"`
+	Responses   Responses    `json:"responses"`
+	Parameters  Parameters   `json:"parameters,omitempty"`
+	RequestBody *RequestBody `json:"requestBody,omitempty"`
 }
 
 type Responses map[string]ResponseInfo
@@ -358,7 +362,8 @@ type Responses map[string]ResponseInfo
 type Parameters []ParameterInfo
 
 type ResponseInfo struct {
-	Schema Schema `json:"schema"`
+	Description string               `json:"description"`
+	Content     map[string]MediaType `json:"content"`
 }
 
 type ParameterInfo struct {
@@ -388,4 +393,13 @@ type XAEPResource struct {
 	Plural   string   `json:"plural,omitempty"`
 	Patterns []string `json:"patterns,omitempty"`
 	Parents  []string `json:"parents,omitempty"`
+}
+
+type RequestBody struct {
+	Required bool                 `json:"required"`
+	Content  map[string]MediaType `json:"content"`
+}
+
+type MediaType struct {
+	Schema Schema `json:"schema"`
 }
