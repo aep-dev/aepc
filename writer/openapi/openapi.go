@@ -111,14 +111,15 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			}
 			if r.Methods.Create != nil {
 				createPath := fmt.Sprintf("%s/%s", pwp.Pattern, collection)
-				params := append(pwp.Params, bodyParam,
-					ParameterInfo{
+				params := append(pwp.Params, bodyParam)
+				if !r.Methods.Create.NonClientSettableId {
+					params = append(params, ParameterInfo{
 						In:       "query",
 						Name:     "id",
 						Required: true,
 						Type:     "string",
-					},
-				)
+					})
+				}
 				addMethodToPath(paths, createPath, "post", MethodInfo{
 					Parameters: params,
 					Responses: Responses{

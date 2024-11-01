@@ -48,7 +48,9 @@ message Object {
 // Methods supported by a resource.
 message Methods {
   // The properties of the create method.
-  message CreateMethod {}
+  message CreateMethod {
+    bool non_client_settable_id = 1;
+  }
   // The properties of the read method.
   message ReadMethod {}
   // The properties of the update method.

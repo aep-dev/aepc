@@ -58,6 +58,21 @@ components:
         - /publishers/{publisher}/books/{book}/editions/{book-edition}
         plural: book-editions
         singular: book-edition
+    isbn:
+      properties:
+        id:
+          readOnly: true
+          type: string
+          x-terraform-id: true
+        path:
+          readOnly: true
+          type: string
+      type: object
+      x-aep-resource:
+        patterns:
+        - /isbns/{isbn}
+        plural: isbns
+        singular: isbn
     publisher:
       properties:
         description:
@@ -79,6 +94,34 @@ info:
   title: bookstore.example.com
   version: version not set
 paths:
+  /isbns:
+    post:
+      parameters:
+      - in: body
+        name: body
+        schema:
+          $ref: '#/components/schemas/isbn'
+      - in: query
+        name: id
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/isbn'
+  /isbns/{isbn}:
+    get:
+      parameters:
+      - in: path
+        name: isbn
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/isbn'
   /publishers:
     get:
       parameters:

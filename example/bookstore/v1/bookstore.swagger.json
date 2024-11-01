@@ -16,6 +16,58 @@
     "application/json"
   ],
   "paths": {
+    "/{parent_1}": {
+      "post": {
+        "summary": "An aep-compliant Create method for publisher.",
+        "operationId": "Bookstore_CreatePublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Publisher"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent_1",
+            "description": "A field for the parent of publisher",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers"
+          },
+          {
+            "name": "publisher",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Publisher",
+              "required": [
+                "publisher"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "description": "An id that uniquely identifies the resource within the collection",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
     "/{parent}": {
       "get": {
         "summary": "An aep-compliant List method for publishers.",
@@ -64,13 +116,13 @@
         ]
       },
       "post": {
-        "summary": "An aep-compliant Create method for publisher.",
-        "operationId": "Bookstore_CreatePublisher",
+        "summary": "An aep-compliant Create method for isbn.",
+        "operationId": "Bookstore_CreateIsbn",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Publisher"
+              "$ref": "#/definitions/v1Isbn"
             }
           },
           "default": {
@@ -83,21 +135,21 @@
         "parameters": [
           {
             "name": "parent",
-            "description": "A field for the parent of publisher",
+            "description": "A field for the parent of isbn",
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "publishers"
+            "pattern": "isbns"
           },
           {
-            "name": "publisher",
+            "name": "isbn",
             "description": "The resource to perform the operation on.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Publisher",
+              "$ref": "#/definitions/v1Isbn",
               "required": [
-                "publisher"
+                "isbn"
               ]
             }
           },
@@ -463,13 +515,13 @@
     },
     "/{path_2}": {
       "get": {
-        "summary": "An aep-compliant Get method for publisher.",
-        "operationId": "Bookstore_GetPublisher",
+        "summary": "An aep-compliant Get method for isbn.",
+        "operationId": "Bookstore_GetIsbn",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Publisher"
+              "$ref": "#/definitions/v1Isbn"
             }
           },
           "default": {
@@ -486,7 +538,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "publishers/[^/]+"
+            "pattern": "isbns/[^/]+"
           }
         ],
         "tags": [
@@ -514,6 +566,39 @@
         "parameters": [
           {
             "name": "path_2",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers/[^/]+"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/{path_3}": {
+      "get": {
+        "summary": "An aep-compliant Get method for publisher.",
+        "operationId": "Bookstore_GetPublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Publisher"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_3",
             "description": "The globally unique identifier for the resource",
             "in": "path",
             "required": true,
@@ -789,6 +874,20 @@
       "required": [
         "displayname"
       ]
+    },
+    "v1Isbn": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        },
+        "id": {
+          "type": "string",
+          "description": "Field for id."
+        }
+      },
+      "description": "A Isbn."
     },
     "v1ListBookEditionsResponse": {
       "type": "object",

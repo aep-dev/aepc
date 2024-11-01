@@ -13,6 +13,53 @@
     "http"
   ],
   "paths": {
+    "/isbns": {
+      "post": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/components/schemas/isbn"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/components/schemas/isbn"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/isbns/{isbn}": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/components/schemas/isbn"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "isbn",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      }
+    },
     "/publishers": {
       "get": {
         "responses": {
@@ -549,6 +596,27 @@
           ],
           "parents": [
             "book"
+          ]
+        }
+      },
+      "isbn": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "x-terraform-id": true
+          },
+          "path": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "x-aep-resource": {
+          "singular": "isbn",
+          "plural": "isbns",
+          "patterns": [
+            "/isbns/{isbn}"
           ]
         }
       },
