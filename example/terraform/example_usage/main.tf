@@ -8,5 +8,7 @@ terraform {
 }
 
 # resource "bookstore_books" "book" {
-#   isbn = "978-3-16-148410-0"
+#  isbn = ["978-3-16-148410-0"]
+#  price = 10.00
+#  published = false
 # }
