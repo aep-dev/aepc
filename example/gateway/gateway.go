@@ -75,7 +75,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		// Replace the original body with the TeeReader
 		r.Body = io.NopCloser(bodyReader)
 
-    w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 
 		// Let the next handler read the body again
 		next.ServeHTTP(w, r)
