@@ -8,15 +8,7 @@ import (
 	"github.com/aep-dev/aepc/parser"
 	"github.com/aep-dev/aepc/schema"
 	"github.com/aep-dev/aepc/writer/writer_utils"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
-
-var lowerizer cases.Caser
-
-func init() {
-	lowerizer = cases.Lower(language.AmericanEnglish)
-}
 
 func WriteServiceToOpenAPI(ps *parser.ParsedService) ([]byte, error) {
 	openAPI, err := convertToOpenAPI(ps)
@@ -164,8 +156,17 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 				})
 			}
 			if r.Methods.Delete != nil {
+				params := append(pwp.Params, idParam)
+				if len(r.ParsedChildren) > 0 {
+					params = append(params, ParameterInfo{
+						In:       "query",
+						Name:     "force",
+						Required: false,
+						Type:     "boolean",
+					})
+				}
 				addMethodToPath(paths, resourcePath, "delete", MethodInfo{
-					Parameters: append(pwp.Params, idParam),
+					Parameters: params,
 					Responses: Responses{
 						"200": ResponseInfo{},
 					},

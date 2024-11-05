@@ -210,7 +210,16 @@ func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService,
 	if err != nil {
 		return nil, err
 	}
-	m.Messages[fmt.Sprintf("%s/%s", s.Name, r.Kind)] = mb
+	typeName := fmt.Sprintf("%s/%s", s.Name, r.Kind)
+	m.Messages[typeName] = mb
+	options := &descriptorpb.MessageOptions{}
+	proto.SetExtension(options, annotations.E_Resource, &annotations.ResourceDescriptor{
+		Type:     typeName,
+		Singular: r.Kind,
+		Plural:   r.Plural,
+		Pattern:  writer_utils.GeneratePatternStrings(r),
+	})
+	mb.SetOptions(options)
 	return mb, nil
 }
 
@@ -242,8 +251,12 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		},
 		Body: bodyField,
 	})
+	methodSignatureFields := []string{bodyField}
+	if len(r.ParsedParents) > 0 {
+		methodSignatureFields = append([]string{constants.FIELD_PARENT_NAME}, methodSignatureFields...)
+	}
 	proto.SetExtension(options, annotations.E_MethodSignature, []string{
-		strings.Join([]string{constants.FIELD_PARENT_NAME, bodyField}, ","),
+		strings.Join(methodSignatureFields, ","),
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
@@ -330,6 +343,9 @@ func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		LeadingComment: fmt.Sprintf("Request message for the Delete%v method", toMessageName(r.Kind)),
 	})
 	addPathField(r, mb)
+	if len(r.ParsedChildren) > 0 {
+		addForceField(r, mb)
+	}
 	fb.AddMessage(mb)
 	emptyMd, err := desc.LoadMessageDescriptor("google.protobuf.Empty")
 	if err != nil {
@@ -553,6 +569,13 @@ func addPageToken(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 func addNextPageToken(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 	f := builder.NewField(constants.FIELD_NEXT_PAGE_TOKEN_NAME, builder.FieldTypeString()).SetNumber(constants.FIELD_NEXT_PAGE_TOKEN_NUMBER).SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("The page token indicating the ending point of this response."),
+	})
+	mb.AddField(f)
+}
+
+func addForceField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
+	f := builder.NewField(constants.FIELD_FORCE_NAME, builder.FieldTypeBool()).SetNumber(constants.FIELD_FORCE_NUMBER).SetComments(builder.Comments{
+		LeadingComment: fmt.Sprintf("If true, the resource will be deleted even if it still has children."),
 	})
 	mb.AddField(f)
 }

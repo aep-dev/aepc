@@ -32,6 +32,7 @@ const (
 	Bookstore_ListBookEditions_FullMethodName  = "/example.bookstore.v1.Bookstore/ListBookEditions"
 	Bookstore_CreateIsbn_FullMethodName        = "/example.bookstore.v1.Bookstore/CreateIsbn"
 	Bookstore_GetIsbn_FullMethodName           = "/example.bookstore.v1.Bookstore/GetIsbn"
+	Bookstore_ListIsbns_FullMethodName         = "/example.bookstore.v1.Bookstore/ListIsbns"
 	Bookstore_CreatePublisher_FullMethodName   = "/example.bookstore.v1.Bookstore/CreatePublisher"
 	Bookstore_GetPublisher_FullMethodName      = "/example.bookstore.v1.Bookstore/GetPublisher"
 	Bookstore_UpdatePublisher_FullMethodName   = "/example.bookstore.v1.Bookstore/UpdatePublisher"
@@ -68,6 +69,8 @@ type BookstoreClient interface {
 	CreateIsbn(ctx context.Context, in *CreateIsbnRequest, opts ...grpc.CallOption) (*Isbn, error)
 	// An aep-compliant Get method for isbn.
 	GetIsbn(ctx context.Context, in *GetIsbnRequest, opts ...grpc.CallOption) (*Isbn, error)
+	// An aep-compliant List method for isbns.
+	ListIsbns(ctx context.Context, in *ListIsbnsRequest, opts ...grpc.CallOption) (*ListIsbnsResponse, error)
 	// An aep-compliant Create method for publisher.
 	CreatePublisher(ctx context.Context, in *CreatePublisherRequest, opts ...grpc.CallOption) (*Publisher, error)
 	// An aep-compliant Get method for publisher.
@@ -198,6 +201,15 @@ func (c *bookstoreClient) GetIsbn(ctx context.Context, in *GetIsbnRequest, opts 
 	return out, nil
 }
 
+func (c *bookstoreClient) ListIsbns(ctx context.Context, in *ListIsbnsRequest, opts ...grpc.CallOption) (*ListIsbnsResponse, error) {
+	out := new(ListIsbnsResponse)
+	err := c.cc.Invoke(ctx, Bookstore_ListIsbns_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *bookstoreClient) CreatePublisher(ctx context.Context, in *CreatePublisherRequest, opts ...grpc.CallOption) (*Publisher, error) {
 	out := new(Publisher)
 	err := c.cc.Invoke(ctx, Bookstore_CreatePublisher_FullMethodName, in, out, opts...)
@@ -280,6 +292,8 @@ type BookstoreServer interface {
 	CreateIsbn(context.Context, *CreateIsbnRequest) (*Isbn, error)
 	// An aep-compliant Get method for isbn.
 	GetIsbn(context.Context, *GetIsbnRequest) (*Isbn, error)
+	// An aep-compliant List method for isbns.
+	ListIsbns(context.Context, *ListIsbnsRequest) (*ListIsbnsResponse, error)
 	// An aep-compliant Create method for publisher.
 	CreatePublisher(context.Context, *CreatePublisherRequest) (*Publisher, error)
 	// An aep-compliant Get method for publisher.
@@ -334,6 +348,9 @@ func (UnimplementedBookstoreServer) CreateIsbn(context.Context, *CreateIsbnReque
 }
 func (UnimplementedBookstoreServer) GetIsbn(context.Context, *GetIsbnRequest) (*Isbn, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetIsbn not implemented")
+}
+func (UnimplementedBookstoreServer) ListIsbns(context.Context, *ListIsbnsRequest) (*ListIsbnsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListIsbns not implemented")
 }
 func (UnimplementedBookstoreServer) CreatePublisher(context.Context, *CreatePublisherRequest) (*Publisher, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreatePublisher not implemented")
@@ -582,6 +599,24 @@ func _Bookstore_GetIsbn_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Bookstore_ListIsbns_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListIsbnsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).ListIsbns(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_ListIsbns_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).ListIsbns(ctx, req.(*ListIsbnsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Bookstore_CreatePublisher_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreatePublisherRequest)
 	if err := dec(in); err != nil {
@@ -744,6 +779,10 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetIsbn",
 			Handler:    _Bookstore_GetIsbn_Handler,
+		},
+		{
+			MethodName: "ListIsbns",
+			Handler:    _Bookstore_ListIsbns_Handler,
 		},
 		{
 			MethodName: "CreatePublisher",
