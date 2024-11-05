@@ -809,21 +809,6 @@
     "v1Book": {
       "type": "object",
       "properties": {
-        "author": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/BookAuthor"
-          },
-          "description": "Field for author."
-        },
-        "isbn": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Field for isbn."
-        },
         "price": {
           "type": "number",
           "format": "float",
@@ -838,6 +823,18 @@
           "format": "int32",
           "description": "Field for edition."
         },
+        "author": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/BookAuthor"
+          },
+          "description": "Field for author."
+        },
+        "etag": {
+          "type": "string",
+          "description": "Field for etag."
+        },
         "path": {
           "type": "string",
           "description": "Field for path."
@@ -849,7 +846,6 @@
       },
       "description": "A Book.",
       "required": [
-        "isbn",
         "price",
         "published"
       ]
@@ -921,6 +917,10 @@
         "nextPageToken": {
           "type": "string",
           "description": "The page token indicating the ending point of this response."
+        },
+        "unreachable": {
+          "type": "string",
+          "description": "The resources that are unreachable."
         }
       },
       "title": "Response message for the Listbook method"
@@ -949,6 +949,10 @@
         "description": {
           "type": "string",
           "description": "Field for description."
+        },
+        "etag": {
+          "type": "string",
+          "description": "Field for etag."
         },
         "path": {
           "type": "string",

@@ -377,6 +377,9 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	})
 	addResourcesField(r, resourceMb, respMb)
 	addNextPageToken(r, respMb)
+	if r.Methods.List.UnreachableResources {
+		addUnreachableResources(r, respMb)
+	}
 	fb.AddMessage(respMb)
 	method := builder.NewMethod("List"+toMessageName(r.Plural),
 		builder.RpcTypeMessage(reqMb, false),
@@ -553,6 +556,13 @@ func addPageToken(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 func addNextPageToken(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 	f := builder.NewField(constants.FIELD_NEXT_PAGE_TOKEN_NAME, builder.FieldTypeString()).SetNumber(constants.FIELD_NEXT_PAGE_TOKEN_NUMBER).SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("The page token indicating the ending point of this response."),
+	})
+	mb.AddField(f)
+}
+
+func addUnreachableResources(r *parser.ParsedResource, mb *builder.MessageBuilder) {
+	f := builder.NewField(constants.FIELD_UNREACHABLE_RESOURCES_NAME, builder.FieldTypeString()).SetNumber(constants.FIELD_UNREACHABLE_RESOURCES_NUMBER).SetComments(builder.Comments{
+		LeadingComment: fmt.Sprintf("The resources that are unreachable."),
 	})
 	mb.AddField(f)
 }

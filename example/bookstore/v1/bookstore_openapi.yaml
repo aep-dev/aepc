@@ -9,14 +9,12 @@ components:
         edition:
           format: int32
           type: integer
+        etag:
+          type: string
         id:
           readOnly: true
           type: string
           x-terraform-id: true
-        isbn:
-          items:
-            type: string
-          type: array
         path:
           readOnly: true
           type: string
@@ -26,7 +24,6 @@ components:
         published:
           type: boolean
       required:
-      - isbn
       - price
       - published
       type: object
@@ -76,6 +73,8 @@ components:
     publisher:
       properties:
         description:
+          type: string
+        etag:
           type: string
         id:
           readOnly: true
@@ -269,6 +268,10 @@ paths:
                   results:
                     items:
                       $ref: '#/components/schemas/book'
+                    type: array
+                  unreachable:
+                    items:
+                      type: string
                     type: array
                 type: object
           description: Successful response

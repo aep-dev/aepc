@@ -9,6 +9,9 @@ resources:
       description:
         type: STRING
         number: 1
+      etag:
+        type: STRING
+        number: 2
     methods:
       create: {}
       read: {}
@@ -24,11 +27,9 @@ resources:
     parents:
       - "publisher"
     properties:
-      isbn:
-        array_type:
-          type: STRING
-        number: 1
-        required: true
+      etag:
+        type: STRING
+        number: 6
       price:
         type: FLOAT
         number: 2
@@ -42,6 +43,7 @@ resources:
         number: 4
         required: false
       author:
+        number: 5
         array_type:
           object_type:
             properties:
@@ -56,7 +58,8 @@ resources:
       read: {}
       update: {}
       delete: {}
-      list: {}
+      list:
+        unreachable_resources: true
       apply: {} # do not uncomment until there is an AEP on apply.
   # other example resources that might be interesting to add:
   # authors, which could be a reference for book

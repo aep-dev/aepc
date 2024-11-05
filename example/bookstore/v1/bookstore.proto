@@ -172,12 +172,6 @@ message Book {
     string lastName = 2;
   }
 
-  // Field for author.
-  repeated Author author = 5;
-
-  // Field for isbn.
-  repeated string isbn = 1 [(google.api.field_behavior) = REQUIRED];
-
   // Field for price.
   float price = 2 [(google.api.field_behavior) = REQUIRED];
 
@@ -186,6 +180,12 @@ message Book {
 
   // Field for edition.
   int32 edition = 4;
+
+  // Field for author.
+  repeated Author author = 5;
+
+  // Field for etag.
+  string etag = 6;
 
   // Field for path.
   string path = 10000;
@@ -264,6 +264,9 @@ message ListBooksResponse {
 
   // The page token indicating the ending point of this response.
   string next_page_token = 10011;
+
+  // The resources that are unreachable.
+  string unreachable = 10019;
 }
 
 // Request message for the Applybook method
@@ -384,6 +387,9 @@ message GetIsbnRequest {
 message Publisher {
   // Field for description.
   string description = 1;
+
+  // Field for etag.
+  string etag = 2;
 
   // Field for path.
   string path = 10000;

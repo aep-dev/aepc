@@ -90,6 +90,22 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 			patterns = append(patterns, resourcePath)
 			if r.Methods.List != nil {
 				listPath := fmt.Sprintf("%s/%s", pwp.Pattern, collection)
+				responseProperties := Properties{
+					"results": Schema{
+						Type: "array",
+						Items: &Schema{
+							Ref: schemaRef,
+						},
+					},
+				}
+				if r.Methods.List.UnreachableResources {
+					responseProperties["unreachable"] = Schema{
+						Type: "array",
+						Items: &Schema{
+							Type: "string",
+						},
+					}
+				}
 				addMethodToPath(paths, listPath, "get", MethodInfo{
 					Parameters: append(pwp.Params,
 						ParameterInfo{
@@ -111,15 +127,8 @@ func convertToOpenAPI(service *parser.ParsedService) (*OpenAPI, error) {
 							Content: map[string]MediaType{
 								"application/json": {
 									Schema: Schema{
-										Type: "object",
-										Properties: &Properties{
-											"results": {
-												Type: "array",
-												Items: &Schema{
-													Ref: schemaRef,
-												},
-											},
-										},
+										Type:       "object",
+										Properties: &responseProperties,
 									},
 								},
 							},

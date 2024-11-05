@@ -58,7 +58,10 @@ message Methods {
   // The properties of the delete method.
   message DeleteMethod {}
   // The properties of the list method.
-  message ListMethod {}
+  message ListMethod {
+    // true if there are unreachable resources.
+    bool unreachable_resources = 1;
+  }
   // THe properties of the global list method.
   message GlobalListMethod {}
   // THe properties of the apply method.

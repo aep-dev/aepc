@@ -266,6 +266,12 @@
                       "items": {
                         "$ref": "#/components/schemas/book"
                       }
+                    },
+                    "unreachable": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -651,7 +657,6 @@
       "book": {
         "type": "object",
         "required": [
-          "isbn",
           "price",
           "published"
         ],
@@ -666,16 +671,13 @@
             "type": "integer",
             "format": "int32"
           },
+          "etag": {
+            "type": "string"
+          },
           "id": {
             "type": "string",
             "readOnly": true,
             "x-terraform-id": true
-          },
-          "isbn": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           },
           "path": {
             "type": "string",
@@ -755,6 +757,9 @@
         "type": "object",
         "properties": {
           "description": {
+            "type": "string"
+          },
+          "etag": {
             "type": "string"
           },
           "id": {
