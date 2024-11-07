@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/dikhan/terraform-provider-openapi/v3/openapi"
+	"github.com/aep-dev/terraform-provider-aep/openapi"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
