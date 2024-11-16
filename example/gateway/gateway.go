@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
@@ -53,10 +54,15 @@ func Run(grpcServerEndpoint string) {
 	}
 
 	loggingWrappedMux := loggingMiddleware(mux)
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PATCH", "PUT", "DELETE"},
+	})
+	corsWrappedMux := c.Handler(loggingWrappedMux)
 
 	log.Print("Starting grpc-gateway server on localhost:8081")
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
-	if err := http.ListenAndServe(":8081", loggingWrappedMux); err != nil {
+	if err := http.ListenAndServe(":8081", corsWrappedMux); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -74,8 +80,6 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		bodyReader := bytes.NewReader(bodyBytes)
 		// Replace the original body with the TeeReader
 		r.Body = io.NopCloser(bodyReader)
-
-		w.Header().Set("Access-Control-Allow-Origin", "*")
 
 		// Let the next handler read the body again
 		next.ServeHTTP(w, r)
