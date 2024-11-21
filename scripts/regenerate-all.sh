@@ -8,14 +8,8 @@ set -ex
 # path to help handle edge cases where the rest of the schema depends
 # on aepc output.
 buf generate --path ./schema/
-# protoc ./schema/resourcedefinition.proto --go_opt paths=source_relative --go_out=.
-# generate service proto from resource proto
-# proto package names have to match a-z0-9_
 go run main.go -i ./example/bookstore/v1/bookstore.yaml -o ./example/bookstore/v1/bookstore
-# bookstore.pb.go
-# bookstore.yaml
-# bookstore.proto
-# bookstore-openapi.json
+go run main.go -i ./example/roblox/v2.yaml -o ./example/roblox/v2
 buf generate
 # generated all downstream proto code
 # protoc \

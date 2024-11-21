@@ -1,0 +1,69 @@
+# normally this would be suffixed with the domain (.com)
+name: "cloud.roblox.com"
+url: "https://apis.roblox.com/cloud/v2"
+resources:
+  - kind: "user"
+    plural: "users"
+    properties:
+      displayName:
+        type: STRING
+        number: 2
+        required: true
+    methods:
+      read: {}
+  - kind: "creator-store-product"
+    plural: "creator-store-products"
+    properties: {}
+    methods:
+      read: {}
+      create: {}
+      update: {}
+  - kind: "universe"
+    plural: "universes"
+    properties:
+      # TODO(yft): make a decision around dashes
+      # display-name:
+      # type: STRING
+      # number: 1
+      description:
+        type: STRING
+        number: 1
+        readOnly: true
+      displayName:
+        type: STRING
+        number: 2
+        readOnly: true
+      mobileEnabled:
+        type: BOOLEAN
+        number: 3
+      desktopEnabled:
+        type: BOOLEAN
+        number: 4
+      tabletEnabled:
+        type: BOOLEAN
+        number: 5
+    methods:
+      read: {}
+      create: {}
+      update: {}
+  # needs support for parents
+  - kind: "data-store"
+    plural: "data-stores"
+    parents:
+      - "universe"
+    properties: {}
+    methods:
+      list: {}
+  - kind: "data-store-entry"
+    plural: "data-store-entries"
+    parents:
+      - "data-store"
+    properties:
+      value:
+        object_type: {}
+      attributes:
+        object_type: {}
+    methods:
+      list: {}
+      create: {}
+      read: {}

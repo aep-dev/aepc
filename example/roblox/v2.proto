@@ -1,0 +1,360 @@
+syntax = "proto3";
+
+package example.roblox;
+
+import "google/api/annotations.proto";
+
+import "google/api/client.proto";
+
+import "google/api/field_behavior.proto";
+
+import "google/api/resource.proto";
+
+import "google/protobuf/field_mask.proto";
+
+option go_package = "/cloud";
+
+// A service.
+service Cloud {
+  // An aep-compliant Create method for creator-store-product.
+  rpc CreateCreatorStoreProduct ( CreateCreatorStoreProductRequest ) returns ( CreatorStoreProduct ) {
+    option (google.api.http) = {
+      post: "/{parent=creator-store-products}",
+      body: "creator_store_product"
+    };
+
+    option (google.api.method_signature) = "parent,creator_store_product";
+  }
+
+  // An aep-compliant Get method for creator-store-product.
+  rpc GetCreatorStoreProduct ( GetCreatorStoreProductRequest ) returns ( CreatorStoreProduct ) {
+    option (google.api.http) = { get: "/{path=creator-store-products/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant Update method for creator-store-product.
+  rpc UpdateCreatorStoreProduct ( UpdateCreatorStoreProductRequest ) returns ( CreatorStoreProduct ) {
+    option (google.api.http) = {
+      patch: "/{path=creator-store-products/*}",
+      body: "creator_store_product"
+    };
+
+    option (google.api.method_signature) = "creator_store_product,update_mask";
+  }
+
+  // An aep-compliant Get method for data-store.
+  rpc GetDataStore ( GetDataStoreRequest ) returns ( DataStore ) {
+    option (google.api.http) = { get: "/{path=universes/*/data-stores/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant List method for data-stores.
+  rpc ListDataStores ( ListDataStoresRequest ) returns ( ListDataStoresResponse ) {
+    option (google.api.http) = { get: "/{parent=universes/*}/data-stores" };
+
+    option (google.api.method_signature) = "parent";
+  }
+
+  // An aep-compliant Create method for data-store-entry.
+  rpc CreateDataStoreEntry ( CreateDataStoreEntryRequest ) returns ( DataStoreEntry ) {
+    option (google.api.http) = {
+      post: "/{parent=universes/*/data-stores/*}/entries",
+      body: "data_store_entry"
+    };
+
+    option (google.api.method_signature) = "parent,data_store_entry";
+  }
+
+  // An aep-compliant Get method for data-store-entry.
+  rpc GetDataStoreEntry ( GetDataStoreEntryRequest ) returns ( DataStoreEntry ) {
+    option (google.api.http) = {
+      get: "/{path=universes/*/data-stores/*/entries/*}"
+    };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant List method for data-store-entries.
+  rpc ListDataStoreEntries ( ListDataStoreEntriesRequest ) returns ( ListDataStoreEntriesResponse ) {
+    option (google.api.http) = {
+      get: "/{parent=universes/*/data-stores/*}/entries"
+    };
+
+    option (google.api.method_signature) = "parent";
+  }
+
+  // An aep-compliant Create method for universe.
+  rpc CreateUniverse ( CreateUniverseRequest ) returns ( Universe ) {
+    option (google.api.http) = { post: "/{parent=universes}", body: "universe" };
+
+    option (google.api.method_signature) = "parent,universe";
+  }
+
+  // An aep-compliant Get method for universe.
+  rpc GetUniverse ( GetUniverseRequest ) returns ( Universe ) {
+    option (google.api.http) = { get: "/{path=universes/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant Update method for universe.
+  rpc UpdateUniverse ( UpdateUniverseRequest ) returns ( Universe ) {
+    option (google.api.http) = { patch: "/{path=universes/*}", body: "universe" };
+
+    option (google.api.method_signature) = "universe,update_mask";
+  }
+
+  // An aep-compliant Get method for user.
+  rpc GetUser ( GetUserRequest ) returns ( User ) {
+    option (google.api.http) = { get: "/{path=users/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+}
+
+// A CreatorStoreProduct.
+message CreatorStoreProduct {
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// A Create request for a  creator-store-product resource.
+message CreateCreatorStoreProductRequest {
+  // A field for the parent of creator-store-product
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // An id that uniquely identifies the resource within the collection
+  string id = 10014;
+
+  // The resource to perform the operation on.
+  CreatorStoreProduct creator_store_product = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for the Getcreator-store-product method
+message GetCreatorStoreProductRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/creator-store-product" }
+  ];
+}
+
+// Request message for the UpdateCreatorStoreProduct method
+message UpdateCreatorStoreProductRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/creator-store-product" }
+  ];
+
+  // The resource to perform the operation on.
+  CreatorStoreProduct creator_store_product = 10015 [(google.api.field_behavior) = REQUIRED];
+
+  // The update mask for the resource
+  google.protobuf.FieldMask update_mask = 10012;
+}
+
+// A DataStore.
+message DataStore {
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// Request message for the Getdata-store method
+message GetDataStoreRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/data-store" }
+  ];
+}
+
+// Request message for the Listdata-store method
+message ListDataStoresRequest {
+  // A field for the parent of data-store
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // The page token indicating the starting point of the page
+  string page_token = 10010;
+
+  // The maximum number of resources to return in a single page.
+  int32 max_page_size = 10017;
+}
+
+// Response message for the Listdata-store method
+message ListDataStoresResponse {
+  // A list of data-stores
+  repeated DataStore results = 10016;
+
+  // The page token indicating the ending point of this response.
+  string next_page_token = 10011;
+}
+
+// A DataStoreEntry.
+message DataStoreEntry {
+  // A Attributes.
+  message Attributes {
+  }
+
+  // A Value.
+  message Value {
+  }
+
+  // Field for attributes.
+  Attributes attributes = 1;
+
+  // Field for value.
+  Value value = 2;
+
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// A Create request for a  data-store-entry resource.
+message CreateDataStoreEntryRequest {
+  // A field for the parent of data-store-entry
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // An id that uniquely identifies the resource within the collection
+  string id = 10014;
+
+  // The resource to perform the operation on.
+  DataStoreEntry data_store_entry = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for the Getdata-store-entry method
+message GetDataStoreEntryRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/data-store-entry" }
+  ];
+}
+
+// Request message for the Listdata-store-entry method
+message ListDataStoreEntriesRequest {
+  // A field for the parent of data-store-entry
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // The page token indicating the starting point of the page
+  string page_token = 10010;
+
+  // The maximum number of resources to return in a single page.
+  int32 max_page_size = 10017;
+}
+
+// Response message for the Listdata-store-entry method
+message ListDataStoreEntriesResponse {
+  // A list of data-store-entries
+  repeated DataStoreEntry results = 10016;
+
+  // The page token indicating the ending point of this response.
+  string next_page_token = 10011;
+}
+
+// A Universe.
+message Universe {
+  // Field for description.
+  string description = 1;
+
+  // Field for displayName.
+  string displayName = 2;
+
+  // Field for mobileEnabled.
+  bool mobileEnabled = 3;
+
+  // Field for desktopEnabled.
+  bool desktopEnabled = 4;
+
+  // Field for tabletEnabled.
+  bool tabletEnabled = 5;
+
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// A Create request for a  universe resource.
+message CreateUniverseRequest {
+  // A field for the parent of universe
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
+  // An id that uniquely identifies the resource within the collection
+  string id = 10014;
+
+  // The resource to perform the operation on.
+  Universe universe = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for the Getuniverse method
+message GetUniverseRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/universe" }
+  ];
+}
+
+// Request message for the UpdateUniverse method
+message UpdateUniverseRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/universe" }
+  ];
+
+  // The resource to perform the operation on.
+  Universe universe = 10015 [(google.api.field_behavior) = REQUIRED];
+
+  // The update mask for the resource
+  google.protobuf.FieldMask update_mask = 10012;
+}
+
+// A User.
+message User {
+  // Field for displayName.
+  string displayName = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // Field for path.
+  string path = 10000;
+
+  // Field for id.
+  string id = 10001;
+}
+
+// Request message for the Getuser method
+message GetUserRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "cloud.roblox.com/user" }
+  ];
+}

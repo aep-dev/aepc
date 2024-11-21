@@ -1,0 +1,323 @@
+components:
+  schemas:
+    creator-store-product:
+      properties:
+        id:
+          readOnly: true
+          type: string
+          x-terraform-id: true
+        path:
+          readOnly: true
+          type: string
+      type: object
+      x-aep-resource:
+        patterns:
+        - /creator-store-products/{creator-store-product}
+        plural: creator-store-products
+        singular: creator-store-product
+    data-store:
+      properties:
+        id:
+          readOnly: true
+          type: string
+          x-terraform-id: true
+        path:
+          readOnly: true
+          type: string
+      type: object
+      x-aep-resource:
+        parents:
+        - universe
+        patterns:
+        - /universes/{universe}/data-stores/{data-store}
+        plural: data-stores
+        singular: data-store
+    data-store-entry:
+      properties:
+        attributes:
+          type: object
+        id:
+          readOnly: true
+          type: string
+          x-terraform-id: true
+        path:
+          readOnly: true
+          type: string
+        value:
+          type: object
+      type: object
+      x-aep-resource:
+        parents:
+        - data-store
+        patterns:
+        - /universes/{universe}/data-stores/{data-store}/entries/{data-store-entry}
+        plural: data-store-entries
+        singular: data-store-entry
+    universe:
+      properties:
+        description:
+          readOnly: true
+          type: string
+        desktopEnabled:
+          type: boolean
+        displayName:
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: string
+          x-terraform-id: true
+        mobileEnabled:
+          type: boolean
+        path:
+          readOnly: true
+          type: string
+        tabletEnabled:
+          type: boolean
+      type: object
+      x-aep-resource:
+        patterns:
+        - /universes/{universe}
+        plural: universes
+        singular: universe
+    user:
+      properties:
+        displayName:
+          type: string
+        id:
+          readOnly: true
+          type: string
+          x-terraform-id: true
+        path:
+          readOnly: true
+          type: string
+      required:
+      - displayName
+      type: object
+      x-aep-resource:
+        patterns:
+        - /users/{user}
+        plural: users
+        singular: user
+info:
+  title: cloud.roblox.com
+  version: version not set
+paths:
+  /creator-store-products:
+    post:
+      parameters:
+      - in: body
+        name: body
+        schema:
+          $ref: '#/components/schemas/creator-store-product'
+      - in: query
+        name: id
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/creator-store-product'
+  /creator-store-products/{creator-store-product}:
+    get:
+      parameters:
+      - in: path
+        name: creator-store-product
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/creator-store-product'
+    patch:
+      parameters:
+      - in: path
+        name: creator-store-product
+        required: true
+        schema: {}
+        type: string
+      - in: body
+        name: body
+        schema:
+          $ref: '#/components/schemas/creator-store-product'
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/creator-store-product'
+  /universes:
+    post:
+      parameters:
+      - in: body
+        name: body
+        schema:
+          $ref: '#/components/schemas/universe'
+      - in: query
+        name: id
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/universe'
+  /universes/{universe}:
+    get:
+      parameters:
+      - in: path
+        name: universe
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/universe'
+    patch:
+      parameters:
+      - in: path
+        name: universe
+        required: true
+        schema: {}
+        type: string
+      - in: body
+        name: body
+        schema:
+          $ref: '#/components/schemas/universe'
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/universe'
+  /universes/{universe}/data-stores:
+    get:
+      parameters:
+      - in: path
+        name: universe
+        required: true
+        schema: {}
+        type: string
+      - in: query
+        name: max_page_size
+        required: true
+        schema: {}
+        type: integer
+      - in: query
+        name: page_token
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            items:
+              $ref: '#/components/schemas/data-store'
+  /universes/{universe}/data-stores/{data-store}:
+    get:
+      parameters:
+      - in: path
+        name: universe
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: data-store
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/data-store'
+  /universes/{universe}/data-stores/{data-store}/entries:
+    get:
+      parameters:
+      - in: path
+        name: universe
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: data-store
+        required: true
+        schema: {}
+        type: string
+      - in: query
+        name: max_page_size
+        required: true
+        schema: {}
+        type: integer
+      - in: query
+        name: page_token
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            items:
+              $ref: '#/components/schemas/data-store-entry'
+    post:
+      parameters:
+      - in: path
+        name: universe
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: data-store
+        required: true
+        schema: {}
+        type: string
+      - in: body
+        name: body
+        schema:
+          $ref: '#/components/schemas/data-store-entry'
+      - in: query
+        name: id
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/data-store-entry'
+  /universes/{universe}/data-stores/{data-store}/entries/{data-store-entry}:
+    get:
+      parameters:
+      - in: path
+        name: universe
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: data-store
+        required: true
+        schema: {}
+        type: string
+      - in: path
+        name: data-store-entry
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/data-store-entry'
+  /users/{user}:
+    get:
+      parameters:
+      - in: path
+        name: user
+        required: true
+        schema: {}
+        type: string
+      responses:
+        "200":
+          schema:
+            $ref: '#/components/schemas/user'
+schemes:
+- http
+servers:
+- url: https://apis.roblox.com/cloud/v2
+swagger: "2.0"
