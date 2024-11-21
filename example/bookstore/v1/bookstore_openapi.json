@@ -11,6 +11,44 @@
   },
   "paths": {
     "/isbns": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/isbn"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "max_page_size",
+            "schema": {},
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "page_token",
+            "schema": {},
+            "required": true,
+            "type": "string"
+          }
+        ]
+      },
       "post": {
         "responses": {
           "200": {
@@ -158,6 +196,12 @@
             "schema": {},
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "force",
+            "schema": {},
+            "type": "boolean"
           }
         ]
       },
@@ -360,6 +404,12 @@
             "schema": {},
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "force",
+            "schema": {},
+            "type": "boolean"
           }
         ]
       },

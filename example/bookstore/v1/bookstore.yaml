@@ -84,5 +84,6 @@ resources:
     properties: {}
     methods:
       create: {}
+      list: {}
       # blocked on https://github.com/aep-dev/api-linter/issues/97
       # non_client_settable_id: true
