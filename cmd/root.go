@@ -26,7 +26,6 @@ import (
 	"github.com/aep-dev/aepc/parser"
 	"github.com/aep-dev/aepc/schema"
 	"github.com/aep-dev/aepc/validator"
-	"github.com/aep-dev/aepc/writer/openapi"
 	"github.com/aep-dev/aepc/writer/proto"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -83,7 +82,12 @@ func ProcessInput(inputFile, outputFilePrefix string) error {
 		return fmt.Errorf("error writing file: %w", err)
 	}
 	fmt.Printf("output proto file: %s\n", protoFile)
-	openapi, err := openapi.WriteServiceToOpenAPI(ps)
+	api, err := parser.ToAPI(s)
+	if err != nil {
+		return fmt.Errorf("error building api %s", err)
+	}
+
+	openapi, err := api.ConvertToOpenAPIBytes()
 	if err != nil {
 		return fmt.Errorf("error building openapi %s", err)
 	}

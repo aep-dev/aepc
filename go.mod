@@ -1,11 +1,8 @@
 module github.com/aep-dev/aepc
 
-go 1.22.0
-
-toolchain go1.22.3
+go 1.22.3
 
 require (
-	github.com/aep-dev/terraform-provider-aep v0.0.0-20241021202055-6e899642070a
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.35.0
 	github.com/jhump/protoreflect v1.17.0
@@ -21,6 +18,8 @@ require (
 	github.com/ProtonMail/go-crypto v1.1.0-alpha.2 // indirect
 	github.com/PuerkitoBio/purell v1.1.0 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
+	github.com/aep-dev/aep-lib-go v0.0.0-20241118063646-299cf2127afb // indirect
+	github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768 // indirect
 	github.com/agext/levenshtein v1.2.2 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a // indirect
@@ -94,5 +93,3 @@ require (
 	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/text v0.19.0
 )
-
-replace github.com/aep-dev/terraform-provider-aep => /Users/astephen/Projects/aep/terraform-provider-openapi

@@ -7,11 +7,16 @@
   ],
   "info": {
     "title": "bookstore.example.com",
+    "description": "",
     "version": "version not set"
   },
   "paths": {
     "/isbns": {
       "post": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -24,29 +29,33 @@
             }
           }
         },
-        "parameters": [
-          {
-            "in": "query",
-            "name": "id",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ],
         "requestBody": {
-          "required": true,
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/isbn"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
     "/isbns/{isbn}": {
       "get": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "isbn",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -58,20 +67,30 @@
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "in": "path",
-            "name": "isbn",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ]
+        }
       }
     },
     "/publishers": {
       "get": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "max_page_size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -91,25 +110,13 @@
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "in": "query",
-            "name": "max_page_size",
-            "schema": {},
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "in": "query",
-            "name": "page_token",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ]
+        }
       },
       "post": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -122,102 +129,59 @@
             }
           }
         },
-        "parameters": [
-          {
-            "in": "query",
-            "name": "id",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ],
         "requestBody": {
-          "required": true,
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/publisher"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
     "/publishers/{publisher}": {
-      "delete": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": null
-          }
-        },
-        "parameters": [
-          {
-            "in": "path",
-            "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ]
-      },
       "get": {
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/publisher"
-                }
-              }
-            }
-          }
-        },
+        "summary": "",
+        "description": "",
+        "operationId": "",
         "parameters": [
           {
-            "in": "path",
             "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ]
-      },
-      "patch": {
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/publisher"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
             "in": "path",
-            "name": "publisher",
-            "schema": {},
+            "description": "",
             "required": true,
             "type": "string"
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/publisher"
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publisher"
+                }
               }
             }
           }
         }
       },
-      "put": {
+      "patch": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "publisher",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -230,29 +194,74 @@
             }
           }
         },
-        "parameters": [
-          {
-            "in": "path",
-            "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ],
         "requestBody": {
-          "required": true,
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/publisher"
               }
             }
+          },
+          "required": true
+        }
+      },
+      "delete": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "publisher",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "force",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": null
           }
         }
       }
     },
     "/publishers/{publisher}/books": {
       "get": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "publisher",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "max_page_size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -272,32 +281,21 @@
               }
             }
           }
-        },
+        }
+      },
+      "post": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
         "parameters": [
           {
-            "in": "path",
             "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "max_page_size",
-            "schema": {},
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "in": "query",
-            "name": "page_token",
-            "schema": {},
+            "in": "path",
+            "description": "",
             "required": true,
             "type": "string"
           }
-        ]
-      },
-      "post": {
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -310,130 +308,73 @@
             }
           }
         },
-        "parameters": [
-          {
-            "in": "path",
-            "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "id",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ],
         "requestBody": {
-          "required": true,
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/book"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
     "/publishers/{publisher}/books/{book}": {
-      "delete": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": null
-          }
-        },
-        "parameters": [
-          {
-            "in": "path",
-            "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "book",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ]
-      },
       "get": {
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/book"
-                }
-              }
-            }
-          }
-        },
+        "summary": "",
+        "description": "",
+        "operationId": "",
         "parameters": [
           {
-            "in": "path",
             "name": "publisher",
-            "schema": {},
+            "in": "path",
+            "description": "",
             "required": true,
             "type": "string"
           },
           {
-            "in": "path",
             "name": "book",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ]
-      },
-      "patch": {
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/book"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
             "in": "path",
-            "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "book",
-            "schema": {},
+            "description": "",
             "required": true,
             "type": "string"
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/book"
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
               }
             }
           }
         }
       },
-      "put": {
+      "patch": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "publisher",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "book",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -446,36 +387,88 @@
             }
           }
         },
-        "parameters": [
-          {
-            "in": "path",
-            "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "book",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ],
         "requestBody": {
-          "required": true,
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/book"
               }
             }
+          },
+          "required": true
+        }
+      },
+      "delete": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "publisher",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "book",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "force",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": null
           }
         }
       }
     },
     "/publishers/{publisher}/books/{book}/editions": {
       "get": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "publisher",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "book",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "max_page_size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -495,39 +488,28 @@
               }
             }
           }
-        },
+        }
+      },
+      "post": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
         "parameters": [
           {
-            "in": "path",
             "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          },
-          {
             "in": "path",
-            "name": "book",
-            "schema": {},
+            "description": "",
             "required": true,
             "type": "string"
           },
           {
-            "in": "query",
-            "name": "max_page_size",
-            "schema": {},
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "in": "query",
-            "name": "page_token",
-            "schema": {},
+            "name": "book",
+            "in": "path",
+            "description": "",
             "required": true,
             "type": "string"
           }
-        ]
-      },
-      "post": {
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -540,74 +522,47 @@
             }
           }
         },
-        "parameters": [
-          {
-            "in": "path",
-            "name": "publisher",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "book",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "id",
-            "schema": {},
-            "required": true,
-            "type": "string"
-          }
-        ],
         "requestBody": {
-          "required": true,
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/book-edition"
               }
             }
-          }
+          },
+          "required": true
         }
       }
     },
     "/publishers/{publisher}/books/{book}/editions/{book-edition}": {
-      "delete": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": null
-          }
-        },
+      "get": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
         "parameters": [
           {
-            "in": "path",
             "name": "publisher",
-            "schema": {},
+            "in": "path",
+            "description": "",
             "required": true,
             "type": "string"
           },
           {
-            "in": "path",
             "name": "book",
-            "schema": {},
+            "in": "path",
+            "description": "",
             "required": true,
             "type": "string"
           },
           {
-            "in": "path",
             "name": "book-edition",
-            "schema": {},
+            "in": "path",
+            "description": "",
             "required": true,
             "type": "string"
           }
-        ]
-      },
-      "get": {
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -619,30 +574,41 @@
               }
             }
           }
-        },
+        }
+      },
+      "delete": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
         "parameters": [
           {
-            "in": "path",
             "name": "publisher",
-            "schema": {},
+            "in": "path",
+            "description": "",
             "required": true,
             "type": "string"
           },
           {
-            "in": "path",
             "name": "book",
-            "schema": {},
+            "in": "path",
+            "description": "",
             "required": true,
             "type": "string"
           },
           {
-            "in": "path",
             "name": "book-edition",
-            "schema": {},
+            "in": "path",
+            "description": "",
             "required": true,
             "type": "string"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": null
+          }
+        }
       }
     }
   },
@@ -650,16 +616,19 @@
     "schemas": {
       "book": {
         "type": "object",
-        "required": [
-          "isbn",
-          "price",
-          "published"
-        ],
         "properties": {
           "author": {
             "type": "array",
             "items": {
-              "type": "object"
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                }
+              }
             }
           },
           "edition": {
@@ -667,9 +636,7 @@
             "format": "int32"
           },
           "id": {
-            "type": "string",
-            "readOnly": true,
-            "x-terraform-id": true
+            "type": "string"
           },
           "isbn": {
             "type": "array",
@@ -678,8 +645,7 @@
             }
           },
           "path": {
-            "type": "string",
-            "readOnly": true
+            "type": "string"
           },
           "price": {
             "type": "number",
@@ -693,61 +659,60 @@
           "singular": "book",
           "plural": "books",
           "patterns": [
-            "/publishers/{publisher}/books/{book}"
+            "publishers/{publisher}/books/{book}"
           ],
           "parents": [
             "publisher"
           ]
-        }
+        },
+        "required": [
+          "published",
+          "isbn",
+          "price"
+        ]
       },
       "book-edition": {
         "type": "object",
-        "required": [
-          "displayname"
-        ],
         "properties": {
           "displayname": {
             "type": "string"
           },
           "id": {
-            "type": "string",
-            "readOnly": true,
-            "x-terraform-id": true
+            "type": "string"
           },
           "path": {
-            "type": "string",
-            "readOnly": true
+            "type": "string"
           }
         },
         "x-aep-resource": {
           "singular": "book-edition",
           "plural": "book-editions",
           "patterns": [
-            "/publishers/{publisher}/books/{book}/editions/{book-edition}"
+            "publishers/{publisher}/books/{book}/editions/{book-edition}"
           ],
           "parents": [
             "book"
           ]
-        }
+        },
+        "required": [
+          "displayname"
+        ]
       },
       "isbn": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "readOnly": true,
-            "x-terraform-id": true
+            "type": "string"
           },
           "path": {
-            "type": "string",
-            "readOnly": true
+            "type": "string"
           }
         },
         "x-aep-resource": {
           "singular": "isbn",
           "plural": "isbns",
           "patterns": [
-            "/isbns/{isbn}"
+            "isbns/{isbn}"
           ]
         }
       },
@@ -758,20 +723,17 @@
             "type": "string"
           },
           "id": {
-            "type": "string",
-            "readOnly": true,
-            "x-terraform-id": true
+            "type": "string"
           },
           "path": {
-            "type": "string",
-            "readOnly": true
+            "type": "string"
           }
         },
         "x-aep-resource": {
           "singular": "publisher",
           "plural": "publishers",
           "patterns": [
-            "/publishers/{publisher}"
+            "publishers/{publisher}"
           ]
         }
       }
