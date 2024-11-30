@@ -16,13 +16,13 @@ package proto
 import (
 	"fmt"
 	"reflect"
+	"sort"
 	"strings"
 
+	"github.com/aep-dev/aep-lib-go/pkg/api"
+	"github.com/aep-dev/aep-lib-go/pkg/openapi"
 	"github.com/aep-dev/aepc/constants"
 	"github.com/aep-dev/aepc/internal/utils"
-	"github.com/aep-dev/aepc/parser"
-	"github.com/aep-dev/aepc/schema"
-	"github.com/aep-dev/aepc/writer/writer_utils"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/builder"
 	"google.golang.org/genproto/googleapis/api/annotations"
@@ -32,102 +32,157 @@ import (
 )
 
 // AddResource adds a resource's protos and RPCs to a file and service.
-func AddResource(r *parser.ParsedResource, ps *parser.ParsedService, fb *builder.FileBuilder, sb *builder.ServiceBuilder, m *MessageStorage) error {
+func AddResource(r *api.Resource, a *api.API, fb *builder.FileBuilder, sb *builder.ServiceBuilder, m *MessageStorage) error {
 	// Do not recreate resources if they've already been created.
-	resourceMb, ok := m.Messages[fmt.Sprintf("%s/%s", ps.Name, r.Kind)]
+	resourceMb, ok := m.Messages[fmt.Sprintf("%s/%s", a.Name, r.Singular)]
 	if !ok {
-		return fmt.Errorf("%s not found in message storage", r.Kind)
+		return fmt.Errorf("%s not found in message storage", r.Singular)
 	}
 
-	fb.AddMessage(resourceMb)
-
-	if !r.IsResource {
-		return nil
+	if r.CreateMethod != nil {
+		err := AddCreate(a, r, resourceMb, fb, sb)
+		if err != nil {
+			return err
+		}
 	}
+	if r.GetMethod != nil {
+		err := AddGet(a, r, resourceMb, fb, sb)
+		if err != nil {
+			return err
+		}
+	}
+	if r.UpdateMethod != nil {
+		err := AddUpdate(a, r, resourceMb, fb, sb)
+		if err != nil {
+			return err
+		}
+	}
+	if r.DeleteMethod != nil {
+		err := AddDelete(a, r, resourceMb, fb, sb)
+		if err != nil {
+			return err
+		}
+	}
+	if r.ListMethod != nil {
+		err := AddList(r, resourceMb, fb, sb)
+		if err != nil {
+			return err
+		}
+	}
+	// TODO: add global list
+	/// if r.GlobalList != nil {
+	/// 	err := AddGlobalList(r, resourceMb, fb, sb)
+	/// 	if err != nil {
+	/// 		return err
+	/// 	}
+	/// }
 
-	if r.Methods != nil {
-		if r.Methods.Create != nil {
-			err := AddCreate(r, resourceMb, fb, sb)
-			if err != nil {
-				return err
-			}
-		}
-		if r.Methods.Read != nil {
-			err := AddGet(r, resourceMb, fb, sb)
-			if err != nil {
-				return err
-			}
-		}
-		if r.Methods.Update != nil {
-			err := AddUpdate(r, resourceMb, fb, sb)
-			if err != nil {
-				return err
-			}
-		}
-		if r.Methods.Delete != nil {
-			err := AddDelete(r, resourceMb, fb, sb)
-			if err != nil {
-				return err
-			}
-		}
-		if r.Methods.List != nil {
-			err := AddList(r, resourceMb, fb, sb)
-			if err != nil {
-				return err
-			}
-		}
-		if r.Methods.GlobalList != nil {
-			err := AddGlobalList(r, resourceMb, fb, sb)
-			if err != nil {
-				return err
-			}
-		}
-
-		if r.Methods.Apply != nil {
-			err := AddApply(r, resourceMb, fb, sb)
-			if err != nil {
-				return err
-			}
+	if r.ApplyMethod != nil {
+		err := AddApply(a, r, resourceMb, fb, sb)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
 }
 
-func protoType(p *parser.ParsedProperty, s *parser.ParsedService, m *MessageStorage, parent *builder.MessageBuilder) (*builder.FieldType, error) {
-	switch p.GetTypes().(type) {
-	case *schema.Property_Type:
-		return protoTypePrimitive(p.GetType())
-	case *schema.Property_ObjectType:
-		return protoTypeObject(p.GetObjectType(), p, s, m, parent)
-	case *schema.Property_ArrayType:
-		return protoTypeArray(p.GetArrayType(), p, s, m, parent)
-	default:
-		return nil, fmt.Errorf("reached outside of prototype switch statement.")
+// this function should only be called with openapi Schemas that
+// map to primitive types.
+func protoFieldType(name string, number int, s openapi.Schema, a *api.API, m *MessageStorage, parent *builder.MessageBuilder) (*builder.FieldType, error) {
+	switch s.Type {
+	case "object":
+		typ, err := protoFieldTypeObject(name, &s, a, m, parent)
+		if err != nil {
+			return nil, fmt.Errorf("error creating proto type object for %s: %w", name, err)
+		}
+		return typ, nil
+	// Ideally we would set the repeated parameter here as well.
+	// But "repeated" is a property of the field, not the type.
+	case "array":
+		typ, err := protoFieldType(name, number, *s.Items, a, m, parent)
+		if err != nil {
+			return nil, fmt.Errorf("error creating proto type for array item for %s: %w", name, err)
+		}
+		return typ, nil
+	case "string":
+		return builder.FieldTypeString(), nil
+	case "boolean":
+		return builder.FieldTypeBool(), nil
+	case "integer":
+		if s.Format == "int32" {
+			return builder.FieldTypeInt32(), nil
+		} else if s.Format == "int64" {
+			return builder.FieldTypeInt64(), nil
+		}
+	case "number":
+		if s.Format == "float" {
+			return builder.FieldTypeFloat(), nil
+		} else if s.Format == "double" {
+			return builder.FieldTypeDouble(), nil
+		}
 	}
+	return nil, fmt.Errorf("proto type for %q, format %q not found", s.Type, s.Format)
 }
 
-func protoTypeObject(o *schema.ObjectType, p *parser.ParsedProperty, s *parser.ParsedService, m *MessageStorage, parent *builder.MessageBuilder) (*builder.FieldType, error) {
-	if o.GetMessageName() != "" {
-		wantedType := fmt.Sprintf("%s/%s", s.Name, o.GetMessageName())
+func GenerateMessage(name string, s *openapi.Schema, a *api.API, m *MessageStorage) (*builder.MessageBuilder, error) {
+	mb := builder.NewMessage(name)
+	mb.SetComments(builder.Comments{
+		LeadingComment: fmt.Sprintf("A %v.", name),
+	})
+	sorted_field_numbers := []int{}
+	for n := range s.XAEPFieldNumbers {
+		sorted_field_numbers = append(sorted_field_numbers, n)
+	}
+	sort.Ints(sorted_field_numbers)
+
+	required := map[string]bool{}
+	for _, n := range s.Required {
+		required[n] = true
+	}
+
+	for _, num := range sorted_field_numbers {
+		name := s.XAEPFieldNumbers[num]
+		f, err := protoField(name, num, s.Properties[name], a, m, mb)
+		if err != nil {
+			return nil, err
+		}
+		if required[name] {
+			proto.SetExtension(&descriptorpb.FieldOptions{}, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
+		}
+		mb.AddField(f)
+	}
+	return mb, nil
+}
+
+func protoField(name string, number int, s openapi.Schema, a *api.API, m *MessageStorage, parent *builder.MessageBuilder) (*builder.FieldBuilder, error) {
+	typ, err := protoFieldType(name, number, s, a, m, parent)
+	if err != nil {
+		return nil, fmt.Errorf("error creating proto field for %s: %w", name, err)
+	}
+	f := builder.NewField(name, typ).SetNumber(int32(number)).SetComments(
+		builder.Comments{
+			LeadingComment: fmt.Sprintf("Field for %v.", name),
+		},
+	)
+	if s.Type == "array" {
+		f.SetRepeated()
+	}
+	return f, nil
+}
+
+func protoFieldTypeObject(name string, s *openapi.Schema, a *api.API, m *MessageStorage, parent *builder.MessageBuilder) (*builder.FieldType, error) {
+	if s.Ref != "" {
+		wantedType := s.Ref
+		// extract the name from the ref
+		wantedType = strings.TrimPrefix(wantedType, "#/components/schemas/")
+		wantedType = fmt.Sprintf("%s/%s", a.Name, wantedType)
 		_, ok := m.Messages[wantedType]
 		if !ok {
-			// Resource has not been generated yet.
-			n, ok := s.ResourceByType[wantedType]
-			if !ok {
-				return nil, fmt.Errorf("could not find %s in full object list", wantedType)
-			}
-			_, err := GeneratedResourceMessage(n, s, m)
-			if err != nil {
-				return nil, err
-			}
+			return nil, fmt.Errorf("could not find message %s, referenced by %s", wantedType, name)
 		}
-		resourceMb, ok := m.Messages[wantedType]
-		if !ok {
-			return nil, fmt.Errorf("could not find message %s after recursive create", wantedType)
-		}
-		return builder.FieldTypeMessage(resourceMb), nil
+		return builder.FieldTypeMessage(m.Messages[wantedType]), nil
 	} else {
-		msg, err := GenerateMessage(parser.PropertiesSortedByNumber(o.GetProperties()), toMessageName(p.Name), s, m)
+		msg, err := GenerateMessage(toMessageName(name), s, a, m)
 		if err != nil {
 			return nil, err
 		}
@@ -136,106 +191,38 @@ func protoTypeObject(o *schema.ObjectType, p *parser.ParsedProperty, s *parser.P
 	}
 }
 
-func protoTypeArray(a *schema.ArrayType, p *parser.ParsedProperty, s *parser.ParsedService, m *MessageStorage, parent *builder.MessageBuilder) (*builder.FieldType, error) {
-	switch a.GetArrayDetails().(type) {
-	case *schema.ArrayType_Type:
-		// Repeated will be set later on.
-		return protoTypePrimitive(a.GetType())
-	case *schema.ArrayType_ObjectType:
-		return protoTypeObject(a.GetObjectType(), p, s, m, parent)
-	default:
-		return nil, fmt.Errorf("Proto type for %q not found ", a)
-	}
-}
-
-func protoTypePrimitive(t schema.Type) (*builder.FieldType, error) {
-	switch t {
-	case schema.Type_STRING:
-		return builder.FieldTypeString(), nil
-	case schema.Type_INT32:
-		return builder.FieldTypeInt32(), nil
-	case schema.Type_INT64:
-		return builder.FieldTypeInt64(), nil
-	case schema.Type_BOOLEAN:
-		return builder.FieldTypeBool(), nil
-	case schema.Type_DOUBLE:
-		return builder.FieldTypeDouble(), nil
-	case schema.Type_FLOAT:
-		return builder.FieldTypeFloat(), nil
-	default:
-		return nil, fmt.Errorf("Proto type for %q not found", t)
-	}
-}
-
-func protoField(p *parser.ParsedProperty, s *parser.ParsedService, m *MessageStorage, parent *builder.MessageBuilder) (*builder.FieldBuilder, error) {
-	typ, err := protoType(p, s, m, parent)
-	if err != nil {
-		return nil, err
-	}
-	f := builder.NewField(p.Name, typ).SetNumber(p.Number).SetComments(
-		builder.Comments{
-			LeadingComment: fmt.Sprintf("Field for %v.", p.Name),
-		},
-	)
-	switch p.GetTypes().(type) {
-	case *schema.Property_ArrayType:
-		f.SetRepeated()
-	}
-	o := &descriptorpb.FieldOptions{}
-	if p.Required {
-		proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
-	}
-	f.SetOptions(o)
-	return f, nil
-}
-
-func GenerateMessage(properties []*parser.ParsedProperty, name string, s *parser.ParsedService, m *MessageStorage) (*builder.MessageBuilder, error) {
-	mb := builder.NewMessage(name)
-	mb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("A %v.", name),
-	})
-	for _, p := range properties {
-		f, err := protoField(p, s, m, mb)
-		if err != nil {
-			return nil, err
-		}
-		mb.AddField(f)
-	}
-	return mb, nil
-}
-
 // GenerateResourceMesssage adds the resource message.
-func GeneratedResourceMessage(r *parser.ParsedResource, s *parser.ParsedService, m *MessageStorage) (*builder.MessageBuilder, error) {
-	mb, err := GenerateMessage(r.GetPropertiesSortedByNumber(), toMessageName(r.Kind), s, m)
+func GenerateSchemaMessage(name string, s *openapi.Schema, a *api.API, m *MessageStorage) (*builder.MessageBuilder, error) {
+	mb, err := GenerateMessage(toMessageName(name), s, a, m)
 	if err != nil {
 		return nil, err
 	}
-	m.Messages[fmt.Sprintf("%s/%s", s.Name, r.Kind)] = mb
+	m.Messages[fmt.Sprintf("%s/%s", a.Name, name)] = mb
 	return mb, nil
 }
 
-func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddCreate(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
-	mb := builder.NewMessage("Create" + toMessageName(r.Kind) + "Request")
+	mb := builder.NewMessage("Create" + toMessageName(r.Singular) + "Request")
 	mb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("A Create request for a  %v resource.", r.Kind),
+		LeadingComment: fmt.Sprintf("A Create request for a  %v resource.", r.Singular),
 	})
 	addParentField(r, mb)
-	if !r.Methods.Create.NonClientSettableId {
+	if r.CreateMethod.SupportsUserSettableCreate {
 		addIdField(r, mb)
 	}
 	addResourceField(r, resourceMb, mb)
 	fb.AddMessage(mb)
-	method := builder.NewMethod("Create"+toMessageName(r.Kind),
+	method := builder.NewMethod("Create"+toMessageName(r.Singular),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
 	)
 	method.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("An aep-compliant Create method for %v.", r.Kind),
+		LeadingComment: fmt.Sprintf("An aep-compliant Create method for %v.", r.Singular),
 	})
 	options := &descriptorpb.MethodOptions{}
-	bodyField := utils.KebabToSnakeCase(r.Kind)
+	bodyField := utils.KebabToSnakeCase(r.Singular)
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Post{
 			Post: generateParentHTTPPath(r),
@@ -252,19 +239,19 @@ func AddCreate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 
 // AddGet adds a read method for the resource, along with
 // any required messages.
-func AddGet(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	mb := builder.NewMessage("Get" + toMessageName(r.Kind) + "Request")
+func AddGet(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	mb := builder.NewMessage("Get" + toMessageName(r.Singular) + "Request")
 	mb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Request message for the Get%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Request message for the Get%v method", r.Singular),
 	})
 	addPathField(r, mb)
 	fb.AddMessage(mb)
-	method := builder.NewMethod("Get"+toMessageName(r.Kind),
+	method := builder.NewMethod("Get"+toMessageName(r.Singular),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
 	)
 	method.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("An aep-compliant Get method for %v.", r.Kind),
+		LeadingComment: fmt.Sprintf("An aep-compliant Get method for %v.", r.Singular),
 	})
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
@@ -282,10 +269,10 @@ func AddGet(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *bu
 
 // AddRead adds a read method for the resource, along with
 // any required messages.
-func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	mb := builder.NewMessage("Update" + toMessageName(r.Kind) + "Request")
+func AddUpdate(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	mb := builder.NewMessage("Update" + toMessageName(r.Singular) + "Request")
 	mb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Request message for the Update%v method", toMessageName(r.Kind)),
+		LeadingComment: fmt.Sprintf("Request message for the Update%v method", toMessageName(r.Singular)),
 	})
 	addPathField(r, mb)
 	addResourceField(r, resourceMb, mb)
@@ -299,15 +286,15 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 		}))
 
 	fb.AddMessage(mb)
-	method := builder.NewMethod("Update"+toMessageName(r.Kind),
+	method := builder.NewMethod("Update"+toMessageName(r.Singular),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
 	)
 	method.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("An aep-compliant Update method for %v.", r.Kind),
+		LeadingComment: fmt.Sprintf("An aep-compliant Update method for %v.", r.Singular),
 	})
 	options := &descriptorpb.MethodOptions{}
-	body_field := utils.KebabToSnakeCase(r.Kind)
+	body_field := utils.KebabToSnakeCase(r.Singular)
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Patch{
 			Patch: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
@@ -322,12 +309,12 @@ func AddUpdate(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	return nil
 }
 
-func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddDelete(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
-	mb := builder.NewMessage("Delete" + toMessageName(r.Kind) + "Request")
+	mb := builder.NewMessage("Delete" + toMessageName(r.Singular) + "Request")
 	mb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Request message for the Delete%v method", toMessageName(r.Kind)),
+		LeadingComment: fmt.Sprintf("Request message for the Delete%v method", toMessageName(r.Singular)),
 	})
 	addPathField(r, mb)
 	fb.AddMessage(mb)
@@ -335,12 +322,12 @@ func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	if err != nil {
 		return err
 	}
-	method := builder.NewMethod("Delete"+toMessageName(r.Kind),
+	method := builder.NewMethod("Delete"+toMessageName(r.Singular),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeImportedMessage(emptyMd, false),
 	)
 	method.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("An aep-compliant Delete method for %v.", r.Kind),
+		LeadingComment: fmt.Sprintf("An aep-compliant Delete method for %v.", r.Singular),
 	})
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
@@ -356,12 +343,12 @@ func AddDelete(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb 
 	return nil
 }
 
-func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddList(r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
 	reqMb := builder.NewMessage("List" + toMessageName(r.Plural) + "Request")
 	reqMb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Request message for the List%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Request message for the List%v method", r.Singular),
 	})
 	addParentField(r, reqMb)
 	addPageToken(r, reqMb)
@@ -373,7 +360,7 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	fb.AddMessage(reqMb)
 	respMb := builder.NewMessage("List" + toMessageName(r.Plural) + "Response")
 	respMb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Response message for the List%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Response message for the List%v method", r.Singular),
 	})
 	addResourcesField(r, resourceMb, respMb)
 	addNextPageToken(r, respMb)
@@ -399,31 +386,31 @@ func AddList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *b
 	return nil
 }
 
-func AddGlobalList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddGlobalList(r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
-	reqMb := builder.NewMessage("GlobalList" + r.Kind + "Request")
+	reqMb := builder.NewMessage("GlobalList" + r.Singular + "Request")
 	reqMb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Request message for the GlobalList%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Request message for the GlobalList%v method", r.Singular),
 	})
 	addPathField(r, reqMb)
 	addPageToken(r, reqMb)
 	fb.AddMessage(reqMb)
-	respMb := builder.NewMessage("GlobalList" + r.Kind + "Response")
+	respMb := builder.NewMessage("GlobalList" + r.Singular + "Response")
 	respMb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Response message for the GlobalList%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Response message for the GlobalList%v method", r.Singular),
 	})
 	addResourcesField(r, resourceMb, respMb)
 	addNextPageToken(r, respMb)
 	fb.AddMessage(respMb)
-	method := builder.NewMethod("GlobalList"+r.Kind,
+	method := builder.NewMethod("GlobalList"+r.Singular,
 		builder.RpcTypeMessage(reqMb, false),
 		builder.RpcTypeMessage(respMb, false),
 	)
 	options := &descriptorpb.MethodOptions{}
 	proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
 		Pattern: &annotations.HttpRule_Get{
-			Get: fmt.Sprintf("/{path=--/%v}", strings.ToLower(r.Kind)),
+			Get: fmt.Sprintf("/{path=--/%v}", strings.ToLower(r.Singular)),
 		},
 	})
 	method.SetOptions(options)
@@ -433,15 +420,15 @@ func AddGlobalList(r *parser.ParsedResource, resourceMb *builder.MessageBuilder,
 
 // AddApply adds a read method for the resource, along with
 // any required messages.
-func AddApply(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
-	mb := builder.NewMessage("Apply" + toMessageName(r.Kind) + "Request")
+func AddApply(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+	mb := builder.NewMessage("Apply" + toMessageName(r.Singular) + "Request")
 	mb.SetComments(builder.Comments{
-		LeadingComment: fmt.Sprintf("Request message for the Apply%v method", r.Kind),
+		LeadingComment: fmt.Sprintf("Request message for the Apply%v method", r.Singular),
 	})
 	addPathField(r, mb)
 	addResourceField(r, resourceMb, mb)
 	fb.AddMessage(mb)
-	method := builder.NewMethod("Apply"+toMessageName(r.Kind),
+	method := builder.NewMethod("Apply"+toMessageName(r.Singular),
 		builder.RpcTypeMessage(mb, false),
 		builder.RpcTypeMessage(resourceMb, false),
 	)
@@ -454,41 +441,41 @@ func AddApply(r *parser.ParsedResource, resourceMb *builder.MessageBuilder, fb *
 			Put: fmt.Sprintf("/{path=%v}", generateHTTPPath(r)),
 		},
 		// TODO: do a conversion to underscores instead.
-		Body: strings.ToLower(r.Kind),
+		Body: strings.ToLower(r.Singular),
 	})
 	method.SetOptions(options)
 	sb.AddMethod(method)
 	return nil
 }
 
-func generateHTTPPath(r *parser.ParsedResource) string {
-	elements := []string{writer_utils.CollectionName(r)}
-	if len(r.ParsedParents) > 0 {
+func generateHTTPPath(r *api.Resource) string {
+	elements := []string{api.CollectionName(r)}
+	if len(r.Parents) > 0 {
 		// TODO: handle multiple parents
-		p := r.ParsedParents[0]
+		p := r.Parents[0]
 		for p != nil {
-			elements = append([]string{strings.ToLower(p.Plural)}, elements...)
-			if len(p.ParsedParents) == 0 {
+			elements = append([]string{api.CollectionName(p)}, elements...)
+			if len(p.Parents) == 0 {
 				break
 			}
-			p = p.ParsedParents[0]
+			p = p.Parents[0]
 		}
 	}
 	return fmt.Sprintf("%v/*", strings.Join(elements, "/*/"))
 }
 
-func generateParentHTTPPath(r *parser.ParsedResource) string {
+func generateParentHTTPPath(r *api.Resource) string {
 	parentPath := ""
-	if len(r.ParsedParents) == 0 {
+	if len(r.Parents) == 0 {
 		return fmt.Sprintf("/{parent=%v}", strings.ToLower(r.Plural))
 	}
-	if len(r.ParsedParents) > 0 {
-		parentPath = fmt.Sprintf("%v", generateHTTPPath(r.ParsedParents[0]))
+	if len(r.Parents) > 0 {
+		parentPath = fmt.Sprintf("%v", generateHTTPPath(r.Parents[0]))
 	}
-	return fmt.Sprintf("/{parent=%v}/%v", parentPath, writer_utils.CollectionName(r))
+	return fmt.Sprintf("/{parent=%v}/%v", parentPath, api.CollectionName(r))
 }
 
-func addParentField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
+func addParentField(r *api.Resource, mb *builder.MessageBuilder) {
 	o := &descriptorpb.FieldOptions{}
 	proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
 	proto.SetExtension(o, annotations.E_ResourceReference, &annotations.ResourceReference{})
@@ -496,24 +483,24 @@ func addParentField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 		NewField(constants.FIELD_PARENT_NAME, builder.FieldTypeString()).
 		SetNumber(constants.FIELD_PARENT_NUMBER).
 		SetComments(builder.Comments{
-			LeadingComment: fmt.Sprintf("A field for the parent of %v", r.Kind),
+			LeadingComment: fmt.Sprintf("A field for the parent of %v", r.Singular),
 		}).
 		SetOptions(o)
 	mb.AddField(f)
 }
 
-func addIdField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
+func addIdField(r *api.Resource, mb *builder.MessageBuilder) {
 	f := builder.NewField(constants.FIELD_ID_NAME, builder.FieldTypeString()).SetNumber(constants.FIELD_ID_NUMBER).SetComments(builder.Comments{
 		LeadingComment: "An id that uniquely identifies the resource within the collection",
 	})
 	mb.AddField(f)
 }
 
-func addPathField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
+func addPathField(r *api.Resource, mb *builder.MessageBuilder) {
 	o := &descriptorpb.FieldOptions{}
 	proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
 	proto.SetExtension(o, annotations.E_ResourceReference, &annotations.ResourceReference{
-		Type: r.Type,
+		Type: r.Singular,
 	})
 	f := builder.NewField(constants.FIELD_PATH_NAME, builder.FieldTypeString()).
 		SetNumber(constants.FIELD_PATH_NUMBER).
@@ -524,10 +511,10 @@ func addPathField(r *parser.ParsedResource, mb *builder.MessageBuilder) {
 	mb.AddField(f)
 }
 
-func addResourceField(r *parser.ParsedResource, resourceMb, mb *builder.MessageBuilder) {
+func addResourceField(r *api.Resource, resourceMb, mb *builder.MessageBuilder) {
 	o := &descriptorpb.FieldOptions{}
 	proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
-	f := builder.NewField(utils.KebabToSnakeCase(r.Kind), builder.FieldTypeMessage(resourceMb)).
+	f := builder.NewField(utils.KebabToSnakeCase(r.Singular), builder.FieldTypeMessage(resourceMb)).
 		SetNumber(constants.FIELD_RESOURCE_NUMBER).
 		SetComments(builder.Comments{
 			LeadingComment: fmt.Sprintf("The resource to perform the operation on."),
@@ -536,23 +523,36 @@ func addResourceField(r *parser.ParsedResource, resourceMb, mb *builder.MessageB
 	mb.AddField(f)
 }
 
-func addResourcesField(r *parser.ParsedResource, resourceMb, mb *builder.MessageBuilder) {
+func addResourcesField(r *api.Resource, resourceMb, mb *builder.MessageBuilder) {
 	f := builder.NewField("results", builder.FieldTypeMessage(resourceMb)).SetNumber(constants.FIELD_RESOURCES_NUMBER).SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("A list of %v", r.Plural),
 	}).SetRepeated()
 	mb.AddField(f)
 }
 
-func addPageToken(r *parser.ParsedResource, mb *builder.MessageBuilder) {
+func addPageToken(r *api.Resource, mb *builder.MessageBuilder) {
 	f := builder.NewField(constants.FIELD_PAGE_TOKEN_NAME, builder.FieldTypeString()).SetNumber(constants.FIELD_PAGE_TOKEN_NUMBER).SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("The page token indicating the starting point of the page"),
 	})
 	mb.AddField(f)
 }
 
-func addNextPageToken(r *parser.ParsedResource, mb *builder.MessageBuilder) {
+func addNextPageToken(r *api.Resource, mb *builder.MessageBuilder) {
 	f := builder.NewField(constants.FIELD_NEXT_PAGE_TOKEN_NAME, builder.FieldTypeString()).SetNumber(constants.FIELD_NEXT_PAGE_TOKEN_NUMBER).SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("The page token indicating the ending point of this response."),
 	})
 	mb.AddField(f)
+}
+
+func getSortedProperties(s *openapi.Schema) []openapi.Schema {
+	sorted_field_names := []string{}
+	for _, f := range s.XAEPFieldNumbers {
+		sorted_field_names = append(sorted_field_names, f)
+	}
+	sort.Strings(sorted_field_names)
+	sorted_fields := []openapi.Schema{}
+	for _, f := range sorted_field_names {
+		sorted_fields = append(sorted_fields, s.Properties[f])
+	}
+	return sorted_fields
 }

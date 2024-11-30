@@ -10,17 +10,19 @@ components:
               lastName:
                 type: string
             type: object
+            x-aep-field-numbers:
+              "1": firstName
+              "2": lastName
           type: array
         edition:
           format: int32
           type: integer
-        id:
-          type: string
         isbn:
           items:
             type: string
           type: array
         path:
+          readOnly: true
           type: string
         price:
           format: float
@@ -28,10 +30,17 @@ components:
         published:
           type: boolean
       required:
-      - published
       - isbn
       - price
+      - published
       type: object
+      x-aep-field-numbers:
+        "0": author
+        "1": isbn
+        "2": price
+        "3": published
+        "4": edition
+        "10018": path
       x-aep-resource:
         parents:
         - publisher
@@ -43,13 +52,15 @@ components:
       properties:
         displayname:
           type: string
-        id:
-          type: string
         path:
+          readOnly: true
           type: string
       required:
       - displayname
       type: object
+      x-aep-field-numbers:
+        "1": displayname
+        "10018": path
       x-aep-resource:
         parents:
         - book
@@ -59,11 +70,12 @@ components:
         singular: book-edition
     isbn:
       properties:
-        id:
-          type: string
         path:
+          readOnly: true
           type: string
       type: object
+      x-aep-field-numbers:
+        "10018": path
       x-aep-resource:
         patterns:
         - isbns/{isbn}
@@ -73,11 +85,13 @@ components:
       properties:
         description:
           type: string
-        id:
-          type: string
         path:
+          readOnly: true
           type: string
       type: object
+      x-aep-field-numbers:
+        "1": description
+        "10018": path
       x-aep-resource:
         patterns:
         - publishers/{publisher}
@@ -101,24 +115,6 @@ paths:
               $ref: '#/components/schemas/isbn'
         description: ""
         required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/isbn'
-          description: Successful response
-      summary: ""
-  /isbns/{isbn}:
-    get:
-      description: ""
-      operationId: ""
-      parameters:
-      - description: ""
-        in: path
-        name: isbn
-        required: true
-        type: string
       responses:
         "200":
           content:
@@ -212,6 +208,30 @@ paths:
           description: Successful response
       summary: ""
     patch:
+      description: ""
+      operationId: ""
+      parameters:
+      - description: ""
+        in: path
+        name: publisher
+        required: true
+        type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/publisher'
+        description: ""
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/publisher'
+          description: Successful response
+      summary: ""
+    put:
       description: ""
       operationId: ""
       parameters:
@@ -340,6 +360,35 @@ paths:
           description: Successful response
       summary: ""
     patch:
+      description: ""
+      operationId: ""
+      parameters:
+      - description: ""
+        in: path
+        name: publisher
+        required: true
+        type: string
+      - description: ""
+        in: path
+        name: book
+        required: true
+        type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/book'
+        description: ""
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/book'
+          description: Successful response
+      summary: ""
+    put:
       description: ""
       operationId: ""
       parameters:

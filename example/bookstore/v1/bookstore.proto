@@ -107,13 +107,6 @@ service Bookstore {
     option (google.api.method_signature) = "parent,isbn";
   }
 
-  // An aep-compliant Get method for isbn.
-  rpc GetIsbn ( GetIsbnRequest ) returns ( Isbn ) {
-    option (google.api.http) = { get: "/{path=isbns/*}" };
-
-    option (google.api.method_signature) = "path";
-  }
-
   // An aep-compliant Create method for publisher.
   rpc CreatePublisher ( CreatePublisherRequest ) returns ( Publisher ) {
     option (google.api.http) = {
@@ -176,22 +169,43 @@ message Book {
   repeated Author author = 5;
 
   // Field for isbn.
-  repeated string isbn = 1 [(google.api.field_behavior) = REQUIRED];
+  repeated string isbn = 1;
 
   // Field for price.
-  float price = 2 [(google.api.field_behavior) = REQUIRED];
+  float price = 2;
 
   // Field for published.
-  bool published = 3 [(google.api.field_behavior) = REQUIRED];
+  bool published = 3;
 
   // Field for edition.
   int32 edition = 4;
 
   // Field for path.
-  string path = 10000;
+  string path = 10018;
+}
 
-  // Field for id.
-  string id = 10001;
+// A BookEdition.
+message BookEdition {
+  // Field for displayname.
+  string displayname = 1;
+
+  // Field for path.
+  string path = 10018;
+}
+
+// A Isbn.
+message Isbn {
+  // Field for path.
+  string path = 10018;
+}
+
+// A Publisher.
+message Publisher {
+  // Field for description.
+  string description = 1;
+
+  // Field for path.
+  string path = 10018;
 }
 
 // A Create request for a  book resource.
@@ -214,7 +228,7 @@ message GetBookRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/book" }
+    (google.api.resource_reference) = { type: "book" }
   ];
 }
 
@@ -223,7 +237,7 @@ message UpdateBookRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/book" }
+    (google.api.resource_reference) = { type: "book" }
   ];
 
   // The resource to perform the operation on.
@@ -238,7 +252,7 @@ message DeleteBookRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/book" }
+    (google.api.resource_reference) = { type: "book" }
   ];
 }
 
@@ -271,23 +285,11 @@ message ApplyBookRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/book" }
+    (google.api.resource_reference) = { type: "book" }
   ];
 
   // The resource to perform the operation on.
   Book book = 10015 [(google.api.field_behavior) = REQUIRED];
-}
-
-// A BookEdition.
-message BookEdition {
-  // Field for displayname.
-  string displayname = 1 [(google.api.field_behavior) = REQUIRED];
-
-  // Field for path.
-  string path = 10000;
-
-  // Field for id.
-  string id = 10001;
 }
 
 // A Create request for a  book-edition resource.
@@ -310,7 +312,7 @@ message GetBookEditionRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/book-edition" }
+    (google.api.resource_reference) = { type: "book-edition" }
   ];
 }
 
@@ -319,7 +321,7 @@ message DeleteBookEditionRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/book-edition" }
+    (google.api.resource_reference) = { type: "book-edition" }
   ];
 }
 
@@ -347,15 +349,6 @@ message ListBookEditionsResponse {
   string next_page_token = 10011;
 }
 
-// A Isbn.
-message Isbn {
-  // Field for path.
-  string path = 10000;
-
-  // Field for id.
-  string id = 10001;
-}
-
 // A Create request for a  isbn resource.
 message CreateIsbnRequest {
   // A field for the parent of isbn
@@ -369,27 +362,6 @@ message CreateIsbnRequest {
 
   // The resource to perform the operation on.
   Isbn isbn = 10015 [(google.api.field_behavior) = REQUIRED];
-}
-
-// Request message for the Getisbn method
-message GetIsbnRequest {
-  // The globally unique identifier for the resource
-  string path = 10018 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/isbn" }
-  ];
-}
-
-// A Publisher.
-message Publisher {
-  // Field for description.
-  string description = 1;
-
-  // Field for path.
-  string path = 10000;
-
-  // Field for id.
-  string id = 10001;
 }
 
 // A Create request for a  publisher resource.
@@ -412,7 +384,7 @@ message GetPublisherRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/publisher" }
+    (google.api.resource_reference) = { type: "publisher" }
   ];
 }
 
@@ -421,7 +393,7 @@ message UpdatePublisherRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/publisher" }
+    (google.api.resource_reference) = { type: "publisher" }
   ];
 
   // The resource to perform the operation on.
@@ -436,7 +408,7 @@ message DeletePublisherRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/publisher" }
+    (google.api.resource_reference) = { type: "publisher" }
   ];
 }
 
@@ -469,7 +441,7 @@ message ApplyPublisherRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "bookstore.example.com/publisher" }
+    (google.api.resource_reference) = { type: "publisher" }
   ];
 
   // The resource to perform the operation on.

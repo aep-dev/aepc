@@ -18,7 +18,7 @@ message Service {
   repeated Resource resources = 3;
 
   // These are additional objects (list of properties) that may be referenced from another property.
-  repeated Object objects = 4;
+  repeated Schema schemas = 4;
 }
 
 // A resource.
@@ -38,10 +38,10 @@ message Resource {
 
 // An object is a collection of properties, that does not have methods of it's
 // on in the API. It is currently only used as a property of a resource.
-message Object {
-  // The name of the object.
-  string kind = 1;
-  // The properties of the object.
+message Schema {
+  // The name of the schema.
+  string name = 1;
+  // The properties of the schema.
   map<string, Property> properties = 2;
 }
 

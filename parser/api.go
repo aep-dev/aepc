@@ -5,6 +5,7 @@ import (
 
 	"github.com/aep-dev/aep-lib-go/pkg/api"
 	"github.com/aep-dev/aep-lib-go/pkg/openapi"
+	"github.com/aep-dev/aepc/constants"
 	"github.com/aep-dev/aepc/schema"
 )
 
@@ -13,6 +14,13 @@ func ToAPI(s *schema.Service) (*api.API, error) {
 	resourceByName := make(map[string]*schema.Resource)
 	for _, r := range s.Resources {
 		resourceByName[r.Kind] = r
+	}
+	for _, s := range s.Schemas {
+		oasSchema, err := toOpenAPISchemaFromPropMap(s.Properties)
+		if err != nil {
+			return nil, err
+		}
+		schemas[s.Name] = oasSchema
 	}
 	resources := map[string]*api.Resource{}
 	for _, r := range s.Resources {
@@ -41,6 +49,7 @@ func getOrCreateResource(apiResourceByName map[string]*api.Resource, resourceByN
 	if err != nil {
 		return nil, err
 	}
+	addCommonFieldsToResourceSchema(schema)
 	parents := []*api.Resource{}
 	apiR := &api.Resource{
 		Singular: schemaR.Kind,
@@ -66,6 +75,9 @@ func getOrCreateResource(apiResourceByName map[string]*api.Resource, resourceByN
 	if methods.List != nil {
 		apiR.ListMethod = &api.ListMethod{}
 	}
+	if methods.Apply != nil {
+		apiR.ApplyMethod = &api.ApplyMethod{}
+	}
 	for _, p := range schemaR.Parents {
 		apiP, err := getOrCreateResource(apiResourceByName, resourceByName, p)
 		if err != nil {
@@ -76,4 +88,13 @@ func getOrCreateResource(apiResourceByName map[string]*api.Resource, resourceByN
 	}
 	apiResourceByName[name] = apiR
 	return apiR, nil
+}
+
+// add an id field to the resource.
+func addCommonFieldsToResourceSchema(s *openapi.Schema) {
+	s.Properties[constants.FIELD_PATH_NAME] = openapi.Schema{
+		Type:     "string",
+		ReadOnly: true,
+	}
+	s.XAEPFieldNumbers[constants.FIELD_PATH_NUMBER] = constants.FIELD_PATH_NAME
 }

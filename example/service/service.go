@@ -33,7 +33,6 @@ func (BookstoreServer) CreateBook(_ context.Context, r *bpb.CreateBookRequest) (
 		r.Id = fmt.Sprintf("%v/books/%v", r.Parent, len(bookDatabase)+1)
 	}
 	path := fmt.Sprintf("%v/books/%v", r.Parent, r.Id)
-	book.Id = r.Id
 	book.Path = path
 	bookDatabase[path] = book
 	log.Printf("created book %q", path)
@@ -44,7 +43,6 @@ func (BookstoreServer) ApplyBook(_ context.Context, r *bpb.ApplyBookRequest) (*b
 	log.Printf("applying book request: %v", r)
 	originalResource := bookDatabase[r.Path]
 	book := proto.Clone(r.Book).(*bpb.Book)
-	book.Id = originalResource.Id
 	book.Path = originalResource.Path
 	bookDatabase[r.Path] = book
 	log.Printf("applied book %q", book.Path)
@@ -89,7 +87,6 @@ func (BookstoreServer) CreatePublisher(_ context.Context, r *bpb.CreatePublisher
 		r.Id = fmt.Sprintf("%v", len(bookDatabase)+1)
 	}
 	path := fmt.Sprintf("publishers/%v", r.Id)
-	publisher.Id = r.Id
 	publisher.Path = path
 	publisherDatabase[path] = publisher
 	log.Printf("created publisher %q", path)
@@ -100,7 +97,6 @@ func (BookstoreServer) ApplyPublisher(_ context.Context, r *bpb.ApplyPublisherRe
 	log.Printf("applying publisher request: %v", r)
 	originalResource := bookDatabase[r.Path]
 	publisher := proto.Clone(r.Publisher).(*bpb.Publisher)
-	publisher.Id = originalResource.Id
 	publisher.Path = originalResource.Path
 	publisherDatabase[r.Path] = publisher
 	log.Printf("applied publisher %q", publisher.Path)

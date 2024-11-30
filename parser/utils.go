@@ -7,14 +7,6 @@ import (
 	"github.com/aep-dev/aepc/schema"
 )
 
-type TypeInfo struct {
-	openapi_type   string
-	openapi_format string
-	openapi_ref    string
-
-	array_type *TypeInfo
-}
-
 func toOpenAPISchema(p *schema.Property) (*openapi.Schema, error) {
 	switch p.GetTypes().(type) {
 	case *schema.Property_ArrayType:
@@ -64,6 +56,7 @@ func openAPITypeObject(o *schema.ObjectType) (*openapi.Schema, error) {
 func toOpenAPISchemaFromPropMap(propMap map[string]*schema.Property) (*openapi.Schema, error) {
 	required := []string{}
 	properties := openapi.Properties{}
+	field_numbers := map[int]string{}
 	for name, p := range propMap {
 		prop, err := toOpenAPISchema(p)
 		if err != nil {
@@ -73,11 +66,13 @@ func toOpenAPISchemaFromPropMap(propMap map[string]*schema.Property) (*openapi.S
 		if p.GetRequired() {
 			required = append(required, name)
 		}
+		field_numbers[int(p.GetNumber())] = name
 	}
 	return &openapi.Schema{
-		Type:       "object",
-		Properties: properties,
-		Required:   required,
+		Type:             "object",
+		Properties:       properties,
+		Required:         required,
+		XAEPFieldNumbers: field_numbers,
 	}, nil
 }
 
@@ -103,7 +98,7 @@ func openAPITypePrimitive(p schema.Type) (*openapi.Schema, error) {
 	case schema.Type_BOOLEAN:
 		t = "boolean"
 	default:
-		return nil, fmt.Errorf("%s does not have openapi type support", p.Type)
+		return nil, fmt.Errorf("%s does not have openapi type support", p)
 	}
 
 	return &openapi.Schema{

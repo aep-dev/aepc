@@ -42,34 +42,6 @@
         }
       }
     },
-    "/isbns/{isbn}": {
-      "get": {
-        "summary": "",
-        "description": "",
-        "operationId": "",
-        "parameters": [
-          {
-            "name": "isbn",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/isbn"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/publishers": {
       "get": {
         "summary": "",
@@ -170,6 +142,43 @@
         }
       },
       "patch": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "publisher",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publisher"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publisher"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "put": {
         "summary": "",
         "description": "",
         "operationId": "",
@@ -356,6 +365,50 @@
         }
       },
       "patch": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "publisher",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "book",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "put": {
         "summary": "",
         "description": "",
         "operationId": "",
@@ -628,15 +681,16 @@
                 "lastName": {
                   "type": "string"
                 }
+              },
+              "x-aep-field-numbers": {
+                "1": "firstName",
+                "2": "lastName"
               }
             }
           },
           "edition": {
             "type": "integer",
             "format": "int32"
-          },
-          "id": {
-            "type": "string"
           },
           "isbn": {
             "type": "array",
@@ -645,7 +699,8 @@
             }
           },
           "path": {
-            "type": "string"
+            "type": "string",
+            "readOnly": true
           },
           "price": {
             "type": "number",
@@ -665,10 +720,18 @@
             "publisher"
           ]
         },
+        "x-aep-field-numbers": {
+          "0": "author",
+          "1": "isbn",
+          "10018": "path",
+          "2": "price",
+          "3": "published",
+          "4": "edition"
+        },
         "required": [
-          "published",
           "isbn",
-          "price"
+          "price",
+          "published"
         ]
       },
       "book-edition": {
@@ -677,11 +740,9 @@
           "displayname": {
             "type": "string"
           },
-          "id": {
-            "type": "string"
-          },
           "path": {
-            "type": "string"
+            "type": "string",
+            "readOnly": true
           }
         },
         "x-aep-resource": {
@@ -694,6 +755,10 @@
             "book"
           ]
         },
+        "x-aep-field-numbers": {
+          "1": "displayname",
+          "10018": "path"
+        },
         "required": [
           "displayname"
         ]
@@ -701,11 +766,9 @@
       "isbn": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
           "path": {
-            "type": "string"
+            "type": "string",
+            "readOnly": true
           }
         },
         "x-aep-resource": {
@@ -714,6 +777,9 @@
           "patterns": [
             "isbns/{isbn}"
           ]
+        },
+        "x-aep-field-numbers": {
+          "10018": "path"
         }
       },
       "publisher": {
@@ -722,11 +788,9 @@
           "description": {
             "type": "string"
           },
-          "id": {
-            "type": "string"
-          },
           "path": {
-            "type": "string"
+            "type": "string",
+            "readOnly": true
           }
         },
         "x-aep-resource": {
@@ -735,6 +799,10 @@
           "patterns": [
             "publishers/{publisher}"
           ]
+        },
+        "x-aep-field-numbers": {
+          "1": "description",
+          "10018": "path"
         }
       }
     }
