@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/aep-dev/aep-lib-go/pkg/openapi"
 	"github.com/aep-dev/aepc/schema"
@@ -68,6 +69,7 @@ func toOpenAPISchemaFromPropMap(propMap map[string]*schema.Property) (*openapi.S
 		}
 		field_numbers[int(p.GetNumber())] = name
 	}
+	sort.Strings(required)
 	return &openapi.Schema{
 		Type:             "object",
 		Properties:       properties,
