@@ -810,7 +810,12 @@
           "description": "Field for path."
         }
       },
-      "description": "A Book."
+      "description": "A Book.",
+      "required": [
+        "isbn",
+        "price",
+        "published"
+      ]
     },
     "v1BookEdition": {
       "type": "object",
@@ -824,7 +829,10 @@
           "description": "Field for path."
         }
       },
-      "description": "A BookEdition."
+      "description": "A BookEdition.",
+      "required": [
+        "displayname"
+      ]
     },
     "v1Isbn": {
       "type": "object",

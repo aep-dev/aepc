@@ -169,13 +169,13 @@ message Book {
   repeated Author author = 5;
 
   // Field for isbn.
-  repeated string isbn = 1;
+  repeated string isbn = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Field for price.
-  float price = 2;
+  float price = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Field for published.
-  bool published = 3;
+  bool published = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Field for edition.
   int32 edition = 4;
@@ -187,7 +187,7 @@ message Book {
 // A BookEdition.
 message BookEdition {
   // Field for displayname.
-  string displayname = 1;
+  string displayname = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Field for path.
   string path = 10018;
@@ -228,7 +228,7 @@ message GetBookRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "book" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/book" }
   ];
 }
 
@@ -237,7 +237,7 @@ message UpdateBookRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "book" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/book" }
   ];
 
   // The resource to perform the operation on.
@@ -252,7 +252,7 @@ message DeleteBookRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "book" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/book" }
   ];
 }
 
@@ -285,7 +285,7 @@ message ApplyBookRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "book" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/book" }
   ];
 
   // The resource to perform the operation on.
@@ -312,7 +312,7 @@ message GetBookEditionRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "book-edition" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/book-edition" }
   ];
 }
 
@@ -321,7 +321,7 @@ message DeleteBookEditionRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "book-edition" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/book-edition" }
   ];
 }
 
@@ -384,7 +384,7 @@ message GetPublisherRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "publisher" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/publisher" }
   ];
 }
 
@@ -393,7 +393,7 @@ message UpdatePublisherRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "publisher" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/publisher" }
   ];
 
   // The resource to perform the operation on.
@@ -408,7 +408,7 @@ message DeletePublisherRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "publisher" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/publisher" }
   ];
 }
 
@@ -441,7 +441,7 @@ message ApplyPublisherRequest {
   // The globally unique identifier for the resource
   string path = 10018 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { type: "publisher" }
+    (google.api.resource_reference) = { type: "bookstore.example.com/publisher" }
   ];
 
   // The resource to perform the operation on.

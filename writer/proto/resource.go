@@ -147,7 +147,9 @@ func GenerateMessage(name string, s *openapi.Schema, a *api.API, m *MessageStora
 			return nil, err
 		}
 		if required[name] {
-			proto.SetExtension(&descriptorpb.FieldOptions{}, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
+			o := &descriptorpb.FieldOptions{}
+			proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
+			f.SetOptions(o)
 		}
 		mb.AddField(f)
 	}
@@ -244,7 +246,7 @@ func AddGet(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, fb 
 	mb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("Request message for the Get%v method", r.Singular),
 	})
-	addPathField(r, mb)
+	addPathField(a, r, mb)
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Get"+toMessageName(r.Singular),
 		builder.RpcTypeMessage(mb, false),
@@ -274,7 +276,7 @@ func AddUpdate(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, 
 	mb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("Request message for the Update%v method", toMessageName(r.Singular)),
 	})
-	addPathField(r, mb)
+	addPathField(a, r, mb)
 	addResourceField(r, resourceMb, mb)
 	// TODO: find a way to get the actual field mask proto descriptor type, without
 	// querying the global registry.
@@ -316,7 +318,7 @@ func AddDelete(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, 
 	mb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("Request message for the Delete%v method", toMessageName(r.Singular)),
 	})
-	addPathField(r, mb)
+	addPathField(a, r, mb)
 	fb.AddMessage(mb)
 	emptyMd, err := desc.LoadMessageDescriptor("google.protobuf.Empty")
 	if err != nil {
@@ -386,14 +388,14 @@ func AddList(r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.Fi
 	return nil
 }
 
-func AddGlobalList(r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
+func AddGlobalList(r *api.Resource, a *api.API, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, sb *builder.ServiceBuilder) error {
 	// add the resource message
 	// create request messages
 	reqMb := builder.NewMessage("GlobalList" + r.Singular + "Request")
 	reqMb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("Request message for the GlobalList%v method", r.Singular),
 	})
-	addPathField(r, reqMb)
+	addPathField(a, r, reqMb)
 	addPageToken(r, reqMb)
 	fb.AddMessage(reqMb)
 	respMb := builder.NewMessage("GlobalList" + r.Singular + "Response")
@@ -425,7 +427,7 @@ func AddApply(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, f
 	mb.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("Request message for the Apply%v method", r.Singular),
 	})
-	addPathField(r, mb)
+	addPathField(a, r, mb)
 	addResourceField(r, resourceMb, mb)
 	fb.AddMessage(mb)
 	method := builder.NewMethod("Apply"+toMessageName(r.Singular),
@@ -496,11 +498,11 @@ func addIdField(r *api.Resource, mb *builder.MessageBuilder) {
 	mb.AddField(f)
 }
 
-func addPathField(r *api.Resource, mb *builder.MessageBuilder) {
+func addPathField(a *api.API, r *api.Resource, mb *builder.MessageBuilder) {
 	o := &descriptorpb.FieldOptions{}
 	proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_REQUIRED})
 	proto.SetExtension(o, annotations.E_ResourceReference, &annotations.ResourceReference{
-		Type: r.Singular,
+		Type: fmt.Sprintf("%v/%v", a.Name, r.Singular),
 	})
 	f := builder.NewField(constants.FIELD_PATH_NAME, builder.FieldTypeString()).
 		SetNumber(constants.FIELD_PATH_NUMBER).
