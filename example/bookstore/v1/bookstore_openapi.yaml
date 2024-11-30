@@ -4,15 +4,19 @@ components:
       properties:
         author:
           items:
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
             type: object
+            x-aep-field-numbers:
+              "1": firstName
+              "2": lastName
           type: array
         edition:
           format: int32
           type: integer
-        id:
-          readOnly: true
-          type: string
-          x-terraform-id: true
         isbn:
           items:
             type: string
@@ -30,84 +34,86 @@ components:
       - price
       - published
       type: object
+      x-aep-field-numbers:
+        "0": author
+        "1": isbn
+        "2": price
+        "3": published
+        "4": edition
+        "10018": path
       x-aep-resource:
         parents:
         - publisher
         patterns:
-        - /publishers/{publisher}/books/{book}
+        - publishers/{publisher}/books/{book}
         plural: books
         singular: book
     book-edition:
       properties:
         displayname:
           type: string
-        id:
-          readOnly: true
-          type: string
-          x-terraform-id: true
         path:
           readOnly: true
           type: string
       required:
       - displayname
       type: object
+      x-aep-field-numbers:
+        "1": displayname
+        "10018": path
       x-aep-resource:
         parents:
         - book
         patterns:
-        - /publishers/{publisher}/books/{book}/editions/{book-edition}
+        - publishers/{publisher}/books/{book}/editions/{book-edition}
         plural: book-editions
         singular: book-edition
     isbn:
       properties:
-        id:
-          readOnly: true
-          type: string
-          x-terraform-id: true
         path:
           readOnly: true
           type: string
       type: object
+      x-aep-field-numbers:
+        "10018": path
       x-aep-resource:
         patterns:
-        - /isbns/{isbn}
+        - isbns/{isbn}
         plural: isbns
         singular: isbn
     publisher:
       properties:
         description:
           type: string
-        id:
-          readOnly: true
-          type: string
-          x-terraform-id: true
         path:
           readOnly: true
           type: string
       type: object
+      x-aep-field-numbers:
+        "1": description
+        "10018": path
       x-aep-resource:
         patterns:
-        - /publishers/{publisher}
+        - publishers/{publisher}
         plural: publishers
         singular: publisher
 info:
+  description: ""
   title: bookstore.example.com
   version: version not set
 openapi: 3.1.0
 paths:
   /isbns:
     post:
-      parameters:
-      - in: query
-        name: id
-        required: true
-        schema: {}
-        type: string
+      description: ""
+      operationId: ""
+      parameters: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/isbn'
+        description: ""
         required: true
       responses:
         "200":
@@ -116,33 +122,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/isbn'
           description: Successful response
-  /isbns/{isbn}:
-    get:
-      parameters:
-      - in: path
-        name: isbn
-        required: true
-        schema: {}
-        type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/isbn'
-          description: Successful response
+      summary: ""
   /publishers:
     get:
+      description: ""
+      operationId: ""
       parameters:
-      - in: query
+      - description: ""
+        in: query
         name: max_page_size
         required: true
-        schema: {}
         type: integer
-      - in: query
+      - description: ""
+        in: query
         name: page_token
         required: true
-        schema: {}
         type: string
       responses:
         "200":
@@ -156,18 +150,17 @@ paths:
                     type: array
                 type: object
           description: Successful response
+      summary: ""
     post:
-      parameters:
-      - in: query
-        name: id
-        required: true
-        schema: {}
-        type: string
+      description: ""
+      operationId: ""
+      parameters: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/publisher'
+        description: ""
         required: true
       responses:
         "200":
@@ -176,24 +169,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/publisher'
           description: Successful response
+      summary: ""
   /publishers/{publisher}:
     delete:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
+      - description: ""
+        in: query
+        name: force
+        required: false
+        type: boolean
       responses:
         "200":
           content: null
           description: ""
+      summary: ""
     get:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
       responses:
         "200":
@@ -202,18 +206,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/publisher'
           description: Successful response
+      summary: ""
     patch:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/publisher'
+        description: ""
         required: true
       responses:
         "200":
@@ -222,18 +230,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/publisher'
           description: Successful response
+      summary: ""
     put:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/publisher'
+        description: ""
         required: true
       responses:
         "200":
@@ -242,23 +254,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/publisher'
           description: Successful response
+      summary: ""
   /publishers/{publisher}/books:
     get:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
-      - in: query
+      - description: ""
+        in: query
         name: max_page_size
         required: true
-        schema: {}
         type: integer
-      - in: query
+      - description: ""
+        in: query
         name: page_token
         required: true
-        schema: {}
         type: string
       responses:
         "200":
@@ -272,23 +287,22 @@ paths:
                     type: array
                 type: object
           description: Successful response
+      summary: ""
     post:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
-        type: string
-      - in: query
-        name: id
-        required: true
-        schema: {}
         type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/book'
+        description: ""
         required: true
       responses:
         "200":
@@ -297,34 +311,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
+      summary: ""
   /publishers/{publisher}/books/{book}:
     delete:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book
         required: true
-        schema: {}
         type: string
+      - description: ""
+        in: query
+        name: force
+        required: false
+        type: boolean
       responses:
         "200":
           content: null
           description: ""
+      summary: ""
     get:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book
         required: true
-        schema: {}
         type: string
       responses:
         "200":
@@ -333,23 +358,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
+      summary: ""
     patch:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book
         required: true
-        schema: {}
         type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/book'
+        description: ""
         required: true
       responses:
         "200":
@@ -358,23 +387,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
+      summary: ""
     put:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book
         required: true
-        schema: {}
         type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/book'
+        description: ""
         required: true
       responses:
         "200":
@@ -383,28 +416,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
+      summary: ""
   /publishers/{publisher}/books/{book}/editions:
     get:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book
         required: true
-        schema: {}
         type: string
-      - in: query
+      - description: ""
+        in: query
         name: max_page_size
         required: true
-        schema: {}
         type: integer
-      - in: query
+      - description: ""
+        in: query
         name: page_token
         required: true
-        schema: {}
         type: string
       responses:
         "200":
@@ -418,28 +454,27 @@ paths:
                     type: array
                 type: object
           description: Successful response
+      summary: ""
     post:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book
         required: true
-        schema: {}
-        type: string
-      - in: query
-        name: id
-        required: true
-        schema: {}
         type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/book-edition'
+        description: ""
         required: true
       responses:
         "200":
@@ -448,44 +483,50 @@ paths:
               schema:
                 $ref: '#/components/schemas/book-edition'
           description: Successful response
+      summary: ""
   /publishers/{publisher}/books/{book}/editions/{book-edition}:
     delete:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book-edition
         required: true
-        schema: {}
         type: string
       responses:
         "200":
           content: null
           description: ""
+      summary: ""
     get:
+      description: ""
+      operationId: ""
       parameters:
-      - in: path
+      - description: ""
+        in: path
         name: publisher
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book
         required: true
-        schema: {}
         type: string
-      - in: path
+      - description: ""
+        in: path
         name: book-edition
         required: true
-        schema: {}
         type: string
       responses:
         "200":
@@ -494,5 +535,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/book-edition'
           description: Successful response
+      summary: ""
 servers:
 - url: http://localhost:8081

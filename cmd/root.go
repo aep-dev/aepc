@@ -26,7 +26,6 @@ import (
 	"github.com/aep-dev/aepc/parser"
 	"github.com/aep-dev/aepc/schema"
 	"github.com/aep-dev/aepc/validator"
-	"github.com/aep-dev/aepc/writer/openapi"
 	"github.com/aep-dev/aepc/writer/proto"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -69,13 +68,13 @@ func ProcessInput(inputFile, outputFilePrefix string) error {
 	if len(errors) > 0 {
 		return fmt.Errorf("error validating service: %v", errors)
 	}
-	ps, err := parser.NewParsedService(s)
+	api, err := parser.ToAPI(s)
 	if err != nil {
-		return fmt.Errorf("error parsing service: %w", err)
+		return fmt.Errorf("error building api: %w", err)
 	}
-	proto, err := proto.WriteServiceToProto(ps, outputDir)
+	proto, err := proto.WriteServiceToProto(api, outputDir)
 	if err != nil {
-		return fmt.Errorf("error writing service proto %w", err)
+		return fmt.Errorf("error writing service proto: %w", err)
 	}
 	protoFile := fmt.Sprintf("%s.proto", outputFilePrefix)
 	err = WriteFile(protoFile, proto)
@@ -83,9 +82,9 @@ func ProcessInput(inputFile, outputFilePrefix string) error {
 		return fmt.Errorf("error writing file: %w", err)
 	}
 	fmt.Printf("output proto file: %s\n", protoFile)
-	openapi, err := openapi.WriteServiceToOpenAPI(ps)
+	openapi, err := api.ConvertToOpenAPIBytes()
 	if err != nil {
-		return fmt.Errorf("error building openapi %s", err)
+		return fmt.Errorf("error building openapi: %w", err)
 	}
 	openapiFile := fmt.Sprintf("%s_openapi.json", outputFilePrefix)
 	err = WriteFile(openapiFile, openapi)

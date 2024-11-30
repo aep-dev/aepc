@@ -515,13 +515,13 @@
     },
     "/{path_2}": {
       "get": {
-        "summary": "An aep-compliant Get method for isbn.",
-        "operationId": "Bookstore_GetIsbn",
+        "summary": "An aep-compliant Get method for publisher.",
+        "operationId": "Bookstore_GetPublisher",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Isbn"
+              "$ref": "#/definitions/v1Publisher"
             }
           },
           "default": {
@@ -538,7 +538,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "isbns/[^/]+"
+            "pattern": "publishers/[^/]+"
           }
         ],
         "tags": [
@@ -566,39 +566,6 @@
         "parameters": [
           {
             "name": "path_2",
-            "description": "The globally unique identifier for the resource",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "pattern": "publishers/[^/]+"
-          }
-        ],
-        "tags": [
-          "Bookstore"
-        ]
-      }
-    },
-    "/{path_3}": {
-      "get": {
-        "summary": "An aep-compliant Get method for publisher.",
-        "operationId": "Bookstore_GetPublisher",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1Publisher"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "path_3",
             "description": "The globally unique identifier for the resource",
             "in": "path",
             "required": true,
@@ -841,18 +808,9 @@
         "path": {
           "type": "string",
           "description": "Field for path."
-        },
-        "id": {
-          "type": "string",
-          "description": "Field for id."
         }
       },
-      "description": "A Book.",
-      "required": [
-        "isbn",
-        "price",
-        "published"
-      ]
+      "description": "A Book."
     },
     "v1BookEdition": {
       "type": "object",
@@ -864,16 +822,9 @@
         "path": {
           "type": "string",
           "description": "Field for path."
-        },
-        "id": {
-          "type": "string",
-          "description": "Field for id."
         }
       },
-      "description": "A BookEdition.",
-      "required": [
-        "displayname"
-      ]
+      "description": "A BookEdition."
     },
     "v1Isbn": {
       "type": "object",
@@ -881,10 +832,6 @@
         "path": {
           "type": "string",
           "description": "Field for path."
-        },
-        "id": {
-          "type": "string",
-          "description": "Field for id."
         }
       },
       "description": "A Isbn."
@@ -953,10 +900,6 @@
         "path": {
           "type": "string",
           "description": "Field for path."
-        },
-        "id": {
-          "type": "string",
-          "description": "Field for id."
         }
       },
       "description": "A Publisher."
