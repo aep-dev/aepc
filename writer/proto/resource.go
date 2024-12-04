@@ -489,6 +489,23 @@ func AddCustomMethod(a *api.API, r *api.Resource, cm *api.CustomMethod, resource
 	method.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("%v a %v.", cm.Name, r.Singular),
 	})
+	options := &descriptorpb.MethodOptions{}
+	http_path := fmt.Sprintf("/{path=%v}:%v", generateHTTPPath(r), cm.Name)
+	switch cm.Method {
+	case "POST":
+		proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
+			Pattern: &annotations.HttpRule_Post{
+				Post: http_path,
+			},
+		})
+	case "GET":
+		proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
+			Pattern: &annotations.HttpRule_Get{
+				Get: http_path,
+			},
+		})
+	}
+	method.SetOptions(options)
 	sb.AddMethod(method)
 	return nil
 }

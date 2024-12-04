@@ -728,6 +728,39 @@
           "Bookstore"
         ]
       }
+    },
+    "/{path}:archive": {
+      "post": {
+        "summary": "archive a book.",
+        "operationId": "Bookstore_archiveBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ArchiveBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers/[^/]+/books/[^/]+"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
     }
   },
   "definitions": {
