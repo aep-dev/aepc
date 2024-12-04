@@ -285,6 +285,10 @@ paths:
                     items:
                       $ref: '#/components/schemas/book'
                     type: array
+                  unreachable:
+                    items:
+                      type: string
+                    type: array
                 type: object
           description: Successful response
       summary: ""

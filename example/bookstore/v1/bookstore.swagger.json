@@ -876,6 +876,14 @@
         "nextPageToken": {
           "type": "string",
           "description": "The page token indicating the ending point of this response."
+        },
+        "unreachable": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Book"
+          },
+          "description": "A list of books that were not reachable."
         }
       },
       "title": "Response message for the Listbook method"

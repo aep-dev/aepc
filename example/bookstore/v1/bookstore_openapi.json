@@ -284,6 +284,12 @@
                       "items": {
                         "$ref": "#/components/schemas/book"
                       }
+                    },
+                    "unreachable": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }

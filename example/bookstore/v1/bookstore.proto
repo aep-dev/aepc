@@ -278,6 +278,9 @@ message ListBooksResponse {
 
   // The page token indicating the ending point of this response.
   string next_page_token = 10011;
+
+  // A list of books that were not reachable.
+  repeated Book unreachable = 10019;
 }
 
 // Request message for the Applybook method
