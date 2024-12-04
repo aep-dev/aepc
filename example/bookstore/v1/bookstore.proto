@@ -68,7 +68,9 @@ service Bookstore {
   }
 
   // archive a book.
-  rpc archiveBook ( ArchiveBookRequest ) returns ( ArchiveBookResponse );
+  rpc archiveBook ( ArchiveBookRequest ) returns ( ArchiveBookResponse ) {
+    option (google.api.http) = { post: "/{path=publishers/*/books/*}:archive" };
+  }
 
   // An aep-compliant Create method for book-edition.
   rpc CreateBookEdition ( CreateBookEditionRequest ) returns ( BookEdition ) {
