@@ -540,5 +540,34 @@ paths:
                 $ref: '#/components/schemas/book-edition'
           description: Successful response
       summary: ""
+  /publishers/{publisher}/books/{book}:archive:
+    post:
+      description: ""
+      operationId: ""
+      parameters:
+      - description: ""
+        in: path
+        name: publisher
+        required: true
+        type: string
+      - description: ""
+        in: path
+        name: book
+        required: true
+        type: string
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+        description: ""
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/book'
+          description: Successful response
+      summary: ""
 servers:
 - url: http://localhost:8081

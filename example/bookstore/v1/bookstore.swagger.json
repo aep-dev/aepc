@@ -773,6 +773,16 @@
         }
       }
     },
+    "v1ArchiveBookResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "description": "Field for success."
+        }
+      },
+      "title": "Response message for the archive method"
+    },
     "v1Book": {
       "type": "object",
       "properties": {

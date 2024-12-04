@@ -58,7 +58,18 @@ resources:
       delete: {}
       list:
         has_unreachable_resources: true
-      apply: {} # do not uncomment until there is an AEP on apply.
+      apply: {}
+      custom:
+        - name: "archive"
+          method_type: POST
+          request:
+            object_type:
+              properties: {}
+          response:
+            object_type:
+              properties:
+                success:
+                  type: BOOLEAN
   # other example resources that might be interesting to add:
   # authors, which could be a reference for book
   # authors could have a reference to publishers too

@@ -669,6 +669,50 @@
           }
         }
       }
+    },
+    "/publishers/{publisher}/books/{book}:archive": {
+      "post": {
+        "summary": "",
+        "description": "",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "publisher",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "book",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        }
+      }
     }
   },
   "components": {

@@ -83,6 +83,13 @@ func AddResource(r *api.Resource, a *api.API, fb *builder.FileBuilder, sb *build
 			return err
 		}
 	}
+
+	for _, cm := range r.CustomMethods {
+		err := AddCustomMethod(a, r, cm, resourceMb, fb, m, sb)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -452,6 +459,36 @@ func AddApply(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, f
 		Body: strings.ToLower(r.Singular),
 	})
 	method.SetOptions(options)
+	sb.AddMethod(method)
+	return nil
+}
+
+func AddCustomMethod(a *api.API, r *api.Resource, cm *api.CustomMethod, resourceMb *builder.MessageBuilder, fb *builder.FileBuilder, m *MessageStorage, sb *builder.ServiceBuilder) error {
+	methodName := cm.Name + toMessageName(r.Singular)
+	requestMb, err := GenerateSchemaMessage(methodName+"Request", cm.Request, a, m)
+	if err != nil {
+		return err
+	}
+	requestMb.SetComments(builder.Comments{
+		LeadingComment: fmt.Sprintf("Request message for the %v method", cm.Name),
+	})
+	addPathField(a, r, requestMb)
+	responseMb, err := GenerateSchemaMessage(methodName+"Response", cm.Response, a, m)
+	if err != nil {
+		return err
+	}
+	responseMb.SetComments(builder.Comments{
+		LeadingComment: fmt.Sprintf("Response message for the %v method", cm.Name),
+	})
+	fb.AddMessage(requestMb)
+	fb.AddMessage(responseMb)
+	method := builder.NewMethod(methodName,
+		builder.RpcTypeMessage(requestMb, false),
+		builder.RpcTypeMessage(responseMb, false),
+	)
+	method.SetComments(builder.Comments{
+		LeadingComment: fmt.Sprintf("%v a %v.", cm.Name, r.Singular),
+	})
 	sb.AddMethod(method)
 	return nil
 }

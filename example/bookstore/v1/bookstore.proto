@@ -67,6 +67,9 @@ service Bookstore {
     };
   }
 
+  // archive a book.
+  rpc archiveBook ( ArchiveBookRequest ) returns ( ArchiveBookResponse );
+
   // An aep-compliant Create method for book-edition.
   rpc CreateBookEdition ( CreateBookEditionRequest ) returns ( BookEdition ) {
     option (google.api.http) = {
@@ -293,6 +296,21 @@ message ApplyBookRequest {
 
   // The resource to perform the operation on.
   Book book = 10015 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Request message for the archive method
+message ArchiveBookRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/book" }
+  ];
+}
+
+// Response message for the archive method
+message ArchiveBookResponse {
+  // Field for success.
+  bool success = 1;
 }
 
 // A Create request for a  book-edition resource.
