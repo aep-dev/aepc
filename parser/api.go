@@ -45,17 +45,17 @@ func getOrCreateResource(apiResourceByName map[string]*api.Resource, resourceByN
 	if !ok {
 		return nil, fmt.Errorf("resource %q not found", name)
 	}
-	schema, err := toOpenAPISchemaFromPropMap(schemaR.Properties)
+	oasSchema, err := toOpenAPISchemaFromPropMap(schemaR.Properties)
 	if err != nil {
 		return nil, err
 	}
-	addCommonFieldsToResourceSchema(schema)
+	addCommonFieldsToResourceSchema(oasSchema)
 	parents := []*api.Resource{}
 	apiR := &api.Resource{
 		Singular: schemaR.Kind,
 		Plural:   schemaR.Plural,
 		Parents:  parents,
-		Schema:   schema,
+		Schema:   oasSchema,
 	}
 	methods := schemaR.GetMethods()
 	if methods.Read != nil {
@@ -79,6 +79,29 @@ func getOrCreateResource(apiResourceByName map[string]*api.Resource, resourceByN
 	}
 	if methods.Apply != nil {
 		apiR.ApplyMethod = &api.ApplyMethod{}
+	}
+	for _, cm := range methods.Custom {
+		request, err := toOpenAPISchema(cm.Request)
+		if err != nil {
+			return nil, err
+		}
+		response, err := toOpenAPISchema(cm.Response)
+		if err != nil {
+			return nil, err
+		}
+		method := "POST"
+		switch cm.MethodType {
+		case schema.Methods_CustomMethod_GET:
+			method = "GET"
+		case schema.Methods_CustomMethod_POST:
+			method = "POST"
+		}
+		apiR.CustomMethods = append(apiR.CustomMethods, &api.CustomMethod{
+			Name:     cm.Name,
+			Method:   method,
+			Request:  request,
+			Response: response,
+		})
 	}
 	for _, p := range schemaR.Parents {
 		apiP, err := getOrCreateResource(apiResourceByName, resourceByName, p)

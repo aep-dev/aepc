@@ -26,6 +26,7 @@ const (
 	Bookstore_DeleteBook_FullMethodName        = "/example.bookstore.v1.Bookstore/DeleteBook"
 	Bookstore_ListBooks_FullMethodName         = "/example.bookstore.v1.Bookstore/ListBooks"
 	Bookstore_ApplyBook_FullMethodName         = "/example.bookstore.v1.Bookstore/ApplyBook"
+	Bookstore_ArchiveBook_FullMethodName       = "/example.bookstore.v1.Bookstore/archiveBook"
 	Bookstore_CreateBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/CreateBookEdition"
 	Bookstore_GetBookEdition_FullMethodName    = "/example.bookstore.v1.Bookstore/GetBookEdition"
 	Bookstore_DeleteBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/DeleteBookEdition"
@@ -55,6 +56,8 @@ type BookstoreClient interface {
 	ListBooks(ctx context.Context, in *ListBooksRequest, opts ...grpc.CallOption) (*ListBooksResponse, error)
 	// An aep-compliant Apply method for books.
 	ApplyBook(ctx context.Context, in *ApplyBookRequest, opts ...grpc.CallOption) (*Book, error)
+	// archive a book.
+	ArchiveBook(ctx context.Context, in *ArchiveBookRequest, opts ...grpc.CallOption) (*ArchiveBookResponse, error)
 	// An aep-compliant Create method for book-edition.
 	CreateBookEdition(ctx context.Context, in *CreateBookEditionRequest, opts ...grpc.CallOption) (*BookEdition, error)
 	// An aep-compliant Get method for book-edition.
@@ -135,6 +138,15 @@ func (c *bookstoreClient) ListBooks(ctx context.Context, in *ListBooksRequest, o
 func (c *bookstoreClient) ApplyBook(ctx context.Context, in *ApplyBookRequest, opts ...grpc.CallOption) (*Book, error) {
 	out := new(Book)
 	err := c.cc.Invoke(ctx, Bookstore_ApplyBook_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookstoreClient) ArchiveBook(ctx context.Context, in *ArchiveBookRequest, opts ...grpc.CallOption) (*ArchiveBookResponse, error) {
+	out := new(ArchiveBookResponse)
+	err := c.cc.Invoke(ctx, Bookstore_ArchiveBook_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -256,6 +268,8 @@ type BookstoreServer interface {
 	ListBooks(context.Context, *ListBooksRequest) (*ListBooksResponse, error)
 	// An aep-compliant Apply method for books.
 	ApplyBook(context.Context, *ApplyBookRequest) (*Book, error)
+	// archive a book.
+	ArchiveBook(context.Context, *ArchiveBookRequest) (*ArchiveBookResponse, error)
 	// An aep-compliant Create method for book-edition.
 	CreateBookEdition(context.Context, *CreateBookEditionRequest) (*BookEdition, error)
 	// An aep-compliant Get method for book-edition.
@@ -302,6 +316,9 @@ func (UnimplementedBookstoreServer) ListBooks(context.Context, *ListBooksRequest
 }
 func (UnimplementedBookstoreServer) ApplyBook(context.Context, *ApplyBookRequest) (*Book, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApplyBook not implemented")
+}
+func (UnimplementedBookstoreServer) ArchiveBook(context.Context, *ArchiveBookRequest) (*ArchiveBookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ArchiveBook not implemented")
 }
 func (UnimplementedBookstoreServer) CreateBookEdition(context.Context, *CreateBookEditionRequest) (*BookEdition, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateBookEdition not implemented")
@@ -453,6 +470,24 @@ func _Bookstore_ApplyBook_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BookstoreServer).ApplyBook(ctx, req.(*ApplyBookRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bookstore_ArchiveBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ArchiveBookRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).ArchiveBook(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_ArchiveBook_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).ArchiveBook(ctx, req.(*ArchiveBookRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -685,6 +720,10 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ApplyBook",
 			Handler:    _Bookstore_ApplyBook_Handler,
+		},
+		{
+			MethodName: "archiveBook",
+			Handler:    _Bookstore_ArchiveBook_Handler,
 		},
 		{
 			MethodName: "CreateBookEdition",

@@ -62,11 +62,26 @@ message Methods {
     // true if the list method has unreachable resources.
     bool has_unreachable_resources = 1;
   }
-  // THe properties of the global list method.
+  // The properties of the global list method.
   message GlobalListMethod {}
-  // THe properties of the apply method.
+  // The properties of the apply method.
   message ApplyMethod {}
-
+  // Properties of a custom method.
+  message CustomMethod {
+    enum MethodType {
+      METHOD_TYPE_UNSPECIFIED = 0;
+      GET = 1;
+      POST = 2;
+    }
+    // The name of the custom method.
+    string name = 1;
+    // The type of the custom method.
+    MethodType method_type = 2;
+    // The properties of the custom method request.
+    Property request = 3;
+    // The properties of the custom method response.
+    Property response = 4;
+  }
   // Specific properties of the create method for the resource.
   CreateMethod create = 1;
   // Specific properties of the read method for the resource.
@@ -81,6 +96,8 @@ message Methods {
   GlobalListMethod global_list = 6;
   // Specific properties of the apply for the resource.
   ApplyMethod apply = 7;
+
+  repeated CustomMethod custom = 8;
 }
 
 // A property represents a field in a resource or object.
