@@ -20,8 +20,8 @@ import (
 	"strings"
 
 	"github.com/aep-dev/aep-lib-go/pkg/api"
+	"github.com/aep-dev/aep-lib-go/pkg/constants"
 	"github.com/aep-dev/aep-lib-go/pkg/openapi"
-	"github.com/aep-dev/aepc/constants"
 	"github.com/aep-dev/aepc/internal/utils"
 	"github.com/jhump/protoreflect/desc"
 	"github.com/jhump/protoreflect/desc/builder"
@@ -366,6 +366,12 @@ func AddList(r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.Fi
 	})
 	addResourcesField(r, resourceMb, respMb)
 	addNextPageToken(r, respMb)
+	if r.ListMethod.HasUnreachableResources {
+		f := builder.NewField(constants.FIELD_UNREACHABLE_NAME, builder.FieldTypeMessage(resourceMb)).SetNumber(constants.FIELD_UNREACHABLE_NUMBER).SetComments(builder.Comments{
+			LeadingComment: fmt.Sprintf("A list of %v that were not reachable.", r.Plural),
+		}).SetRepeated()
+		respMb.AddField(f)
+	}
 	fb.AddMessage(respMb)
 	method := builder.NewMethod("List"+toMessageName(r.Plural),
 		builder.RpcTypeMessage(reqMb, false),

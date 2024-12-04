@@ -591,6 +591,8 @@ type ListBooksResponse struct {
 	Results []*Book `protobuf:"bytes,10016,rep,name=results,proto3" json:"results,omitempty"`
 	// The page token indicating the ending point of this response.
 	NextPageToken string `protobuf:"bytes,10011,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	// A list of books that were not reachable.
+	Unreachable []*Book `protobuf:"bytes,10019,rep,name=unreachable,proto3" json:"unreachable,omitempty"`
 }
 
 func (x *ListBooksResponse) Reset() {
@@ -637,6 +639,13 @@ func (x *ListBooksResponse) GetNextPageToken() string {
 		return x.NextPageToken
 	}
 	return ""
+}
+
+func (x *ListBooksResponse) GetUnreachable() []*Book {
+	if x != nil {
+		return x.Unreachable
+	}
+	return nil
 }
 
 // Request message for the Applybook method
@@ -1609,14 +1618,18 @@ var file_example_bookstore_v1_bookstore_proto_rawDesc = []byte{
 	0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x9a, 0x4e, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x70, 0x61, 0x67,
 	0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x23, 0x0a, 0x0d, 0x6d, 0x61, 0x78, 0x5f, 0x70, 0x61,
 	0x67, 0x65, 0x5f, 0x73, 0x69, 0x7a, 0x65, 0x18, 0xa1, 0x4e, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0b,
-	0x6d, 0x61, 0x78, 0x50, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a, 0x65, 0x22, 0x73, 0x0a, 0x11, 0x4c,
-	0x69, 0x73, 0x74, 0x42, 0x6f, 0x6f, 0x6b, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x12, 0x35, 0x0a, 0x07, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x73, 0x18, 0xa0, 0x4e, 0x20, 0x03,
-	0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x62, 0x6f, 0x6f,
-	0x6b, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x76, 0x31, 0x2e, 0x42, 0x6f, 0x6f, 0x6b, 0x52, 0x07,
-	0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x73, 0x12, 0x27, 0x0a, 0x0f, 0x6e, 0x65, 0x78, 0x74, 0x5f,
-	0x70, 0x61, 0x67, 0x65, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x9b, 0x4e, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0d, 0x6e, 0x65, 0x78, 0x74, 0x50, 0x61, 0x67, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
+	0x6d, 0x61, 0x78, 0x50, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a, 0x65, 0x22, 0xb2, 0x01, 0x0a, 0x11,
+	0x4c, 0x69, 0x73, 0x74, 0x42, 0x6f, 0x6f, 0x6b, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x35, 0x0a, 0x07, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x73, 0x18, 0xa0, 0x4e, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x62, 0x6f,
+	0x6f, 0x6b, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x76, 0x31, 0x2e, 0x42, 0x6f, 0x6f, 0x6b, 0x52,
+	0x07, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x73, 0x12, 0x27, 0x0a, 0x0f, 0x6e, 0x65, 0x78, 0x74,
+	0x5f, 0x70, 0x61, 0x67, 0x65, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x9b, 0x4e, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0d, 0x6e, 0x65, 0x78, 0x74, 0x50, 0x61, 0x67, 0x65, 0x54, 0x6f, 0x6b, 0x65,
+	0x6e, 0x12, 0x3d, 0x0a, 0x0b, 0x75, 0x6e, 0x72, 0x65, 0x61, 0x63, 0x68, 0x61, 0x62, 0x6c, 0x65,
+	0x18, 0xa3, 0x4e, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c,
+	0x65, 0x2e, 0x62, 0x6f, 0x6f, 0x6b, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2e, 0x76, 0x31, 0x2e, 0x42,
+	0x6f, 0x6f, 0x6b, 0x52, 0x0b, 0x75, 0x6e, 0x72, 0x65, 0x61, 0x63, 0x68, 0x61, 0x62, 0x6c, 0x65,
 	0x22, 0x81, 0x01, 0x0a, 0x10, 0x41, 0x70, 0x70, 0x6c, 0x79, 0x42, 0x6f, 0x6f, 0x6b, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x37, 0x0a, 0x04, 0x70, 0x61, 0x74, 0x68, 0x18, 0xa2, 0x4e,
 	0x20, 0x01, 0x28, 0x09, 0x42, 0x22, 0xe0, 0x41, 0x02, 0xfa, 0x41, 0x1c, 0x0a, 0x1a, 0x62, 0x6f,
@@ -1937,54 +1950,55 @@ var file_example_bookstore_v1_bookstore_proto_depIdxs = []int32{
 	0,  // 2: example.bookstore.v1.UpdateBookRequest.book:type_name -> example.bookstore.v1.Book
 	25, // 3: example.bookstore.v1.UpdateBookRequest.update_mask:type_name -> google.protobuf.FieldMask
 	0,  // 4: example.bookstore.v1.ListBooksResponse.results:type_name -> example.bookstore.v1.Book
-	0,  // 5: example.bookstore.v1.ApplyBookRequest.book:type_name -> example.bookstore.v1.Book
-	1,  // 6: example.bookstore.v1.CreateBookEditionRequest.book_edition:type_name -> example.bookstore.v1.BookEdition
-	1,  // 7: example.bookstore.v1.ListBookEditionsResponse.results:type_name -> example.bookstore.v1.BookEdition
-	2,  // 8: example.bookstore.v1.CreateIsbnRequest.isbn:type_name -> example.bookstore.v1.Isbn
-	3,  // 9: example.bookstore.v1.CreatePublisherRequest.publisher:type_name -> example.bookstore.v1.Publisher
-	3,  // 10: example.bookstore.v1.UpdatePublisherRequest.publisher:type_name -> example.bookstore.v1.Publisher
-	25, // 11: example.bookstore.v1.UpdatePublisherRequest.update_mask:type_name -> google.protobuf.FieldMask
-	3,  // 12: example.bookstore.v1.ListPublishersResponse.results:type_name -> example.bookstore.v1.Publisher
-	3,  // 13: example.bookstore.v1.ApplyPublisherRequest.publisher:type_name -> example.bookstore.v1.Publisher
-	4,  // 14: example.bookstore.v1.Bookstore.CreateBook:input_type -> example.bookstore.v1.CreateBookRequest
-	5,  // 15: example.bookstore.v1.Bookstore.GetBook:input_type -> example.bookstore.v1.GetBookRequest
-	6,  // 16: example.bookstore.v1.Bookstore.UpdateBook:input_type -> example.bookstore.v1.UpdateBookRequest
-	7,  // 17: example.bookstore.v1.Bookstore.DeleteBook:input_type -> example.bookstore.v1.DeleteBookRequest
-	8,  // 18: example.bookstore.v1.Bookstore.ListBooks:input_type -> example.bookstore.v1.ListBooksRequest
-	10, // 19: example.bookstore.v1.Bookstore.ApplyBook:input_type -> example.bookstore.v1.ApplyBookRequest
-	11, // 20: example.bookstore.v1.Bookstore.CreateBookEdition:input_type -> example.bookstore.v1.CreateBookEditionRequest
-	12, // 21: example.bookstore.v1.Bookstore.GetBookEdition:input_type -> example.bookstore.v1.GetBookEditionRequest
-	13, // 22: example.bookstore.v1.Bookstore.DeleteBookEdition:input_type -> example.bookstore.v1.DeleteBookEditionRequest
-	14, // 23: example.bookstore.v1.Bookstore.ListBookEditions:input_type -> example.bookstore.v1.ListBookEditionsRequest
-	16, // 24: example.bookstore.v1.Bookstore.CreateIsbn:input_type -> example.bookstore.v1.CreateIsbnRequest
-	17, // 25: example.bookstore.v1.Bookstore.CreatePublisher:input_type -> example.bookstore.v1.CreatePublisherRequest
-	18, // 26: example.bookstore.v1.Bookstore.GetPublisher:input_type -> example.bookstore.v1.GetPublisherRequest
-	19, // 27: example.bookstore.v1.Bookstore.UpdatePublisher:input_type -> example.bookstore.v1.UpdatePublisherRequest
-	20, // 28: example.bookstore.v1.Bookstore.DeletePublisher:input_type -> example.bookstore.v1.DeletePublisherRequest
-	21, // 29: example.bookstore.v1.Bookstore.ListPublishers:input_type -> example.bookstore.v1.ListPublishersRequest
-	23, // 30: example.bookstore.v1.Bookstore.ApplyPublisher:input_type -> example.bookstore.v1.ApplyPublisherRequest
-	0,  // 31: example.bookstore.v1.Bookstore.CreateBook:output_type -> example.bookstore.v1.Book
-	0,  // 32: example.bookstore.v1.Bookstore.GetBook:output_type -> example.bookstore.v1.Book
-	0,  // 33: example.bookstore.v1.Bookstore.UpdateBook:output_type -> example.bookstore.v1.Book
-	26, // 34: example.bookstore.v1.Bookstore.DeleteBook:output_type -> google.protobuf.Empty
-	9,  // 35: example.bookstore.v1.Bookstore.ListBooks:output_type -> example.bookstore.v1.ListBooksResponse
-	0,  // 36: example.bookstore.v1.Bookstore.ApplyBook:output_type -> example.bookstore.v1.Book
-	1,  // 37: example.bookstore.v1.Bookstore.CreateBookEdition:output_type -> example.bookstore.v1.BookEdition
-	1,  // 38: example.bookstore.v1.Bookstore.GetBookEdition:output_type -> example.bookstore.v1.BookEdition
-	26, // 39: example.bookstore.v1.Bookstore.DeleteBookEdition:output_type -> google.protobuf.Empty
-	15, // 40: example.bookstore.v1.Bookstore.ListBookEditions:output_type -> example.bookstore.v1.ListBookEditionsResponse
-	2,  // 41: example.bookstore.v1.Bookstore.CreateIsbn:output_type -> example.bookstore.v1.Isbn
-	3,  // 42: example.bookstore.v1.Bookstore.CreatePublisher:output_type -> example.bookstore.v1.Publisher
-	3,  // 43: example.bookstore.v1.Bookstore.GetPublisher:output_type -> example.bookstore.v1.Publisher
-	3,  // 44: example.bookstore.v1.Bookstore.UpdatePublisher:output_type -> example.bookstore.v1.Publisher
-	26, // 45: example.bookstore.v1.Bookstore.DeletePublisher:output_type -> google.protobuf.Empty
-	22, // 46: example.bookstore.v1.Bookstore.ListPublishers:output_type -> example.bookstore.v1.ListPublishersResponse
-	3,  // 47: example.bookstore.v1.Bookstore.ApplyPublisher:output_type -> example.bookstore.v1.Publisher
-	31, // [31:48] is the sub-list for method output_type
-	14, // [14:31] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	0,  // 5: example.bookstore.v1.ListBooksResponse.unreachable:type_name -> example.bookstore.v1.Book
+	0,  // 6: example.bookstore.v1.ApplyBookRequest.book:type_name -> example.bookstore.v1.Book
+	1,  // 7: example.bookstore.v1.CreateBookEditionRequest.book_edition:type_name -> example.bookstore.v1.BookEdition
+	1,  // 8: example.bookstore.v1.ListBookEditionsResponse.results:type_name -> example.bookstore.v1.BookEdition
+	2,  // 9: example.bookstore.v1.CreateIsbnRequest.isbn:type_name -> example.bookstore.v1.Isbn
+	3,  // 10: example.bookstore.v1.CreatePublisherRequest.publisher:type_name -> example.bookstore.v1.Publisher
+	3,  // 11: example.bookstore.v1.UpdatePublisherRequest.publisher:type_name -> example.bookstore.v1.Publisher
+	25, // 12: example.bookstore.v1.UpdatePublisherRequest.update_mask:type_name -> google.protobuf.FieldMask
+	3,  // 13: example.bookstore.v1.ListPublishersResponse.results:type_name -> example.bookstore.v1.Publisher
+	3,  // 14: example.bookstore.v1.ApplyPublisherRequest.publisher:type_name -> example.bookstore.v1.Publisher
+	4,  // 15: example.bookstore.v1.Bookstore.CreateBook:input_type -> example.bookstore.v1.CreateBookRequest
+	5,  // 16: example.bookstore.v1.Bookstore.GetBook:input_type -> example.bookstore.v1.GetBookRequest
+	6,  // 17: example.bookstore.v1.Bookstore.UpdateBook:input_type -> example.bookstore.v1.UpdateBookRequest
+	7,  // 18: example.bookstore.v1.Bookstore.DeleteBook:input_type -> example.bookstore.v1.DeleteBookRequest
+	8,  // 19: example.bookstore.v1.Bookstore.ListBooks:input_type -> example.bookstore.v1.ListBooksRequest
+	10, // 20: example.bookstore.v1.Bookstore.ApplyBook:input_type -> example.bookstore.v1.ApplyBookRequest
+	11, // 21: example.bookstore.v1.Bookstore.CreateBookEdition:input_type -> example.bookstore.v1.CreateBookEditionRequest
+	12, // 22: example.bookstore.v1.Bookstore.GetBookEdition:input_type -> example.bookstore.v1.GetBookEditionRequest
+	13, // 23: example.bookstore.v1.Bookstore.DeleteBookEdition:input_type -> example.bookstore.v1.DeleteBookEditionRequest
+	14, // 24: example.bookstore.v1.Bookstore.ListBookEditions:input_type -> example.bookstore.v1.ListBookEditionsRequest
+	16, // 25: example.bookstore.v1.Bookstore.CreateIsbn:input_type -> example.bookstore.v1.CreateIsbnRequest
+	17, // 26: example.bookstore.v1.Bookstore.CreatePublisher:input_type -> example.bookstore.v1.CreatePublisherRequest
+	18, // 27: example.bookstore.v1.Bookstore.GetPublisher:input_type -> example.bookstore.v1.GetPublisherRequest
+	19, // 28: example.bookstore.v1.Bookstore.UpdatePublisher:input_type -> example.bookstore.v1.UpdatePublisherRequest
+	20, // 29: example.bookstore.v1.Bookstore.DeletePublisher:input_type -> example.bookstore.v1.DeletePublisherRequest
+	21, // 30: example.bookstore.v1.Bookstore.ListPublishers:input_type -> example.bookstore.v1.ListPublishersRequest
+	23, // 31: example.bookstore.v1.Bookstore.ApplyPublisher:input_type -> example.bookstore.v1.ApplyPublisherRequest
+	0,  // 32: example.bookstore.v1.Bookstore.CreateBook:output_type -> example.bookstore.v1.Book
+	0,  // 33: example.bookstore.v1.Bookstore.GetBook:output_type -> example.bookstore.v1.Book
+	0,  // 34: example.bookstore.v1.Bookstore.UpdateBook:output_type -> example.bookstore.v1.Book
+	26, // 35: example.bookstore.v1.Bookstore.DeleteBook:output_type -> google.protobuf.Empty
+	9,  // 36: example.bookstore.v1.Bookstore.ListBooks:output_type -> example.bookstore.v1.ListBooksResponse
+	0,  // 37: example.bookstore.v1.Bookstore.ApplyBook:output_type -> example.bookstore.v1.Book
+	1,  // 38: example.bookstore.v1.Bookstore.CreateBookEdition:output_type -> example.bookstore.v1.BookEdition
+	1,  // 39: example.bookstore.v1.Bookstore.GetBookEdition:output_type -> example.bookstore.v1.BookEdition
+	26, // 40: example.bookstore.v1.Bookstore.DeleteBookEdition:output_type -> google.protobuf.Empty
+	15, // 41: example.bookstore.v1.Bookstore.ListBookEditions:output_type -> example.bookstore.v1.ListBookEditionsResponse
+	2,  // 42: example.bookstore.v1.Bookstore.CreateIsbn:output_type -> example.bookstore.v1.Isbn
+	3,  // 43: example.bookstore.v1.Bookstore.CreatePublisher:output_type -> example.bookstore.v1.Publisher
+	3,  // 44: example.bookstore.v1.Bookstore.GetPublisher:output_type -> example.bookstore.v1.Publisher
+	3,  // 45: example.bookstore.v1.Bookstore.UpdatePublisher:output_type -> example.bookstore.v1.Publisher
+	26, // 46: example.bookstore.v1.Bookstore.DeletePublisher:output_type -> google.protobuf.Empty
+	22, // 47: example.bookstore.v1.Bookstore.ListPublishers:output_type -> example.bookstore.v1.ListPublishersResponse
+	3,  // 48: example.bookstore.v1.Bookstore.ApplyPublisher:output_type -> example.bookstore.v1.Publisher
+	32, // [32:49] is the sub-list for method output_type
+	15, // [15:32] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_example_bookstore_v1_bookstore_proto_init() }

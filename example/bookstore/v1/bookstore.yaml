@@ -56,7 +56,8 @@ resources:
       read: {}
       update: {}
       delete: {}
-      list: {}
+      list:
+        has_unreachable_resources: true
       apply: {} # do not uncomment until there is an AEP on apply.
   # other example resources that might be interesting to add:
   # authors, which could be a reference for book

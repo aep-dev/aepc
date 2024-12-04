@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/aep-dev/aep-lib-go/pkg/api"
+	"github.com/aep-dev/aep-lib-go/pkg/constants"
 	"github.com/aep-dev/aep-lib-go/pkg/openapi"
-	"github.com/aep-dev/aepc/constants"
 	"github.com/aep-dev/aepc/schema"
 )
 
@@ -73,7 +73,9 @@ func getOrCreateResource(apiResourceByName map[string]*api.Resource, resourceByN
 		apiR.DeleteMethod = &api.DeleteMethod{}
 	}
 	if methods.List != nil {
-		apiR.ListMethod = &api.ListMethod{}
+		apiR.ListMethod = &api.ListMethod{
+			HasUnreachableResources: methods.List.GetHasUnreachableResources(),
+		}
 	}
 	if methods.Apply != nil {
 		apiR.ApplyMethod = &api.ApplyMethod{}
