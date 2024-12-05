@@ -28,6 +28,10 @@ jobs:
         run: |
           ./scripts/test_http_api.sh
 
-      # - name: run api-linter
+      - name: run OAS api-linter
+        run: |
+          ./scripts/run-oas-linter.sh
+
+      # - name: run protobuf api-linter
       #   run: |
       #     ./scripts/run-api-linter.sh

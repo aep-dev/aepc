@@ -1,0 +1,6 @@
+extends:
+  - https://raw.githubusercontent.com/aep-dev/aep-openapi-linter/refs/heads/js-based-linter/spectral.yaml
+rules:
+  # disabling for now, as required path parameters (which are acceptable)
+  # will violate this rule.
+  aep-132-request-required-params: off
