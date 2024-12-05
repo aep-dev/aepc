@@ -18,7 +18,7 @@ require (
 	github.com/ProtonMail/go-crypto v1.1.0-alpha.2 // indirect
 	github.com/PuerkitoBio/purell v1.1.0 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
-	github.com/aep-dev/aep-lib-go v0.0.0-20241204054628-0a7e1306ab81 // indirect
+	github.com/aep-dev/aep-lib-go v0.0.0-20241205062045-39517ccc141d // indirect
 	github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768 // indirect
 	github.com/agext/levenshtein v1.2.2 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect

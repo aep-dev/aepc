@@ -98,15 +98,15 @@ components:
         plural: publishers
         singular: publisher
 info:
-  description: ""
+  description: An API for bookstore.example.com
   title: bookstore.example.com
   version: version not set
 openapi: 3.1.0
 paths:
   /isbns:
     post:
-      description: ""
-      operationId: ""
+      description: Create method for isbn
+      operationId: isbn.create
       parameters: []
       requestBody:
         content:
@@ -125,19 +125,21 @@ paths:
       summary: ""
   /publishers:
     get:
-      description: ""
-      operationId: ""
+      description: List method for publisher
+      operationId: publisher.list
       parameters:
       - description: ""
         in: query
         name: max_page_size
-        required: true
-        type: integer
+        required: false
+        schema:
+          type: integer
       - description: ""
         in: query
         name: page_token
-        required: true
-        type: string
+        required: false
+        schema:
+          type: string
       responses:
         "200":
           content:
@@ -152,8 +154,8 @@ paths:
           description: Successful response
       summary: ""
     post:
-      description: ""
-      operationId: ""
+      description: Create method for publisher
+      operationId: publisher.create
       parameters: []
       requestBody:
         content:
@@ -172,33 +174,38 @@ paths:
       summary: ""
   /publishers/{publisher}:
     delete:
-      description: ""
-      operationId: ""
+      description: Delete method for publisher
+      operationId: publisher.delete
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: query
         name: force
         required: false
-        type: boolean
+        schema:
+          type: boolean
       responses:
-        "200":
-          content: null
-          description: ""
+        "204":
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
       summary: ""
     get:
-      description: ""
-      operationId: ""
+      description: Get method for publisher
+      operationId: publisher.get
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       responses:
         "200":
           content:
@@ -208,14 +215,15 @@ paths:
           description: Successful response
       summary: ""
     patch:
-      description: ""
-      operationId: ""
+      description: Update method for publisher
+      operationId: publisher.update
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -232,14 +240,15 @@ paths:
           description: Successful response
       summary: ""
     put:
-      description: ""
-      operationId: ""
+      description: Apply method for publisher
+      operationId: publisher.apply
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -257,24 +266,27 @@ paths:
       summary: ""
   /publishers/{publisher}/books:
     get:
-      description: ""
-      operationId: ""
+      description: List method for book
+      operationId: book.list
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: query
         name: max_page_size
-        required: true
-        type: integer
+        required: false
+        schema:
+          type: integer
       - description: ""
         in: query
         name: page_token
-        required: true
-        type: string
+        required: false
+        schema:
+          type: string
       responses:
         "200":
           content:
@@ -293,14 +305,15 @@ paths:
           description: Successful response
       summary: ""
     post:
-      description: ""
-      operationId: ""
+      description: Create method for book
+      operationId: book.create
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -318,43 +331,50 @@ paths:
       summary: ""
   /publishers/{publisher}/books/{book}:
     delete:
-      description: ""
-      operationId: ""
+      description: Delete method for book
+      operationId: book.delete
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: query
         name: force
         required: false
-        type: boolean
+        schema:
+          type: boolean
       responses:
-        "200":
-          content: null
-          description: ""
+        "204":
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
       summary: ""
     get:
-      description: ""
-      operationId: ""
+      description: Get method for book
+      operationId: book.get
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book
         required: true
-        type: string
+        schema:
+          type: string
       responses:
         "200":
           content:
@@ -364,19 +384,21 @@ paths:
           description: Successful response
       summary: ""
     patch:
-      description: ""
-      operationId: ""
+      description: Update method for book
+      operationId: book.update
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book
         required: true
-        type: string
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -393,19 +415,21 @@ paths:
           description: Successful response
       summary: ""
     put:
-      description: ""
-      operationId: ""
+      description: Apply method for book
+      operationId: book.apply
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book
         required: true
-        type: string
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -423,29 +447,33 @@ paths:
       summary: ""
   /publishers/{publisher}/books/{book}/editions:
     get:
-      description: ""
-      operationId: ""
+      description: List method for book-edition
+      operationId: book-edition.list
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: query
         name: max_page_size
-        required: true
-        type: integer
+        required: false
+        schema:
+          type: integer
       - description: ""
         in: query
         name: page_token
-        required: true
-        type: string
+        required: false
+        schema:
+          type: string
       responses:
         "200":
           content:
@@ -460,19 +488,21 @@ paths:
           description: Successful response
       summary: ""
     post:
-      description: ""
-      operationId: ""
+      description: Create method for book-edition
+      operationId: book-edition.create
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book
         required: true
-        type: string
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -490,48 +520,56 @@ paths:
       summary: ""
   /publishers/{publisher}/books/{book}/editions/{book-edition}:
     delete:
-      description: ""
-      operationId: ""
+      description: Delete method for book-edition
+      operationId: book-edition.delete
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book-edition
         required: true
-        type: string
+        schema:
+          type: string
       responses:
-        "200":
-          content: null
-          description: ""
+        "204":
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
       summary: ""
     get:
-      description: ""
-      operationId: ""
+      description: Get method for book-edition
+      operationId: book-edition.get
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book-edition
         required: true
-        type: string
+        schema:
+          type: string
       responses:
         "200":
           content:
@@ -542,19 +580,21 @@ paths:
       summary: ""
   /publishers/{publisher}/books/{book}:archive:
     post:
-      description: ""
-      operationId: ""
+      description: Custom method archive for book
+      operationId: book:archive
       parameters:
       - description: ""
         in: path
         name: publisher
         required: true
-        type: string
+        schema:
+          type: string
       - description: ""
         in: path
         name: book
         required: true
-        type: string
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
