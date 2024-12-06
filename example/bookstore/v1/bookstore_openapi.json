@@ -12,6 +12,51 @@
   },
   "paths": {
     "/isbns": {
+      "get": {
+        "summary": "",
+        "description": "List method for isbn",
+        "operationId": "isbn.list",
+        "parameters": [
+          {
+            "name": "max_page_size",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/isbn"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "summary": "",
         "description": "Create method for isbn",
@@ -39,6 +84,36 @@
             }
           },
           "required": true
+        }
+      }
+    },
+    "/isbns/{isbn}": {
+      "get": {
+        "summary": "",
+        "description": "Get method for isbn",
+        "operationId": "isbn.get",
+        "parameters": [
+          {
+            "name": "isbn",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/isbn"
+                }
+              }
+            }
+          }
         }
       }
     },
