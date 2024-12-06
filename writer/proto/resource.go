@@ -35,6 +35,9 @@ import (
 func AddResource(r *api.Resource, a *api.API, fb *builder.FileBuilder, sb *builder.ServiceBuilder, m *MessageStorage) error {
 	// Do not recreate resources if they've already been created.
 	resourceMb, ok := m.Messages[fmt.Sprintf("%s/%s", a.Name, r.Singular)]
+	options := &descriptorpb.MessageOptions{}
+	proto.SetExtension(options, annotations.E_Resource, resourceDescriptor(a, r))
+	resourceMb.SetOptions(options)
 	if !ok {
 		return fmt.Errorf("%s not found in message storage", r.Singular)
 	}
@@ -238,9 +241,11 @@ func AddCreate(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, 
 		},
 		Body: bodyField,
 	})
-	proto.SetExtension(options, annotations.E_MethodSignature, []string{
-		strings.Join([]string{constants.FIELD_PARENT_NAME, bodyField}, ","),
-	})
+	method_signature := []string{bodyField}
+	if len(r.Parents) > 0 {
+		method_signature = []string{constants.FIELD_PARENT_NAME, bodyField}
+	}
+	proto.SetExtension(options, annotations.E_MethodSignature, []string{strings.Join(method_signature, ",")})
 	method.SetOptions(options)
 	sb.AddMethod(method)
 	return nil
@@ -326,6 +331,9 @@ func AddDelete(a *api.API, r *api.Resource, resourceMb *builder.MessageBuilder, 
 		LeadingComment: fmt.Sprintf("Request message for the Delete%v method", toMessageName(r.Singular)),
 	})
 	addPathField(a, r, mb)
+	if len(r.Children) > 0 {
+		addForceField(a, r, mb)
+	}
 	fb.AddMessage(mb)
 	emptyMd, err := desc.LoadMessageDescriptor("google.protobuf.Empty")
 	if err != nil {
@@ -497,6 +505,7 @@ func AddCustomMethod(a *api.API, r *api.Resource, cm *api.CustomMethod, resource
 			Pattern: &annotations.HttpRule_Post{
 				Post: http_path,
 			},
+			Body: "*",
 		})
 	case "GET":
 		proto.SetExtension(options, annotations.E_Http, &annotations.HttpRule{
@@ -529,7 +538,7 @@ func generateHTTPPath(r *api.Resource) string {
 func generateParentHTTPPath(r *api.Resource) string {
 	parentPath := ""
 	if len(r.Parents) == 0 {
-		return fmt.Sprintf("/{parent=%v}", strings.ToLower(r.Plural))
+		return fmt.Sprintf("/%v", strings.ToLower(r.Plural))
 	}
 	if len(r.Parents) > 0 {
 		parentPath = fmt.Sprintf("%v", generateHTTPPath(r.Parents[0]))
@@ -606,6 +615,18 @@ func addNextPageToken(r *api.Resource, mb *builder.MessageBuilder) {
 	mb.AddField(f)
 }
 
+func addForceField(a *api.API, r *api.Resource, mb *builder.MessageBuilder) {
+	o := &descriptorpb.FieldOptions{}
+	proto.SetExtension(o, annotations.E_FieldBehavior, []annotations.FieldBehavior{annotations.FieldBehavior_OPTIONAL})
+	f := builder.NewField(constants.FIELD_FORCE_NAME, builder.FieldTypeBool()).
+		SetNumber(constants.FIELD_FORCE_NUMBER).
+		SetComments(builder.Comments{
+			LeadingComment: "If true, the resource will be deleted, even if children still exist.",
+		}).
+		SetOptions(o)
+	mb.AddField(f)
+}
+
 func getSortedProperties(s *openapi.Schema) []openapi.Schema {
 	sorted_field_names := []string{}
 	for _, f := range s.XAEPFieldNumbers {
@@ -617,4 +638,16 @@ func getSortedProperties(s *openapi.Schema) []openapi.Schema {
 		sorted_fields = append(sorted_fields, s.Properties[f])
 	}
 	return sorted_fields
+}
+
+func resourceDescriptor(a *api.API, r *api.Resource) *annotations.ResourceDescriptor {
+	patterns := []string{
+		strings.Join(r.PatternElems, "/"),
+	}
+	return &annotations.ResourceDescriptor{
+		Type:     fmt.Sprintf("%s/%s", a.Name, r.Singular),
+		Pattern:  patterns,
+		Singular: r.Singular,
+		Plural:   r.Plural,
+	}
 }

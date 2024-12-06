@@ -32,6 +32,6 @@ jobs:
         run: |
           ./scripts/run-oas-linter.sh
 
-      # - name: run protobuf api-linter
-      #   run: |
-      #     ./scripts/run-api-linter.sh
+      - name: run protobuf api-linter
+        run: |
+          ./scripts/run-api-linter.sh

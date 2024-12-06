@@ -69,7 +69,10 @@ service Bookstore {
 
   // archive a book.
   rpc archiveBook ( ArchiveBookRequest ) returns ( ArchiveBookResponse ) {
-    option (google.api.http) = { post: "/{path=publishers/*/books/*}:archive" };
+    option (google.api.http) = {
+      post: "/{path=publishers/*/books/*}:archive",
+      body: "*"
+    };
   }
 
   // An aep-compliant Create method for book-edition.
@@ -107,19 +110,30 @@ service Bookstore {
 
   // An aep-compliant Create method for isbn.
   rpc CreateIsbn ( CreateIsbnRequest ) returns ( Isbn ) {
-    option (google.api.http) = { post: "/{parent=isbns}", body: "isbn" };
+    option (google.api.http) = { post: "/isbns", body: "isbn" };
 
-    option (google.api.method_signature) = "parent,isbn";
+    option (google.api.method_signature) = "isbn";
+  }
+
+  // An aep-compliant Get method for isbn.
+  rpc GetIsbn ( GetIsbnRequest ) returns ( Isbn ) {
+    option (google.api.http) = { get: "/{path=isbns/*}" };
+
+    option (google.api.method_signature) = "path";
+  }
+
+  // An aep-compliant List method for isbns.
+  rpc ListIsbns ( ListIsbnsRequest ) returns ( ListIsbnsResponse ) {
+    option (google.api.http) = { get: "/isbns" };
+
+    option (google.api.method_signature) = "parent";
   }
 
   // An aep-compliant Create method for publisher.
   rpc CreatePublisher ( CreatePublisherRequest ) returns ( Publisher ) {
-    option (google.api.http) = {
-      post: "/{parent=publishers}",
-      body: "publisher"
-    };
+    option (google.api.http) = { post: "/publishers", body: "publisher" };
 
-    option (google.api.method_signature) = "parent,publisher";
+    option (google.api.method_signature) = "publisher";
   }
 
   // An aep-compliant Get method for publisher.
@@ -148,7 +162,7 @@ service Bookstore {
 
   // An aep-compliant List method for publishers.
   rpc ListPublishers ( ListPublishersRequest ) returns ( ListPublishersResponse ) {
-    option (google.api.http) = { get: "/{parent=publishers}" };
+    option (google.api.http) = { get: "/publishers" };
 
     option (google.api.method_signature) = "parent";
   }
@@ -161,6 +175,13 @@ service Bookstore {
 
 // A Book.
 message Book {
+  option (google.api.resource) = {
+    type: "bookstore.example.com/book",
+    pattern: [ "publishers/{publisher}/books/{book}" ],
+    plural: "books",
+    singular: "book"
+  };
+
   // A Author.
   message Author {
     // Field for firstName.
@@ -191,6 +212,15 @@ message Book {
 
 // A BookEdition.
 message BookEdition {
+  option (google.api.resource) = {
+    type: "bookstore.example.com/book-edition",
+    pattern: [
+      "publishers/{publisher}/books/{book}/editions/{book-edition}"
+    ],
+    plural: "book-editions",
+    singular: "book-edition"
+  };
+
   // Field for displayname.
   string displayname = 1 [(google.api.field_behavior) = REQUIRED];
 
@@ -200,12 +230,26 @@ message BookEdition {
 
 // A Isbn.
 message Isbn {
+  option (google.api.resource) = {
+    type: "bookstore.example.com/isbn",
+    pattern: [ "isbns/{isbn}" ],
+    plural: "isbns",
+    singular: "isbn"
+  };
+
   // Field for path.
   string path = 10018;
 }
 
 // A Publisher.
 message Publisher {
+  option (google.api.resource) = {
+    type: "bookstore.example.com/publisher",
+    pattern: [ "publishers/{publisher}" ],
+    plural: "publishers",
+    singular: "publisher"
+  };
+
   // Field for description.
   string description = 1;
 
@@ -259,6 +303,9 @@ message DeleteBookRequest {
     (google.api.field_behavior) = REQUIRED,
     (google.api.resource_reference) = { type: "bookstore.example.com/book" }
   ];
+
+  // If true, the resource will be deleted, even if children still exist.
+  bool force = 10020 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // Request message for the Listbook method
@@ -374,12 +421,6 @@ message ListBookEditionsResponse {
 
 // A Create request for a  isbn resource.
 message CreateIsbnRequest {
-  // A field for the parent of isbn
-  string parent = 10013 [
-    (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference) = { }
-  ];
-
   // An id that uniquely identifies the resource within the collection
   string id = 10014;
 
@@ -387,14 +428,41 @@ message CreateIsbnRequest {
   Isbn isbn = 10015 [(google.api.field_behavior) = REQUIRED];
 }
 
-// A Create request for a  publisher resource.
-message CreatePublisherRequest {
-  // A field for the parent of publisher
+// Request message for the Getisbn method
+message GetIsbnRequest {
+  // The globally unique identifier for the resource
+  string path = 10018 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { type: "bookstore.example.com/isbn" }
+  ];
+}
+
+// Request message for the Listisbn method
+message ListIsbnsRequest {
+  // A field for the parent of isbn
   string parent = 10013 [
     (google.api.field_behavior) = REQUIRED,
     (google.api.resource_reference) = { }
   ];
 
+  // The page token indicating the starting point of the page
+  string page_token = 10010;
+
+  // The maximum number of resources to return in a single page.
+  int32 max_page_size = 10017;
+}
+
+// Response message for the Listisbn method
+message ListIsbnsResponse {
+  // A list of isbns
+  repeated Isbn results = 10016;
+
+  // The page token indicating the ending point of this response.
+  string next_page_token = 10011;
+}
+
+// A Create request for a  publisher resource.
+message CreatePublisherRequest {
   // An id that uniquely identifies the resource within the collection
   string id = 10014;
 
@@ -433,6 +501,9 @@ message DeletePublisherRequest {
     (google.api.field_behavior) = REQUIRED,
     (google.api.resource_reference) = { type: "bookstore.example.com/publisher" }
   ];
+
+  // If true, the resource will be deleted, even if children still exist.
+  bool force = 10020 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // Request message for the Listpublisher method

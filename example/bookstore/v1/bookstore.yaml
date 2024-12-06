@@ -95,6 +95,8 @@ resources:
     plural: "isbns"
     properties: {}
     methods:
+      read: {}
+      list: {}
       create: {}
       # blocked on https://github.com/aep-dev/api-linter/issues/97
       # non_client_settable_id: true

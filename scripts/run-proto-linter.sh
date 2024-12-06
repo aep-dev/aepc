@@ -5,6 +5,6 @@ if ! which buf-plugin-aep > /dev/null; then
     go install github.com/aep-dev/api-linter/cmd/buf-plugin-aep@latest
 fi
 
-echo "Running API linter..."
+echo "Running API Proto linter..."
 buf lint --path example/bookstore/v1/bookstore.proto
 echo "passed!"

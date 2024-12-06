@@ -104,6 +104,35 @@ info:
 openapi: 3.1.0
 paths:
   /isbns:
+    get:
+      description: List method for isbn
+      operationId: isbn.list
+      parameters:
+      - description: ""
+        in: query
+        name: max_page_size
+        required: false
+        schema:
+          type: integer
+      - description: ""
+        in: query
+        name: page_token
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  results:
+                    items:
+                      $ref: '#/components/schemas/isbn'
+                    type: array
+                type: object
+          description: Successful response
+      summary: ""
     post:
       description: Create method for isbn
       operationId: isbn.create
@@ -115,6 +144,25 @@ paths:
               $ref: '#/components/schemas/isbn'
         description: ""
         required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/isbn'
+          description: Successful response
+      summary: ""
+  /isbns/{isbn}:
+    get:
+      description: Get method for isbn
+      operationId: isbn.get
+      parameters:
+      - description: ""
+        in: path
+        name: isbn
+        required: true
+        schema:
+          type: string
       responses:
         "200":
           content:
