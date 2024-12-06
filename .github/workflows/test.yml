@@ -32,6 +32,8 @@ jobs:
         run: |
           ./scripts/run-oas-linter.sh
 
+      # currently disabled due to api-linter bugs:
+      # - https://github.com/aep-dev/api-linter/milestone/1
       # - name: run protobuf api-linter
       #   run: |
       #     ./scripts/run-api-linter.sh
