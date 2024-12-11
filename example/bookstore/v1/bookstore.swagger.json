@@ -93,6 +93,13 @@
             }
           },
           {
+            "name": "parent",
+            "description": "A field for the parent of isbn",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "id",
             "description": "An id that uniquely identifies the resource within the collection",
             "in": "query",
@@ -180,6 +187,13 @@
                 "publisher"
               ]
             }
+          },
+          {
+            "name": "parent",
+            "description": "A field for the parent of publisher",
+            "in": "query",
+            "required": true,
+            "type": "string"
           },
           {
             "name": "id",

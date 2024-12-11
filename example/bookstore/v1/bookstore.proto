@@ -421,6 +421,12 @@ message ListBookEditionsResponse {
 
 // A Create request for a  isbn resource.
 message CreateIsbnRequest {
+  // A field for the parent of isbn
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
   // An id that uniquely identifies the resource within the collection
   string id = 10014;
 
@@ -463,6 +469,12 @@ message ListIsbnsResponse {
 
 // A Create request for a  publisher resource.
 message CreatePublisherRequest {
+  // A field for the parent of publisher
+  string parent = 10013 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = { }
+  ];
+
   // An id that uniquely identifies the resource within the collection
   string id = 10014;
 
