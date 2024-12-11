@@ -34,5 +34,4 @@ jobs:
 
       - name: run protobuf api-linter
         run: |
-          ./scripts/run-api-linter.sh
- 
+          ./scripts/run-proto-linter.sh
