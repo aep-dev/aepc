@@ -15,7 +15,7 @@
       "get": {
         "summary": "",
         "description": "List method for isbn",
-        "operationId": "isbn.list",
+        "operationId": "ListIsbn",
         "parameters": [
           {
             "name": "max_page_size",
@@ -91,7 +91,7 @@
       "get": {
         "summary": "",
         "description": "Get method for isbn",
-        "operationId": "isbn.get",
+        "operationId": "GetIsbn",
         "parameters": [
           {
             "name": "isbn",

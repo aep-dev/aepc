@@ -106,7 +106,7 @@ paths:
   /isbns:
     get:
       description: List method for isbn
-      operationId: isbn.list
+      operationId: ListIsbn
       parameters:
       - description: ""
         in: query
@@ -155,7 +155,7 @@ paths:
   /isbns/{isbn}:
     get:
       description: Get method for isbn
-      operationId: isbn.get
+      operationId: GetIsbn
       parameters:
       - description: ""
         in: path
