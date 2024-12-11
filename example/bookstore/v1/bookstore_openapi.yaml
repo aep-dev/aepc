@@ -135,7 +135,7 @@ paths:
       summary: ""
     post:
       description: Create method for isbn
-      operationId: isbn.create
+      operationId: CreateIsbn
       parameters: []
       requestBody:
         content:
@@ -174,7 +174,7 @@ paths:
   /publishers:
     get:
       description: List method for publisher
-      operationId: publisher.list
+      operationId: ListPublisher
       parameters:
       - description: ""
         in: query
@@ -203,7 +203,7 @@ paths:
       summary: ""
     post:
       description: Create method for publisher
-      operationId: publisher.create
+      operationId: CreatePublisher
       parameters: []
       requestBody:
         content:
@@ -223,7 +223,7 @@ paths:
   /publishers/{publisher}:
     delete:
       description: Delete method for publisher
-      operationId: publisher.delete
+      operationId: DeletePublisher
       parameters:
       - description: ""
         in: path
@@ -246,7 +246,7 @@ paths:
       summary: ""
     get:
       description: Get method for publisher
-      operationId: publisher.get
+      operationId: GetPublisher
       parameters:
       - description: ""
         in: path
@@ -264,7 +264,7 @@ paths:
       summary: ""
     patch:
       description: Update method for publisher
-      operationId: publisher.update
+      operationId: UpdatePublisher
       parameters:
       - description: ""
         in: path
@@ -289,7 +289,7 @@ paths:
       summary: ""
     put:
       description: Apply method for publisher
-      operationId: publisher.apply
+      operationId: ApplyPublisher
       parameters:
       - description: ""
         in: path
@@ -315,7 +315,7 @@ paths:
   /publishers/{publisher}/books:
     get:
       description: List method for book
-      operationId: book.list
+      operationId: ListBook
       parameters:
       - description: ""
         in: path
@@ -354,7 +354,7 @@ paths:
       summary: ""
     post:
       description: Create method for book
-      operationId: book.create
+      operationId: CreateBook
       parameters:
       - description: ""
         in: path
@@ -380,7 +380,7 @@ paths:
   /publishers/{publisher}/books/{book}:
     delete:
       description: Delete method for book
-      operationId: book.delete
+      operationId: DeleteBook
       parameters:
       - description: ""
         in: path
@@ -409,7 +409,7 @@ paths:
       summary: ""
     get:
       description: Get method for book
-      operationId: book.get
+      operationId: GetBook
       parameters:
       - description: ""
         in: path
@@ -433,7 +433,7 @@ paths:
       summary: ""
     patch:
       description: Update method for book
-      operationId: book.update
+      operationId: UpdateBook
       parameters:
       - description: ""
         in: path
@@ -464,7 +464,7 @@ paths:
       summary: ""
     put:
       description: Apply method for book
-      operationId: book.apply
+      operationId: ApplyBook
       parameters:
       - description: ""
         in: path
@@ -496,7 +496,7 @@ paths:
   /publishers/{publisher}/books/{book}/editions:
     get:
       description: List method for book-edition
-      operationId: book-edition.list
+      operationId: ListBookEdition
       parameters:
       - description: ""
         in: path
@@ -537,7 +537,7 @@ paths:
       summary: ""
     post:
       description: Create method for book-edition
-      operationId: book-edition.create
+      operationId: CreateBookEdition
       parameters:
       - description: ""
         in: path
@@ -569,7 +569,7 @@ paths:
   /publishers/{publisher}/books/{book}/editions/{book-edition}:
     delete:
       description: Delete method for book-edition
-      operationId: book-edition.delete
+      operationId: DeleteBookEdition
       parameters:
       - description: ""
         in: path
@@ -598,7 +598,7 @@ paths:
       summary: ""
     get:
       description: Get method for book-edition
-      operationId: book-edition.get
+      operationId: GetBookEdition
       parameters:
       - description: ""
         in: path
@@ -629,7 +629,7 @@ paths:
   /publishers/{publisher}/books/{book}:archive:
     post:
       description: Custom method archive for book
-      operationId: book:archive
+      operationId: :ArchiveBook
       parameters:
       - description: ""
         in: path

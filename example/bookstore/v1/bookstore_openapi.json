@@ -60,7 +60,7 @@
       "post": {
         "summary": "",
         "description": "Create method for isbn",
-        "operationId": "isbn.create",
+        "operationId": "CreateIsbn",
         "parameters": [],
         "responses": {
           "200": {
@@ -121,7 +121,7 @@
       "get": {
         "summary": "",
         "description": "List method for publisher",
-        "operationId": "publisher.list",
+        "operationId": "ListPublisher",
         "parameters": [
           {
             "name": "max_page_size",
@@ -166,7 +166,7 @@
       "post": {
         "summary": "",
         "description": "Create method for publisher",
-        "operationId": "publisher.create",
+        "operationId": "CreatePublisher",
         "parameters": [],
         "responses": {
           "200": {
@@ -197,7 +197,7 @@
       "get": {
         "summary": "",
         "description": "Get method for publisher",
-        "operationId": "publisher.get",
+        "operationId": "GetPublisher",
         "parameters": [
           {
             "name": "publisher",
@@ -225,7 +225,7 @@
       "patch": {
         "summary": "",
         "description": "Update method for publisher",
-        "operationId": "publisher.update",
+        "operationId": "UpdatePublisher",
         "parameters": [
           {
             "name": "publisher",
@@ -264,7 +264,7 @@
       "put": {
         "summary": "",
         "description": "Apply method for publisher",
-        "operationId": "publisher.apply",
+        "operationId": "ApplyPublisher",
         "parameters": [
           {
             "name": "publisher",
@@ -303,7 +303,7 @@
       "delete": {
         "summary": "",
         "description": "Delete method for publisher",
-        "operationId": "publisher.delete",
+        "operationId": "DeletePublisher",
         "parameters": [
           {
             "name": "publisher",
@@ -340,7 +340,7 @@
       "get": {
         "summary": "",
         "description": "List method for book",
-        "operationId": "book.list",
+        "operationId": "ListBook",
         "parameters": [
           {
             "name": "publisher",
@@ -400,7 +400,7 @@
       "post": {
         "summary": "",
         "description": "Create method for book",
-        "operationId": "book.create",
+        "operationId": "CreateBook",
         "parameters": [
           {
             "name": "publisher",
@@ -441,7 +441,7 @@
       "get": {
         "summary": "",
         "description": "Get method for book",
-        "operationId": "book.get",
+        "operationId": "GetBook",
         "parameters": [
           {
             "name": "publisher",
@@ -478,7 +478,7 @@
       "patch": {
         "summary": "",
         "description": "Update method for book",
-        "operationId": "book.update",
+        "operationId": "UpdateBook",
         "parameters": [
           {
             "name": "publisher",
@@ -526,7 +526,7 @@
       "put": {
         "summary": "",
         "description": "Apply method for book",
-        "operationId": "book.apply",
+        "operationId": "ApplyBook",
         "parameters": [
           {
             "name": "publisher",
@@ -574,7 +574,7 @@
       "delete": {
         "summary": "",
         "description": "Delete method for book",
-        "operationId": "book.delete",
+        "operationId": "DeleteBook",
         "parameters": [
           {
             "name": "publisher",
@@ -620,7 +620,7 @@
       "get": {
         "summary": "",
         "description": "List method for book-edition",
-        "operationId": "book-edition.list",
+        "operationId": "ListBookEdition",
         "parameters": [
           {
             "name": "publisher",
@@ -683,7 +683,7 @@
       "post": {
         "summary": "",
         "description": "Create method for book-edition",
-        "operationId": "book-edition.create",
+        "operationId": "CreateBookEdition",
         "parameters": [
           {
             "name": "publisher",
@@ -733,7 +733,7 @@
       "get": {
         "summary": "",
         "description": "Get method for book-edition",
-        "operationId": "book-edition.get",
+        "operationId": "GetBookEdition",
         "parameters": [
           {
             "name": "publisher",
@@ -779,7 +779,7 @@
       "delete": {
         "summary": "",
         "description": "Delete method for book-edition",
-        "operationId": "book-edition.delete",
+        "operationId": "DeleteBookEdition",
         "parameters": [
           {
             "name": "publisher",
@@ -825,7 +825,7 @@
       "post": {
         "summary": "",
         "description": "Custom method archive for book",
-        "operationId": "book:archive",
+        "operationId": ":ArchiveBook",
         "parameters": [
           {
             "name": "publisher",
