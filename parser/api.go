@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aep-dev/aep-lib-go/pkg/api"
 	"github.com/aep-dev/aep-lib-go/pkg/constants"
@@ -111,6 +112,8 @@ func getOrCreateResource(apiResourceByName map[string]*api.Resource, resourceByN
 		apiP.Children = append(apiP.Children, apiR)
 		apiR.Parents = append(apiR.Parents, apiP)
 	}
+	// Generate pattern elements for the resource
+	apiR.PatternElems = strings.Split(api.GeneratePatternStrings(apiR)[0], "/")
 	apiResourceByName[name] = apiR
 	return apiR, nil
 }
