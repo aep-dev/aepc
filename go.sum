@@ -24,6 +24,8 @@ github.com/aep-dev/aep-lib-go v0.0.0-20241211055732-b1e7aa2d5930 h1:2mzOSEsJd8Ko
 github.com/aep-dev/aep-lib-go v0.0.0-20241211055732-b1e7aa2d5930/go.mod h1:M+h1D6T2uIUPelmaEsJbjR6JhqKsTlPX3lxp25zQQsk=
 github.com/aep-dev/aep-lib-go v0.0.0-20241211060914-8915f43c3994 h1:pd+YncR5m4U6m3eeF5Z1In7GypIKNreRvvsfGTc/98M=
 github.com/aep-dev/aep-lib-go v0.0.0-20241211060914-8915f43c3994/go.mod h1:M+h1D6T2uIUPelmaEsJbjR6JhqKsTlPX3lxp25zQQsk=
+github.com/aep-dev/aep-lib-go v0.0.0-20241214201740-a1e57b9a0273 h1:Ti/n7Xko9nrr731O0f7iUewiTL1fiPA93A4/iSazW6M=
+github.com/aep-dev/aep-lib-go v0.0.0-20241214201740-a1e57b9a0273/go.mod h1:M+h1D6T2uIUPelmaEsJbjR6JhqKsTlPX3lxp25zQQsk=
 github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768 h1:b5fRfpIIsOsdsT2N1MsBxr0K/fZacCUlWp0uY9/BJzM=
 github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768/go.mod h1:sUuUJSkWTc4GBxp8GEZXCeEI38VMyuM5msPQ9BG0kMA=
 github.com/agext/levenshtein v1.2.2 h1:0S/Yg6LYmFJ5stwQeRp6EeOcCbj7xiqQSdNelsXvaqE=
