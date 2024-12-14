@@ -13,15 +13,12 @@
   "paths": {
     "/isbns": {
       "get": {
-        "summary": "",
         "description": "List method for isbn",
         "operationId": "ListIsbn",
         "parameters": [
           {
             "name": "max_page_size",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "integer"
             }
@@ -29,8 +26,6 @@
           {
             "name": "page_token",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "string"
             }
@@ -58,10 +53,8 @@
         }
       },
       "post": {
-        "summary": "",
         "description": "Create method for isbn",
         "operationId": "CreateIsbn",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -75,7 +68,6 @@
           }
         },
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -89,14 +81,12 @@
     },
     "/isbns/{isbn}": {
       "get": {
-        "summary": "",
         "description": "Get method for isbn",
         "operationId": "GetIsbn",
         "parameters": [
           {
             "name": "isbn",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -119,15 +109,12 @@
     },
     "/publishers": {
       "get": {
-        "summary": "",
         "description": "List method for publisher",
         "operationId": "ListPublisher",
         "parameters": [
           {
             "name": "max_page_size",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "integer"
             }
@@ -135,8 +122,6 @@
           {
             "name": "page_token",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "string"
             }
@@ -164,10 +149,8 @@
         }
       },
       "post": {
-        "summary": "",
         "description": "Create method for publisher",
         "operationId": "CreatePublisher",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -181,7 +164,6 @@
           }
         },
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -195,14 +177,12 @@
     },
     "/publishers/{publisher}": {
       "get": {
-        "summary": "",
         "description": "Get method for publisher",
         "operationId": "GetPublisher",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -223,14 +203,12 @@
         }
       },
       "patch": {
-        "summary": "",
         "description": "Update method for publisher",
         "operationId": "UpdatePublisher",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -250,7 +228,6 @@
           }
         },
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -262,14 +239,12 @@
         }
       },
       "put": {
-        "summary": "",
         "description": "Apply method for publisher",
         "operationId": "ApplyPublisher",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -289,7 +264,6 @@
           }
         },
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -301,14 +275,12 @@
         }
       },
       "delete": {
-        "summary": "",
         "description": "Delete method for publisher",
         "operationId": "DeletePublisher",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -317,8 +289,6 @@
           {
             "name": "force",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "boolean"
             }
@@ -338,14 +308,12 @@
     },
     "/publishers/{publisher}/books": {
       "get": {
-        "summary": "",
         "description": "List method for book",
         "operationId": "ListBook",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -354,8 +322,6 @@
           {
             "name": "max_page_size",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "integer"
             }
@@ -363,8 +329,6 @@
           {
             "name": "page_token",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "string"
             }
@@ -398,14 +362,12 @@
         }
       },
       "post": {
-        "summary": "",
         "description": "Create method for book",
         "operationId": "CreateBook",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -425,7 +387,6 @@
           }
         },
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -439,14 +400,12 @@
     },
     "/publishers/{publisher}/books/{book}": {
       "get": {
-        "summary": "",
         "description": "Get method for book",
         "operationId": "GetBook",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -455,7 +414,6 @@
           {
             "name": "book",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -476,14 +434,12 @@
         }
       },
       "patch": {
-        "summary": "",
         "description": "Update method for book",
         "operationId": "UpdateBook",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -492,7 +448,6 @@
           {
             "name": "book",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -512,7 +467,6 @@
           }
         },
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -524,14 +478,12 @@
         }
       },
       "put": {
-        "summary": "",
         "description": "Apply method for book",
         "operationId": "ApplyBook",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -540,7 +492,6 @@
           {
             "name": "book",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -560,7 +511,6 @@
           }
         },
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -572,14 +522,12 @@
         }
       },
       "delete": {
-        "summary": "",
         "description": "Delete method for book",
         "operationId": "DeleteBook",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -588,7 +536,6 @@
           {
             "name": "book",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -597,8 +544,6 @@
           {
             "name": "force",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "boolean"
             }
@@ -618,14 +563,12 @@
     },
     "/publishers/{publisher}/books/{book}/editions": {
       "get": {
-        "summary": "",
         "description": "List method for book-edition",
         "operationId": "ListBookEdition",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -634,7 +577,6 @@
           {
             "name": "book",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -643,8 +585,6 @@
           {
             "name": "max_page_size",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "integer"
             }
@@ -652,8 +592,6 @@
           {
             "name": "page_token",
             "in": "query",
-            "description": "",
-            "required": false,
             "schema": {
               "type": "string"
             }
@@ -681,14 +619,12 @@
         }
       },
       "post": {
-        "summary": "",
         "description": "Create method for book-edition",
         "operationId": "CreateBookEdition",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -697,7 +633,6 @@
           {
             "name": "book",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -717,7 +652,6 @@
           }
         },
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -731,14 +665,12 @@
     },
     "/publishers/{publisher}/books/{book}/editions/{book-edition}": {
       "get": {
-        "summary": "",
         "description": "Get method for book-edition",
         "operationId": "GetBookEdition",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -747,7 +679,6 @@
           {
             "name": "book",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -756,7 +687,6 @@
           {
             "name": "book-edition",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -777,14 +707,12 @@
         }
       },
       "delete": {
-        "summary": "",
         "description": "Delete method for book-edition",
         "operationId": "DeleteBookEdition",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -793,7 +721,6 @@
           {
             "name": "book",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -802,7 +729,6 @@
           {
             "name": "book-edition",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -823,14 +749,12 @@
     },
     "/publishers/{publisher}/books/{book}:archive": {
       "post": {
-        "summary": "",
         "description": "Custom method archive for book",
         "operationId": ":ArchiveBook",
         "parameters": [
           {
             "name": "publisher",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -839,7 +763,6 @@
           {
             "name": "book",
             "in": "path",
-            "description": "",
             "required": true,
             "schema": {
               "type": "string"
@@ -859,7 +782,6 @@
           }
         },
         "requestBody": {
-          "description": "",
           "content": {
             "application/json": {
               "schema": {}

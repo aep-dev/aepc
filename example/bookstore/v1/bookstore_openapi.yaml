@@ -108,16 +108,12 @@ paths:
       description: List method for isbn
       operationId: ListIsbn
       parameters:
-      - description: ""
-        in: query
+      - in: query
         name: max_page_size
-        required: false
         schema:
           type: integer
-      - description: ""
-        in: query
+      - in: query
         name: page_token
-        required: false
         schema:
           type: string
       responses:
@@ -132,17 +128,14 @@ paths:
                     type: array
                 type: object
           description: Successful response
-      summary: ""
     post:
       description: Create method for isbn
       operationId: CreateIsbn
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/isbn'
-        description: ""
         required: true
       responses:
         "200":
@@ -151,14 +144,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/isbn'
           description: Successful response
-      summary: ""
   /isbns/{isbn}:
     get:
       description: Get method for isbn
       operationId: GetIsbn
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: isbn
         required: true
         schema:
@@ -170,22 +161,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/isbn'
           description: Successful response
-      summary: ""
   /publishers:
     get:
       description: List method for publisher
       operationId: ListPublisher
       parameters:
-      - description: ""
-        in: query
+      - in: query
         name: max_page_size
-        required: false
         schema:
           type: integer
-      - description: ""
-        in: query
+      - in: query
         name: page_token
-        required: false
         schema:
           type: string
       responses:
@@ -200,17 +186,14 @@ paths:
                     type: array
                 type: object
           description: Successful response
-      summary: ""
     post:
       description: Create method for publisher
       operationId: CreatePublisher
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/publisher'
-        description: ""
         required: true
       responses:
         "200":
@@ -219,22 +202,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/publisher'
           description: Successful response
-      summary: ""
   /publishers/{publisher}:
     delete:
       description: Delete method for publisher
       operationId: DeletePublisher
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: query
+      - in: query
         name: force
-        required: false
         schema:
           type: boolean
       responses:
@@ -243,13 +222,11 @@ paths:
             application/json:
               schema: {}
           description: Successful response
-      summary: ""
     get:
       description: Get method for publisher
       operationId: GetPublisher
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
@@ -261,13 +238,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/publisher'
           description: Successful response
-      summary: ""
     patch:
       description: Update method for publisher
       operationId: UpdatePublisher
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
@@ -277,7 +252,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/publisher'
-        description: ""
         required: true
       responses:
         "200":
@@ -286,13 +260,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/publisher'
           description: Successful response
-      summary: ""
     put:
       description: Apply method for publisher
       operationId: ApplyPublisher
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
@@ -302,7 +274,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/publisher'
-        description: ""
         required: true
       responses:
         "200":
@@ -311,28 +282,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/publisher'
           description: Successful response
-      summary: ""
   /publishers/{publisher}/books:
     get:
       description: List method for book
       operationId: ListBook
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: query
+      - in: query
         name: max_page_size
-        required: false
         schema:
           type: integer
-      - description: ""
-        in: query
+      - in: query
         name: page_token
-        required: false
         schema:
           type: string
       responses:
@@ -351,13 +316,11 @@ paths:
                     type: array
                 type: object
           description: Successful response
-      summary: ""
     post:
       description: Create method for book
       operationId: CreateBook
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
@@ -367,7 +330,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/book'
-        description: ""
         required: true
       responses:
         "200":
@@ -376,28 +338,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
-      summary: ""
   /publishers/{publisher}/books/{book}:
     delete:
       description: Delete method for book
       operationId: DeleteBook
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book
         required: true
         schema:
           type: string
-      - description: ""
-        in: query
+      - in: query
         name: force
-        required: false
         schema:
           type: boolean
       responses:
@@ -406,19 +363,16 @@ paths:
             application/json:
               schema: {}
           description: Successful response
-      summary: ""
     get:
       description: Get method for book
       operationId: GetBook
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book
         required: true
         schema:
@@ -430,19 +384,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
-      summary: ""
     patch:
       description: Update method for book
       operationId: UpdateBook
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book
         required: true
         schema:
@@ -452,7 +403,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/book'
-        description: ""
         required: true
       responses:
         "200":
@@ -461,19 +411,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
-      summary: ""
     put:
       description: Apply method for book
       operationId: ApplyBook
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book
         required: true
         schema:
@@ -483,7 +430,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/book'
-        description: ""
         required: true
       responses:
         "200":
@@ -492,34 +438,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
-      summary: ""
   /publishers/{publisher}/books/{book}/editions:
     get:
       description: List method for book-edition
       operationId: ListBookEdition
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book
         required: true
         schema:
           type: string
-      - description: ""
-        in: query
+      - in: query
         name: max_page_size
-        required: false
         schema:
           type: integer
-      - description: ""
-        in: query
+      - in: query
         name: page_token
-        required: false
         schema:
           type: string
       responses:
@@ -534,19 +473,16 @@ paths:
                     type: array
                 type: object
           description: Successful response
-      summary: ""
     post:
       description: Create method for book-edition
       operationId: CreateBookEdition
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book
         required: true
         schema:
@@ -556,7 +492,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/book-edition'
-        description: ""
         required: true
       responses:
         "200":
@@ -565,26 +500,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/book-edition'
           description: Successful response
-      summary: ""
   /publishers/{publisher}/books/{book}/editions/{book-edition}:
     delete:
       description: Delete method for book-edition
       operationId: DeleteBookEdition
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book-edition
         required: true
         schema:
@@ -595,25 +526,21 @@ paths:
             application/json:
               schema: {}
           description: Successful response
-      summary: ""
     get:
       description: Get method for book-edition
       operationId: GetBookEdition
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book-edition
         required: true
         schema:
@@ -625,20 +552,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/book-edition'
           description: Successful response
-      summary: ""
   /publishers/{publisher}/books/{book}:archive:
     post:
       description: Custom method archive for book
       operationId: :ArchiveBook
       parameters:
-      - description: ""
-        in: path
+      - in: path
         name: publisher
         required: true
         schema:
           type: string
-      - description: ""
-        in: path
+      - in: path
         name: book
         required: true
         schema:
@@ -647,7 +571,6 @@ paths:
         content:
           application/json:
             schema: {}
-        description: ""
         required: true
       responses:
         "200":
@@ -656,6 +579,5 @@ paths:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
-      summary: ""
 servers:
 - url: http://localhost:8081
