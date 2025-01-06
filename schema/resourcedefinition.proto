@@ -61,6 +61,10 @@ message Methods {
   message ListMethod {
     // true if the list method has unreachable resources.
     bool has_unreachable_resources = 1;
+    // true if the list method supports the aep.dev/158 skip parameter.
+    bool supports_skip = 2;
+    // true if the list method supports the aep.dev/160 filter parameter.
+    bool supports_filter = 3;
   }
   // The properties of the global list method.
   message GlobalListMethod {}

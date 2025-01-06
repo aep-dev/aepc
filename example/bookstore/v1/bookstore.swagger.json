@@ -152,6 +152,21 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "skip",
+            "description": "The number of resources to skip before returning the first resource in the page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "filter",
+            "description": "The filter to apply to the list.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [

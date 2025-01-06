@@ -531,6 +531,12 @@ message ListPublishersRequest {
 
   // The maximum number of resources to return in a single page.
   int32 max_page_size = 10017;
+
+  // The number of resources to skip before returning the first resource in the page.
+  int32 skip = 10021;
+
+  // The filter to apply to the list.
+  string filter = 10022;
 }
 
 // Response message for the Listpublisher method

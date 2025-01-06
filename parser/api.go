@@ -76,6 +76,8 @@ func getOrCreateResource(apiResourceByName map[string]*api.Resource, resourceByN
 	if methods.List != nil {
 		apiR.ListMethod = &api.ListMethod{
 			HasUnreachableResources: methods.List.GetHasUnreachableResources(),
+			SupportsSkip:            methods.List.GetSupportsSkip(),
+			SupportsFilter:          methods.List.GetSupportsFilter(),
 		}
 	}
 	if methods.Apply != nil {
