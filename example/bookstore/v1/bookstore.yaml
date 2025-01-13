@@ -14,7 +14,9 @@ resources:
       read: {}
       update: {}
       delete: {}
-      list: {}
+      list:
+        supports_filter: true
+        supports_skip: true
       apply: {}
   # example of a child resource
   - kind: "book"

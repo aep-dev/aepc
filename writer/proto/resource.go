@@ -372,8 +372,22 @@ func AddList(r *api.Resource, resourceMb *builder.MessageBuilder, fb *builder.Fi
 	reqMb.AddField(builder.NewField(constants.FIELD_MAX_PAGE_SIZE_NAME, builder.FieldTypeInt32()).
 		SetNumber(constants.FIELD_MAX_PAGE_SIZE_NUMBER).
 		SetComments(builder.Comments{
-			LeadingComment: fmt.Sprintf("The maximum number of resources to return in a single page."),
+			LeadingComment: "The maximum number of resources to return in a single page.",
 		}))
+	if r.ListMethod.SupportsSkip {
+		reqMb.AddField(builder.NewField(constants.FIELD_SKIP_NAME, builder.FieldTypeInt32()).
+			SetNumber(constants.FIELD_SKIP_NUMBER).
+			SetComments(builder.Comments{
+				LeadingComment: "The number of resources to skip before returning the first resource in the page.",
+			}))
+	}
+	if r.ListMethod.SupportsFilter {
+		reqMb.AddField(builder.NewField(constants.FIELD_FILTER_NAME, builder.FieldTypeString()).
+			SetNumber(constants.FIELD_FILTER_NUMBER).
+			SetComments(builder.Comments{
+				LeadingComment: "The filter to apply to the list.",
+			}))
+	}
 	fb.AddMessage(reqMb)
 	respMb := builder.NewMessage("List" + toMessageName(r.Plural) + "Response")
 	respMb.SetComments(builder.Comments{
