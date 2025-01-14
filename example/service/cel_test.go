@@ -16,6 +16,11 @@ func TestCELToSQL(t *testing.T) {
 			expected: "description LIKE CONCAT('tomorrow', '%')",
 		},
 		{
+			name:     "arithemtic",
+			input:    "1 + 2",
+			expected: "1 + 2",
+		},
+		{
 			name:     "empty",
 			input:    "",
 			expected: "",
