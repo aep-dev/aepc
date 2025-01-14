@@ -1,2 +1,4 @@
 main
 terraform-provider-bookstore
+# libcel2db should be compiled and added.
+example/service/libcel2db.a
