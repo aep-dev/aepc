@@ -98,6 +98,9 @@ components:
         plural: publishers
         singular: publisher
 info:
+  contact:
+    email: aepsupport@aep.dev
+    name: API support
   description: An API for bookstore.example.com
   title: bookstore.example.com
   version: version not set
@@ -131,6 +134,11 @@ paths:
     post:
       description: Create method for isbn
       operationId: CreateIsbn
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -197,6 +205,11 @@ paths:
     post:
       description: Create method for publisher
       operationId: CreatePublisher
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
@@ -257,14 +270,14 @@ paths:
           type: string
       requestBody:
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: '#/components/schemas/publisher'
         required: true
       responses:
         "200":
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: '#/components/schemas/publisher'
           description: Successful response
@@ -331,6 +344,10 @@ paths:
       - in: path
         name: publisher
         required: true
+        schema:
+          type: string
+      - in: query
+        name: id
         schema:
           type: string
       requestBody:
@@ -408,14 +425,14 @@ paths:
           type: string
       requestBody:
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: '#/components/schemas/book'
         required: true
       responses:
         "200":
           content:
-            application/json:
+            application/merge-patch+json:
               schema:
                 $ref: '#/components/schemas/book'
           description: Successful response
@@ -493,6 +510,10 @@ paths:
       - in: path
         name: book
         required: true
+        schema:
+          type: string
+      - in: query
+        name: id
         schema:
           type: string
       requestBody:
@@ -578,14 +599,20 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: {}
+            schema:
+              type: object
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/book'
+                properties:
+                  success:
+                    type: boolean
+                type: object
+                x-aep-field-numbers:
+                  "0": success
           description: Successful response
 servers:
 - url: http://localhost:8081

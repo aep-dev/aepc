@@ -32,6 +32,10 @@ func ToAPI(s *schema.Service) (*api.API, error) {
 	}
 	return &api.API{
 		ServerURL: s.Url,
+		Contact: &api.Contact{
+			Name:  s.Contact.Name,
+			Email: s.Contact.Email,
+		},
 		Name:      s.Name,
 		Schemas:   schemas,
 		Resources: resources,

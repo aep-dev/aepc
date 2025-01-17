@@ -1,15 +1,19 @@
 {
+  "info": {
+    "title": "bookstore.example.com",
+    "description": "An API for bookstore.example.com",
+    "version": "version not set",
+    "contact": {
+      "name": "API support",
+      "email": "aepsupport@aep.dev"
+    }
+  },
   "openapi": "3.1.0",
   "servers": [
     {
       "url": "http://localhost:8081"
     }
   ],
-  "info": {
-    "title": "bookstore.example.com",
-    "description": "An API for bookstore.example.com",
-    "version": "version not set"
-  },
   "paths": {
     "/isbns": {
       "get": {
@@ -55,6 +59,15 @@
       "post": {
         "description": "Create method for isbn",
         "operationId": "CreateIsbn",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -165,6 +178,15 @@
       "post": {
         "description": "Create method for publisher",
         "operationId": "CreatePublisher",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -233,7 +255,7 @@
           "200": {
             "description": "Successful response",
             "content": {
-              "application/json": {
+              "application/merge-patch+json": {
                 "schema": {
                   "$ref": "#/components/schemas/publisher"
                 }
@@ -243,7 +265,7 @@
         },
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/merge-patch+json": {
               "schema": {
                 "$ref": "#/components/schemas/publisher"
               }
@@ -386,6 +408,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -472,7 +501,7 @@
           "200": {
             "description": "Successful response",
             "content": {
-              "application/json": {
+              "application/merge-patch+json": {
                 "schema": {
                   "$ref": "#/components/schemas/book"
                 }
@@ -482,7 +511,7 @@
         },
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/merge-patch+json": {
               "schema": {
                 "$ref": "#/components/schemas/book"
               }
@@ -651,6 +680,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -789,7 +825,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/book"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "x-aep-field-numbers": {
+                    "0": "success"
+                  }
                 }
               }
             }
@@ -798,7 +842,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {}
+              "schema": {
+                "type": "object"
+              }
             }
           },
           "required": true

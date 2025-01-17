@@ -1,6 +1,9 @@
 # normally this would be suffixed with the domain (.com)
 name: "bookstore.example.com"
 url: "http://localhost:8081"
+contact:
+  name: "API support"
+  email: "aepsupport@aep.dev"
 resources:
   # example of a simple resource
   - kind: "publisher"
