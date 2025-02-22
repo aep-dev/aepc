@@ -19,6 +19,15 @@ message Service {
 
   // These are additional objects (list of properties) that may be referenced from another property.
   repeated Schema schemas = 4;
+
+  // The contact information for the API service.
+  Contact contact = 5;
+
+  message Contact {
+    string name = 1;
+    string email = 2;
+    string url = 3;
+  }
 }
 
 // A resource.
