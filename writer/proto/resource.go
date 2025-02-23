@@ -504,9 +504,14 @@ func AddCustomMethod(a *api.API, r *api.Resource, cm *api.CustomMethod, resource
 	})
 	fb.AddMessage(requestMb)
 	fb.AddMessage(responseMb)
+	operationMd, err := desc.LoadMessageDescriptor("google.longrunning.Operation")
+	if err != nil {
+		return err
+	}
 	method := builder.NewMethod(methodName,
 		builder.RpcTypeMessage(requestMb, false),
-		builder.RpcTypeMessage(responseMb, false),
+		builder.RpcTypeImportedMessage(operationMd, false),
+		// builder.RpcTypeMessage(responseMb, false),
 	)
 	method.SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("%v a %v.", cm.Name, r.Singular),

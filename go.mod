@@ -1,6 +1,8 @@
 module github.com/aep-dev/aepc
 
-go 1.22.3
+go 1.23.0
+
+toolchain go1.23.6
 
 require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0
@@ -8,13 +10,14 @@ require (
 	github.com/jhump/protoreflect v1.17.0
 	github.com/rs/cors v1.11.1
 	github.com/spf13/cobra v1.7.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20240826202546-f6391c0de4c7
-	google.golang.org/grpc v1.67.1
-	google.golang.org/protobuf v1.35.1
+	google.golang.org/genproto/googleapis/api v0.0.0-20250212204824-5a70512c5d8b
+	google.golang.org/grpc v1.70.0
+	google.golang.org/protobuf v1.36.5
 )
 
 require (
-	cel.dev/expr v0.18.0 // indirect
+	cel.dev/expr v0.19.0 // indirect
+	cloud.google.com/go/longrunning v0.6.4 // indirect
 	github.com/DataDog/datadog-go v2.2.0+incompatible // indirect
 	github.com/ProtonMail/go-crypto v1.1.0-alpha.2 // indirect
 	github.com/PuerkitoBio/purell v1.1.0 // indirect
@@ -82,14 +85,15 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/zclconf/go-cty v1.15.0 // indirect
-	golang.org/x/crypto v0.28.0 // indirect
+	golang.org/x/crypto v0.32.0 // indirect
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc // indirect
 	golang.org/x/mod v0.21.0 // indirect
-	golang.org/x/net v0.30.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
+	golang.org/x/net v0.34.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/tools v0.26.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240826202546-f6391c0de4c7 // indirect
+	google.golang.org/genproto v0.0.0-20250219182151-9fdb1cabc7b2 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250212204824-5a70512c5d8b // indirect
 	gopkg.in/mgo.v2 v2.0.0-20160818020120-3f83fa500528 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
@@ -97,6 +101,6 @@ require (
 require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/google/go-cmp v0.6.0
-	golang.org/x/sys v0.26.0 // indirect
-	golang.org/x/text v0.19.0
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.21.0
 )
