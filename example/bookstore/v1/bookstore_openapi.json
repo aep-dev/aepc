@@ -43,6 +43,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "next_page_token": {
+                      "type": "string"
+                    },
                     "results": {
                       "type": "array",
                       "items": {
@@ -162,6 +165,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "next_page_token": {
+                      "type": "string"
+                    },
                     "results": {
                       "type": "array",
                       "items": {
@@ -378,6 +384,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "next_page_token": {
+                      "type": "string"
+                    },
                     "results": {
                       "type": "array",
                       "items": {
@@ -648,6 +657,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "next_page_token": {
+                      "type": "string"
+                    },
                     "results": {
                       "type": "array",
                       "items": {
