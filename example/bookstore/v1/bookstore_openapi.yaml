@@ -125,6 +125,8 @@ paths:
             application/json:
               schema:
                 properties:
+                  next_page_token:
+                    type: string
                   results:
                     items:
                       $ref: '#/components/schemas/isbn'
@@ -196,6 +198,8 @@ paths:
             application/json:
               schema:
                 properties:
+                  next_page_token:
+                    type: string
                   results:
                     items:
                       $ref: '#/components/schemas/publisher'
@@ -327,6 +331,8 @@ paths:
             application/json:
               schema:
                 properties:
+                  next_page_token:
+                    type: string
                   results:
                     items:
                       $ref: '#/components/schemas/book'
@@ -492,6 +498,8 @@ paths:
             application/json:
               schema:
                 properties:
+                  next_page_token:
+                    type: string
                   results:
                     items:
                       $ref: '#/components/schemas/book-edition'

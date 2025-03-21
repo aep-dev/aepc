@@ -609,7 +609,7 @@ func addResourceField(r *api.Resource, resourceMb, mb *builder.MessageBuilder) {
 }
 
 func addResourcesField(r *api.Resource, resourceMb, mb *builder.MessageBuilder) {
-	f := builder.NewField("results", builder.FieldTypeMessage(resourceMb)).SetNumber(constants.FIELD_RESOURCES_NUMBER).SetComments(builder.Comments{
+	f := builder.NewField(constants.FIELD_RESULTS_NAME, builder.FieldTypeMessage(resourceMb)).SetNumber(constants.FIELD_RESULTS_NUMBER).SetComments(builder.Comments{
 		LeadingComment: fmt.Sprintf("A list of %v", r.Plural),
 	}).SetRepeated()
 	mb.AddField(f)
