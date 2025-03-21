@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package example.bookstore.v1;
 
+import "aep/api/operation.proto";
+
 import "google/api/annotations.proto";
 
 import "google/api/client.proto";
@@ -68,7 +70,7 @@ service Bookstore {
   }
 
   // archive a book.
-  rpc archiveBook ( ArchiveBookRequest ) returns ( ArchiveBookResponse ) {
+  rpc archiveBook ( ArchiveBookRequest ) returns ( aep.api.Operation ) {
     option (google.api.http) = {
       post: "/{path=publishers/*/books/*}:archive",
       body: "*"

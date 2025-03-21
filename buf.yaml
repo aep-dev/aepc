@@ -9,3 +9,4 @@ plugins:
   - plugin: buf-plugin-aep
 deps:
   - buf.build/googleapis/googleapis:28151c0d0a1641bf938a7672c500e01d
+  - buf.build/aep/api:2fc44491c62940f1b59218fb450701b5

@@ -19,6 +19,7 @@ import (
 	"sort"
 	"strings"
 
+	_ "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
 	"github.com/aep-dev/aep-lib-go/pkg/api"
 	"github.com/aep-dev/aep-lib-go/pkg/constants"
 	"github.com/aep-dev/aep-lib-go/pkg/openapi"
@@ -504,7 +505,7 @@ func AddCustomMethod(a *api.API, r *api.Resource, cm *api.CustomMethod, resource
 	})
 	fb.AddMessage(requestMb)
 	fb.AddMessage(responseMb)
-	operationMd, err := desc.LoadMessageDescriptor("google.longrunning.Operation")
+	operationMd, err := desc.LoadMessageDescriptor("aep.api.Operation")
 	if err != nil {
 		return err
 	}

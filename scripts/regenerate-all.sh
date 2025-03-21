@@ -4,6 +4,9 @@
 # correct sequence to ensure all files pick up
 # changes from their upstreams.
 set -ex
+# update buf dependencies, sometimes needed to pull new
+# buf packages.
+buf dep update
 # regenerate resourcedefinition proto. Only generate the schema
 # path to help handle edge cases where the rest of the schema depends
 # on aepc output.
