@@ -8,10 +8,12 @@ resources:
   # example of a simple resource
   - kind: "publisher"
     plural: "publishers"
-    properties:
-      description:
-        type: STRING
-        number: 1
+    schema:
+      type: "object"
+      properties:
+        description:
+          type: string
+          x-aep-field-number: 1
     methods:
       create: {}
       read: {}
@@ -28,34 +30,33 @@ resources:
     # kind.
     parents:
       - "publisher"
-    properties:
-      isbn:
-        array_type:
-          type: STRING
-        number: 1
-        required: true
-      price:
-        type: FLOAT
-        number: 2
-        required: true
-      published:
-        type: BOOLEAN
-        number: 3
-        required: true
-      edition:
-        type: INT32
-        number: 4
-        required: false
-      author:
-        array_type:
-          object_type:
+    schema:
+      type: "object"
+      required: ["author", "isbn", "price", "published"]
+      properties:
+        isbn:
+          items:
+            type: string
+          x-aep-field-number: 1
+        price:
+          type: float
+          x-aep-field-number: 2
+        published:
+          type: boolean
+          x-aep-field-number: 3
+        edition:
+          type: integer
+          x-aep-field-number: 4
+        author:
+          x-aep-field-number: 5
+          items:
             properties:
               firstName:
-                type: STRING
-                number: 1
+                type: string
+                x-aep-field-number: 1
               lastName:
-                type: STRING
-                number: 2
+                type: string
+                x-aep-field-number: 2
     methods:
       create: {}
       read: {}
@@ -68,13 +69,14 @@ resources:
         - name: "archive"
           method_type: POST
           request:
-            object_type:
-              properties: {}
+            type: "object"
+            properties: {}
           response:
-            object_type:
-              properties:
-                success:
-                  type: BOOLEAN
+            type: "object"
+            properties:
+              success:
+                type: boolean
+                x-aep-field-number: 1
   # other example resources that might be interesting to add:
   # authors, which could be a reference for book
   # authors could have a reference to publishers too
@@ -86,11 +88,13 @@ resources:
     # kind.
     parents:
       - "book"
-    properties:
-      displayname:
-        type: STRING
-        number: 1
-        required: true
+    schema:
+      required: ["displayname"]
+      type: "object"
+      properties:
+        displayname:
+          x-aep-field-number: 1
+          type: string
     methods:
       create: {}
       read: {}
@@ -98,10 +102,29 @@ resources:
       delete: {}
   - kind: "isbn"
     plural: "isbns"
-    properties: {}
+    schema:
+      type: "object"
     methods:
       read: {}
       list: {}
       create: {}
       # blocked on https://github.com/aep-dev/api-linter/issues/97
       # non_client_settable_id: true
+  - kind: "operation"
+    plural: "operations"
+    schema:
+      x-aep-proto-message-name: "aep.api.Operation",
+      type: "object"
+      properties:
+        path:
+          type: string
+          x-aep-field-number: 1
+        metadata:
+          type: string
+          x-aep-field-number: 2
+        done:
+          type: boolean
+          x-aep-field-number: 3
+        response:
+          type: object
+          x-aep-field-number: 5
