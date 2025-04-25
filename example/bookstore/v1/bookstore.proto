@@ -69,8 +69,10 @@ service Bookstore {
     };
   }
 
-  // archive abook.
-  rpc archiveBook ( ArchiveBookRequest ) returns ( aep.api.Operation ) {
+  // archive a book.
+  rpc ArchiveBook ( ArchiveBookRequest ) returns ( aep.api.Operation ) {
+    option (aep.api.operation_info) = { response_type: "example.bookstore.v1.ArchiveBookResponse" };
+
     option (google.api.http) = {
       post: "/{path=publishers/*/books/*}:archive",
       body: "*"
@@ -193,20 +195,20 @@ message Book {
     string lastName = 2;
   }
 
-  // Field for author.
-  repeated Author author = 5;
-
   // Field for isbn.
   repeated string isbn = 1 [(google.api.field_behavior) = REQUIRED];
 
   // Field for price.
-  float price = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 price = 2 [(google.api.field_behavior) = REQUIRED];
 
   // Field for published.
   bool published = 3 [(google.api.field_behavior) = REQUIRED];
 
   // Field for edition.
-  int32 edition = 4;
+  int32 edition = 4 [(google.api.field_behavior) = REQUIRED];
+
+  // Field for author.
+  repeated Author author = 5 [(google.api.field_behavior) = REQUIRED];
 
   // Field for path.
   string path = 10018;
@@ -360,8 +362,6 @@ message ArchiveBookRequest {
 
 // Response message for the archive method
 message ArchiveBookResponse {
-  // Field for success.
-  bool success = 1;
 }
 
 // A Create request for a  book-edition resource.

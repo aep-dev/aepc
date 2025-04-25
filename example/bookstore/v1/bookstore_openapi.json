@@ -833,19 +833,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Long-running operation response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    }
-                  },
-                  "x-aep-field-numbers": {
-                    "0": "success"
-                  }
+                  "$ref": "https://aep.dev/json-schema/type/operation.json"
                 }
               }
             }
@@ -860,6 +852,18 @@
             }
           },
           "required": true
+        },
+        "x-aep-long-running-operation": {
+          "response": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -875,38 +879,42 @@
               "type": "object",
               "properties": {
                 "firstName": {
-                  "type": "string"
+                  "type": "string",
+                  "x-aep-field-number": 1
                 },
                 "lastName": {
-                  "type": "string"
+                  "type": "string",
+                  "x-aep-field-number": 2
                 }
-              },
-              "x-aep-field-numbers": {
-                "1": "firstName",
-                "2": "lastName"
               }
-            }
+            },
+            "x-aep-field-number": 5
           },
           "edition": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "x-aep-field-number": 4
           },
           "isbn": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "x-aep-field-number": 1
           },
           "path": {
             "type": "string",
-            "readOnly": true
+            "x-aep-field-number": 10018,
+            "description": "The server-assigned path of the resource, which is unique within the service."
           },
           "price": {
-            "type": "number",
-            "format": "float"
+            "type": "integer",
+            "format": "int32",
+            "x-aep-field-number": 2
           },
           "published": {
-            "type": "boolean"
+            "type": "boolean",
+            "x-aep-field-number": 3
           }
         },
         "x-aep-resource": {
@@ -919,15 +927,9 @@
             "publisher"
           ]
         },
-        "x-aep-field-numbers": {
-          "0": "author",
-          "1": "isbn",
-          "10018": "path",
-          "2": "price",
-          "3": "published",
-          "4": "edition"
-        },
         "required": [
+          "author",
+          "edition",
           "isbn",
           "price",
           "published"
@@ -937,11 +939,13 @@
         "type": "object",
         "properties": {
           "displayname": {
-            "type": "string"
+            "type": "string",
+            "x-aep-field-number": 1
           },
           "path": {
             "type": "string",
-            "readOnly": true
+            "x-aep-field-number": 10018,
+            "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
         "x-aep-resource": {
@@ -954,10 +958,6 @@
             "book"
           ]
         },
-        "x-aep-field-numbers": {
-          "1": "displayname",
-          "10018": "path"
-        },
         "required": [
           "displayname"
         ]
@@ -967,7 +967,8 @@
         "properties": {
           "path": {
             "type": "string",
-            "readOnly": true
+            "x-aep-field-number": 10018,
+            "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
         "x-aep-resource": {
@@ -976,20 +977,19 @@
           "patterns": [
             "isbns/{isbn}"
           ]
-        },
-        "x-aep-field-numbers": {
-          "10018": "path"
         }
       },
       "publisher": {
         "type": "object",
         "properties": {
           "description": {
-            "type": "string"
+            "type": "string",
+            "x-aep-field-number": 1
           },
           "path": {
             "type": "string",
-            "readOnly": true
+            "x-aep-field-number": 10018,
+            "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
         "x-aep-resource": {
@@ -998,10 +998,6 @@
           "patterns": [
             "publishers/{publisher}"
           ]
-        },
-        "x-aep-field-numbers": {
-          "1": "description",
-          "10018": "path"
         }
       }
     }

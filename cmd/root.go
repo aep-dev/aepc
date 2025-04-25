@@ -22,8 +22,6 @@ import (
 
 	"github.com/ghodss/yaml"
 
-	"encoding/json"
-
 	"github.com/aep-dev/aep-lib-go/pkg/api"
 	"github.com/aep-dev/aep-lib-go/pkg/proto"
 	"github.com/aep-dev/aepc/validator"
@@ -52,22 +50,21 @@ func NewCommand() *cobra.Command {
 
 func ProcessInput(inputFile, outputFilePrefix string) error {
 	outputDir := filepath.Dir(outputFilePrefix)
-	var a api.API
 	input, err := ReadFile(inputFile)
 	fmt.Printf("input: %s\n", string(input))
 	if err != nil {
 		return fmt.Errorf("unable to read file: %w", err)
 	}
 	ext := filepath.Ext(inputFile)
-	err = unmarshal(ext, input, &a)
+	a, err := deserializeAPI(ext, input)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal file: %w", err)
 	}
-	errors := validator.ValidateAPI(&a)
+	errors := validator.ValidateAPI(a)
 	if len(errors) > 0 {
 		return fmt.Errorf("error validating service: %v", errors)
 	}
-	proto, err := proto.APIToProtoString(&a, outputDir)
+	proto, err := proto.APIToProtoString(a, outputDir)
 	if err != nil {
 		return fmt.Errorf("error writing service proto: %w", err)
 	}
@@ -100,24 +97,27 @@ func ProcessInput(inputFile, outputFilePrefix string) error {
 	return nil
 }
 
-func unmarshal(ext string, b []byte, a *api.API) error {
+func deserializeAPI(ext string, b []byte) (*api.API, error) {
 	switch ext {
 	case ".yaml":
 		asJson, err := yaml.YAMLToJSON(b)
 		if err != nil {
-			return fmt.Errorf("unable to decode yaml to JSON %q: %w", string(b), err)
+			return nil, fmt.Errorf("unable to decode yaml to JSON %q: %w", string(b), err)
 		}
-		if err := json.Unmarshal(asJson, a); err != nil {
-			log.Fatal(fmt.Errorf("unable to decode proto %q: %w", string(b), err))
+		api, err := api.LoadAPIFromJson(asJson)
+		if err != nil {
+			log.Fatal(fmt.Errorf("unable to unmarshal json %q: %w", string(b), err))
 		}
+		return api, nil
 	case ".json":
-		if err := json.Unmarshal(b, a); err != nil {
-			return fmt.Errorf("unable to decode json %q: %w", string(b), err)
+		api, err := api.LoadAPIFromJson(b)
+		if err != nil {
+			log.Fatal(fmt.Errorf("unable to unmarshal json %q: %w", string(b), err))
 		}
+		return api, nil
 	default:
-		return fmt.Errorf("extension %v is unsupported", ext)
+		return nil, fmt.Errorf("extension %v is unsupported", ext)
 	}
-	return nil
 }
 
 func ReadFile(fileName string) ([]byte, error) {

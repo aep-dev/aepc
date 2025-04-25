@@ -5,9 +5,9 @@ go 1.23.0
 toolchain go1.23.6
 
 require (
-	buf.build/gen/go/aep/api/protocolbuffers/go v1.36.6-20250324194021-2fc44491c629.1
+	buf.build/gen/go/aep/api/protocolbuffers/go v1.36.6-20250414222444-e90b7c746f4b.1
 	cloud.google.com/go/longrunning v0.6.6
-	github.com/aep-dev/aep-lib-go v0.0.0-20250422043410-eb3b92e38647
+	github.com/aep-dev/aep-lib-go v0.0.0-20250429061439-0b3657512208
 	github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768
 	github.com/google/cel-go v0.22.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0

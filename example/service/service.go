@@ -239,7 +239,7 @@ func (s BookstoreServer) ArchiveBook(ctx context.Context, r *bpb.ArchiveBookRequ
 			return
 		}
 
-		opStore.completeOperation(operationID, &emptypb.Empty{}, nil)
+		opStore.completeOperation(operationID, &anypb.Any{}, nil)
 	}()
 
 	return &api.Operation{Path: operationID, Done: false}, nil

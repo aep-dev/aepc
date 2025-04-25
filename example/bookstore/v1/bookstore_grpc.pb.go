@@ -27,7 +27,7 @@ const (
 	Bookstore_DeleteBook_FullMethodName        = "/example.bookstore.v1.Bookstore/DeleteBook"
 	Bookstore_ListBooks_FullMethodName         = "/example.bookstore.v1.Bookstore/ListBooks"
 	Bookstore_ApplyBook_FullMethodName         = "/example.bookstore.v1.Bookstore/ApplyBook"
-	Bookstore_ArchiveBook_FullMethodName       = "/example.bookstore.v1.Bookstore/archiveBook"
+	Bookstore_ArchiveBook_FullMethodName       = "/example.bookstore.v1.Bookstore/ArchiveBook"
 	Bookstore_CreateBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/CreateBookEdition"
 	Bookstore_GetBookEdition_FullMethodName    = "/example.bookstore.v1.Bookstore/GetBookEdition"
 	Bookstore_DeleteBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/DeleteBookEdition"
@@ -793,7 +793,7 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bookstore_ApplyBook_Handler,
 		},
 		{
-			MethodName: "archiveBook",
+			MethodName: "ArchiveBook",
 			Handler:    _Bookstore_ArchiveBook_Handler,
 		},
 		{

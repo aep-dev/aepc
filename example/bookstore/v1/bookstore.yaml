@@ -1,55 +1,58 @@
 # normally this would be suffixed with the domain (.com)
 name: "bookstore.example.com"
-url: "http://localhost:8081"
+server_url: "http://localhost:8081"
 contact:
   name: "API support"
   email: "aepsupport@aep.dev"
 resources:
-  # example of a simple resource
-  - kind: "publisher"
+  publisher:
+    singular: "publisher"
     plural: "publishers"
     schema:
-      type: "object"
+      type: object
       properties:
         description:
           type: string
           x-aep-field-number: 1
     methods:
-      create: {}
-      read: {}
+      create:
+        supports_user_settable_create: true
+      get: {}
       update: {}
       delete: {}
       list:
         supports_filter: true
         supports_skip: true
       apply: {}
-  # example of a child resource
-  - kind: "book"
+  book:
+    singular: "book"
     plural: "books"
-    # the parents should specify the parents of the resource. It takes in the
-    # kind.
-    parents:
-      - "publisher"
+    parents: ["publisher"]
     schema:
-      type: "object"
-      required: ["author", "isbn", "price", "published"]
+      type: object
+      required: ["author", "edition", "isbn", "price", "published"]
       properties:
         isbn:
+          type: array
           items:
             type: string
           x-aep-field-number: 1
         price:
-          type: float
+          type: integer
+          format: int32
           x-aep-field-number: 2
         published:
           type: boolean
           x-aep-field-number: 3
         edition:
           type: integer
+          format: int32
           x-aep-field-number: 4
         author:
+          type: array
           x-aep-field-number: 5
           items:
+            type: object
             properties:
               firstName:
                 type: string
@@ -58,73 +61,50 @@ resources:
                 type: string
                 x-aep-field-number: 2
     methods:
-      create: {}
-      read: {}
+      create:
+        supports_user_settable_create: true
+      get: {}
       update: {}
       delete: {}
       list:
         has_unreachable_resources: true
       apply: {}
-      custom:
-        - name: "archive"
-          method_type: POST
-          request:
-            type: "object"
-            properties: {}
-          response:
-            type: "object"
-            properties:
-              success:
-                type: boolean
-                x-aep-field-number: 1
-  # other example resources that might be interesting to add:
-  # authors, which could be a reference for book
-  # authors could have a reference to publishers too
-  # example of a child resource, with a redudant type name.
-  # aepc will remove the redundant component in the path pattern
-  - kind: "book-edition"
-    plural: "book-editions"
-    # the parents should specify the parents of the resource. It takes in the
-    # kind.
-    parents:
-      - "book"
-    schema:
-      required: ["displayname"]
-      type: "object"
-      properties:
-        displayname:
-          x-aep-field-number: 1
-          type: string
-    methods:
-      create: {}
-      read: {}
-      list: {}
-      delete: {}
-  - kind: "isbn"
-    plural: "isbns"
-    schema:
-      type: "object"
-    methods:
-      read: {}
-      list: {}
-      create: {}
-      # blocked on https://github.com/aep-dev/api-linter/issues/97
-      # non_client_settable_id: true
-  - kind: "operation"
-    plural: "operations"
-    schema:
-      x-aep-proto-message-name: "aep.api.Operation",
-      type: "object"
-      properties:
-        path:
-          type: string
-          x-aep-field-number: 1
-        metadata:
-          type: string
-          x-aep-field-number: 2
-        done:
-          type: boolean
-          x-aep-field-number: 3
+    custom_methods:
+      - name: "archive"
+        method: "POST"
+        is_long_running: true
+        request:
+          type: object
+          properties: {}
         response:
           type: object
-          x-aep-field-number: 5
+          properties:
+            success:
+              type: boolean
+  book-edition:
+    singular: "book-edition"
+    plural: "book-editions"
+    parents: ["book"]
+    schema:
+      type: object
+      required: ["displayname"]
+      properties:
+        displayname:
+          type: string
+          x-aep-field-number: 1
+    methods:
+      create:
+        supports_user_settable_create: true
+      get: {}
+      list: {}
+      delete: {}
+  isbn:
+    singular: "isbn"
+    plural: "isbns"
+    schema:
+      type: object
+    methods:
+      get: {}
+      list: {}
+      create:
+        supports_user_settable_create: true

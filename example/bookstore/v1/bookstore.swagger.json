@@ -836,7 +836,7 @@
     "/{path}:archive": {
       "post": {
         "summary": "archive a book.",
-        "operationId": "Bookstore_archiveBook",
+        "operationId": "Bookstore_ArchiveBook",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -981,14 +981,6 @@
     "v1Book": {
       "type": "object",
       "properties": {
-        "author": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/BookAuthor"
-          },
-          "description": "Field for author."
-        },
         "isbn": {
           "type": "array",
           "items": {
@@ -997,8 +989,8 @@
           "description": "Field for isbn."
         },
         "price": {
-          "type": "number",
-          "format": "float",
+          "type": "integer",
+          "format": "int32",
           "description": "Field for price."
         },
         "published": {
@@ -1010,6 +1002,14 @@
           "format": "int32",
           "description": "Field for edition."
         },
+        "author": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/BookAuthor"
+          },
+          "description": "Field for author."
+        },
         "path": {
           "type": "string",
           "description": "Field for path."
@@ -1019,7 +1019,9 @@
       "required": [
         "isbn",
         "price",
-        "published"
+        "published",
+        "edition",
+        "author"
       ]
     },
     "v1BookEdition": {
