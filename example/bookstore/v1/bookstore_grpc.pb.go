@@ -7,6 +7,7 @@
 package bookstore
 
 import (
+	api "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -26,7 +27,7 @@ const (
 	Bookstore_DeleteBook_FullMethodName        = "/example.bookstore.v1.Bookstore/DeleteBook"
 	Bookstore_ListBooks_FullMethodName         = "/example.bookstore.v1.Bookstore/ListBooks"
 	Bookstore_ApplyBook_FullMethodName         = "/example.bookstore.v1.Bookstore/ApplyBook"
-	Bookstore_ArchiveBook_FullMethodName       = "/example.bookstore.v1.Bookstore/archiveBook"
+	Bookstore_ArchiveBook_FullMethodName       = "/example.bookstore.v1.Bookstore/ArchiveBook"
 	Bookstore_CreateBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/CreateBookEdition"
 	Bookstore_GetBookEdition_FullMethodName    = "/example.bookstore.v1.Bookstore/GetBookEdition"
 	Bookstore_DeleteBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/DeleteBookEdition"
@@ -59,7 +60,7 @@ type BookstoreClient interface {
 	// An aep-compliant Apply method for books.
 	ApplyBook(ctx context.Context, in *ApplyBookRequest, opts ...grpc.CallOption) (*Book, error)
 	// archive a book.
-	ArchiveBook(ctx context.Context, in *ArchiveBookRequest, opts ...grpc.CallOption) (*ArchiveBookResponse, error)
+	ArchiveBook(ctx context.Context, in *ArchiveBookRequest, opts ...grpc.CallOption) (*api.Operation, error)
 	// An aep-compliant Create method for book-edition.
 	CreateBookEdition(ctx context.Context, in *CreateBookEditionRequest, opts ...grpc.CallOption) (*BookEdition, error)
 	// An aep-compliant Get method for book-edition.
@@ -150,8 +151,8 @@ func (c *bookstoreClient) ApplyBook(ctx context.Context, in *ApplyBookRequest, o
 	return out, nil
 }
 
-func (c *bookstoreClient) ArchiveBook(ctx context.Context, in *ArchiveBookRequest, opts ...grpc.CallOption) (*ArchiveBookResponse, error) {
-	out := new(ArchiveBookResponse)
+func (c *bookstoreClient) ArchiveBook(ctx context.Context, in *ArchiveBookRequest, opts ...grpc.CallOption) (*api.Operation, error) {
+	out := new(api.Operation)
 	err := c.cc.Invoke(ctx, Bookstore_ArchiveBook_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -293,7 +294,7 @@ type BookstoreServer interface {
 	// An aep-compliant Apply method for books.
 	ApplyBook(context.Context, *ApplyBookRequest) (*Book, error)
 	// archive a book.
-	ArchiveBook(context.Context, *ArchiveBookRequest) (*ArchiveBookResponse, error)
+	ArchiveBook(context.Context, *ArchiveBookRequest) (*api.Operation, error)
 	// An aep-compliant Create method for book-edition.
 	CreateBookEdition(context.Context, *CreateBookEditionRequest) (*BookEdition, error)
 	// An aep-compliant Get method for book-edition.
@@ -345,7 +346,7 @@ func (UnimplementedBookstoreServer) ListBooks(context.Context, *ListBooksRequest
 func (UnimplementedBookstoreServer) ApplyBook(context.Context, *ApplyBookRequest) (*Book, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApplyBook not implemented")
 }
-func (UnimplementedBookstoreServer) ArchiveBook(context.Context, *ArchiveBookRequest) (*ArchiveBookResponse, error) {
+func (UnimplementedBookstoreServer) ArchiveBook(context.Context, *ArchiveBookRequest) (*api.Operation, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ArchiveBook not implemented")
 }
 func (UnimplementedBookstoreServer) CreateBookEdition(context.Context, *CreateBookEditionRequest) (*BookEdition, error) {
@@ -792,7 +793,7 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bookstore_ApplyBook_Handler,
 		},
 		{
-			MethodName: "archiveBook",
+			MethodName: "ArchiveBook",
 			Handler:    _Bookstore_ArchiveBook_Handler,
 		},
 		{

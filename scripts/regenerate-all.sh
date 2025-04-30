@@ -4,11 +4,9 @@
 # correct sequence to ensure all files pick up
 # changes from their upstreams.
 set -ex
-# regenerate resourcedefinition proto. Only generate the schema
-# path to help handle edge cases where the rest of the schema depends
-# on aepc output.
-buf generate --path ./schema/
-# protoc ./schema/resourcedefinition.proto --go_opt paths=source_relative --go_out=.
+# update buf dependencies, sometimes needed to pull new
+# buf packages.
+buf dep update
 # generate service proto from resource proto
 # proto package names have to match a-z0-9_
 go run main.go -i ./example/bookstore/v1/bookstore.yaml -o ./example/bookstore/v1/bookstore

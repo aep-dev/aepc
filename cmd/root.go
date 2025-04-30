@@ -22,13 +22,10 @@ import (
 
 	"github.com/ghodss/yaml"
 
-	"github.com/aep-dev/aepc/loader"
-	"github.com/aep-dev/aepc/parser"
-	"github.com/aep-dev/aepc/schema"
+	"github.com/aep-dev/aep-lib-go/pkg/api"
+	"github.com/aep-dev/aep-lib-go/pkg/proto"
 	"github.com/aep-dev/aepc/validator"
-	"github.com/aep-dev/aepc/writer/proto"
 	"github.com/spf13/cobra"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func NewCommand() *cobra.Command {
@@ -53,26 +50,21 @@ func NewCommand() *cobra.Command {
 
 func ProcessInput(inputFile, outputFilePrefix string) error {
 	outputDir := filepath.Dir(outputFilePrefix)
-	s := &schema.Service{}
 	input, err := ReadFile(inputFile)
 	fmt.Printf("input: %s\n", string(input))
 	if err != nil {
 		return fmt.Errorf("unable to read file: %w", err)
 	}
 	ext := filepath.Ext(inputFile)
-	err = unmarshal(ext, input, s)
+	a, err := deserializeAPI(ext, input)
 	if err != nil {
 		return fmt.Errorf("unable to unmarshal file: %w", err)
 	}
-	errors := validator.ValidateService(s)
+	errors := validator.ValidateAPI(a)
 	if len(errors) > 0 {
 		return fmt.Errorf("error validating service: %v", errors)
 	}
-	api, err := parser.ToAPI(s)
-	if err != nil {
-		return fmt.Errorf("error building api: %w", err)
-	}
-	proto, err := proto.WriteServiceToProto(api, outputDir)
+	proto, err := proto.APIToProtoString(a, outputDir)
 	if err != nil {
 		return fmt.Errorf("error writing service proto: %w", err)
 	}
@@ -82,7 +74,7 @@ func ProcessInput(inputFile, outputFilePrefix string) error {
 		return fmt.Errorf("error writing file: %w", err)
 	}
 	fmt.Printf("output proto file: %s\n", protoFile)
-	openapi, err := api.ConvertToOpenAPIBytes()
+	openapi, err := a.ConvertToOpenAPIBytes()
 	if err != nil {
 		return fmt.Errorf("error building openapi: %w", err)
 	}
@@ -105,28 +97,27 @@ func ProcessInput(inputFile, outputFilePrefix string) error {
 	return nil
 }
 
-func unmarshal(ext string, b []byte, s *schema.Service) error {
+func deserializeAPI(ext string, b []byte) (*api.API, error) {
 	switch ext {
-	case ".proto":
-		if err := loader.ReadServiceFromProto(b, s); err != nil {
-			return fmt.Errorf("unable to decode proto %q: %w", string(b), err)
-		}
 	case ".yaml":
 		asJson, err := yaml.YAMLToJSON(b)
 		if err != nil {
-			return fmt.Errorf("unable to decode yaml to JSON %q: %w", string(b), err)
+			return nil, fmt.Errorf("unable to decode yaml to JSON %q: %w", string(b), err)
 		}
-		if err := protojson.Unmarshal(asJson, s); err != nil {
-			log.Fatal(fmt.Errorf("unable to decode proto %q: %w", string(b), err))
+		api, err := api.LoadAPIFromJson(asJson)
+		if err != nil {
+			log.Fatal(fmt.Errorf("unable to unmarshal json %q: %w", string(b), err))
 		}
+		return api, nil
 	case ".json":
-		if err := protojson.Unmarshal(b, s); err != nil {
-			return fmt.Errorf("unable to decode json %q: %w", string(b), err)
+		api, err := api.LoadAPIFromJson(b)
+		if err != nil {
+			log.Fatal(fmt.Errorf("unable to unmarshal json %q: %w", string(b), err))
 		}
+		return api, nil
 	default:
-		return fmt.Errorf("extension %v is unsupported", ext)
+		return nil, fmt.Errorf("extension %v is unsupported", ext)
 	}
-	return nil
 }
 
 func ReadFile(fileName string) ([]byte, error) {

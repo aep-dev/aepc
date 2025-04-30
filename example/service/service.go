@@ -7,19 +7,64 @@ import (
 	"log"
 	"log/slog"
 	"net"
+	"sync"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	_ "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
+	api "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
+	lrpb "cloud.google.com/go/longrunning/autogen/longrunningpb"
 	bpb "github.com/aep-dev/aepc/example/bookstore/v1"
 	_ "github.com/mattn/go-sqlite3" // sqlite3 driver
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
+type operationStatus struct {
+	Done   bool
+	Result interface{}
+	Error  error
+}
+
+type operationStore struct {
+	mu         sync.Mutex
+	operations map[string]*operationStatus
+}
+
+var opStore = &operationStore{
+	operations: make(map[string]*operationStatus),
+}
+
+func (s *operationStore) createOperation(id string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.operations[id] = &operationStatus{Done: false}
+}
+
+func (s *operationStore) completeOperation(id string, result interface{}, err error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if op, exists := s.operations[id]; exists {
+		op.Done = true
+		op.Result = result
+		op.Error = err
+	}
+}
+
+func (s *operationStore) getOperation(id string) (*operationStatus, bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	op, exists := s.operations[id]
+	return op, exists
+}
+
 type BookstoreServer struct {
 	bpb.UnimplementedBookstoreServer
+	lrpb.UnimplementedOperationsServer
 	db *sql.DB
 }
 
@@ -164,6 +209,64 @@ func (s BookstoreServer) ListBooks(_ context.Context, r *bpb.ListBooksRequest) (
 	}
 
 	return &bpb.ListBooksResponse{Results: books}, nil
+}
+
+func (s BookstoreServer) ArchiveBook(ctx context.Context, r *bpb.ArchiveBookRequest) (*api.Operation, error) {
+	log.Printf("archiving book %q", r.Path)
+
+	operationID := fmt.Sprintf("op-%d", time.Now().UnixNano())
+	opStore.createOperation(operationID)
+
+	go func() {
+		// Simulate the archiving process
+		result, err := s.db.Exec(`
+			UPDATE books
+			SET published = false
+			WHERE path = ?`,
+			r.Path)
+		if err != nil {
+			opStore.completeOperation(operationID, nil, status.Errorf(codes.Internal, "failed to archive book: %v", err))
+			return
+		}
+
+		rows, err := result.RowsAffected()
+		if err != nil {
+			opStore.completeOperation(operationID, nil, status.Errorf(codes.Internal, "failed to get rows affected: %v", err))
+			return
+		}
+		if rows == 0 {
+			opStore.completeOperation(operationID, nil, status.Errorf(codes.NotFound, "book %q not found", r.Path))
+			return
+		}
+
+		opStore.completeOperation(operationID, &anypb.Any{}, nil)
+	}()
+
+	return &api.Operation{Path: operationID, Done: false}, nil
+}
+
+func (s BookstoreServer) GetOperation(ctx context.Context, r *lrpb.GetOperationRequest) (*lrpb.Operation, error) {
+	op, exists := opStore.getOperation(r.Name)
+	if !exists {
+		return nil, status.Errorf(codes.NotFound, "operation %q not found", r.Name)
+	}
+
+	operation := &lrpb.Operation{
+		Name: r.Name,
+		Done: op.Done,
+	}
+
+	if op.Error != nil {
+		operation.Result = &lrpb.Operation_Error{
+			Error: status.Convert(op.Error).Proto(),
+		}
+	} else {
+		operation.Result = &lrpb.Operation_Response{
+			Response: op.Result.(*anypb.Any),
+		}
+	}
+
+	return operation, nil
 }
 
 func (s BookstoreServer) CreatePublisher(_ context.Context, r *bpb.CreatePublisherRequest) (*bpb.Publisher, error) {

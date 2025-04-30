@@ -7,40 +7,41 @@ components:
             properties:
               firstName:
                 type: string
+                x-aep-field-number: 1
               lastName:
                 type: string
+                x-aep-field-number: 2
             type: object
-            x-aep-field-numbers:
-              "1": firstName
-              "2": lastName
           type: array
+          x-aep-field-number: 5
         edition:
           format: int32
           type: integer
+          x-aep-field-number: 4
         isbn:
           items:
             type: string
           type: array
+          x-aep-field-number: 1
         path:
-          readOnly: true
+          description: The server-assigned path of the resource, which is unique within
+            the service.
           type: string
+          x-aep-field-number: 10018
         price:
-          format: float
-          type: number
+          format: int32
+          type: integer
+          x-aep-field-number: 2
         published:
           type: boolean
+          x-aep-field-number: 3
       required:
+      - author
+      - edition
       - isbn
       - price
       - published
       type: object
-      x-aep-field-numbers:
-        "0": author
-        "1": isbn
-        "2": price
-        "3": published
-        "4": edition
-        "10018": path
       x-aep-resource:
         parents:
         - publisher
@@ -52,15 +53,15 @@ components:
       properties:
         displayname:
           type: string
+          x-aep-field-number: 1
         path:
-          readOnly: true
+          description: The server-assigned path of the resource, which is unique within
+            the service.
           type: string
+          x-aep-field-number: 10018
       required:
       - displayname
       type: object
-      x-aep-field-numbers:
-        "1": displayname
-        "10018": path
       x-aep-resource:
         parents:
         - book
@@ -71,11 +72,11 @@ components:
     isbn:
       properties:
         path:
-          readOnly: true
+          description: The server-assigned path of the resource, which is unique within
+            the service.
           type: string
+          x-aep-field-number: 10018
       type: object
-      x-aep-field-numbers:
-        "10018": path
       x-aep-resource:
         patterns:
         - isbns/{isbn}
@@ -85,13 +86,13 @@ components:
       properties:
         description:
           type: string
+          x-aep-field-number: 1
         path:
-          readOnly: true
+          description: The server-assigned path of the resource, which is unique within
+            the service.
           type: string
+          x-aep-field-number: 10018
       type: object
-      x-aep-field-numbers:
-        "1": description
-        "10018": path
       x-aep-resource:
         patterns:
         - publishers/{publisher}
@@ -615,12 +616,14 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  success:
-                    type: boolean
-                type: object
-                x-aep-field-numbers:
-                  "0": success
-          description: Successful response
+                $ref: https://aep.dev/json-schema/type/operation.json
+          description: Long-running operation response
+      x-aep-long-running-operation:
+        response:
+          schema:
+            properties:
+              success:
+                type: boolean
+            type: object
 servers:
 - url: http://localhost:8081

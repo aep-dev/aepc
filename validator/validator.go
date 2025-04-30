@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/aep-dev/aepc/schema"
+	"github.com/aep-dev/aep-lib-go/pkg/api"
+	"github.com/aep-dev/aep-lib-go/pkg/openapi"
 )
 
 const (
@@ -21,13 +22,13 @@ func init() {
 	RESOURCE_KIND_REGEX = *regexp.MustCompile(RESOURCE_KIND_REGEX_STRING)
 }
 
-// ValidateService returns one or more errors
+// ValidateAPI returns one or more errors
 // with a service.
-func ValidateService(s *schema.Service) []error {
+func ValidateAPI(a *api.API) []error {
 	errors := []error{}
-	for _, r := range s.Resources {
+	for _, r := range a.Resources {
 		for _, err := range validateResource(r) {
-			errors = append(errors, fmt.Errorf("error validating resource %q: %w", r.Kind, err))
+			errors = append(errors, fmt.Errorf("error validating resource %q: %w", r.Singular, err))
 		}
 	}
 	return errors
@@ -35,31 +36,30 @@ func ValidateService(s *schema.Service) []error {
 
 // validateResource returns any validation errors
 // with a resource.
-func validateResource(r *schema.Resource) []error {
+func validateResource(r *api.Resource) []error {
 	regex := regexp.MustCompile(RESOURCE_KIND_REGEX_STRING)
 	errors := []error{}
-	if !regex.MatchString(r.Kind) {
+	if !regex.MatchString(r.Singular) {
 		errors = append(
 			errors,
 			fmt.Errorf("kind must match regex %q", RESOURCE_KIND_REGEX_STRING),
 		)
 	}
 
-	for _, p := range r.Properties {
-		errors = append(errors, validateProperty(p)...)
+	for _, p := range r.Schema.Properties {
+		errors = append(errors, validateProperty(&p)...)
 	}
 	return errors
 }
 
-func validateProperty(p *schema.Property) []error {
+func validateProperty(p *openapi.Schema) []error {
 	errors := []error{}
-	switch p.GetTypes().(type) {
-	case *schema.Property_ObjectType:
-		if p.GetObjectType().GetMessageName() != "" && len(p.GetObjectType().GetProperties()) != 0 {
-			errors = append(errors, fmt.Errorf("cannot set both message_name and properties on object_type %q", p))
-		}
-		for _, p := range p.GetObjectType().GetProperties() {
-			errors = append(errors, validateProperty(p)...)
+	if p.Ref != "" && p.Properties != nil {
+		errors = append(errors, fmt.Errorf("cannot set both ref and properties on %v", p))
+	}
+	if p.Properties != nil {
+		for _, p := range p.Properties {
+			errors = append(errors, validateProperty(&p)...)
 		}
 	}
 	return errors
