@@ -223,6 +223,117 @@
         ]
       }
     },
+    "/stores": {
+      "get": {
+        "summary": "An aep-compliant List method for stores.",
+        "operationId": "Bookstore_ListStores",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListStoresResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "A field for the parent of store",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pageToken",
+            "description": "The page token indicating the starting point of the page",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "description": "The maximum number of resources to return in a single page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "skip",
+            "description": "The number of resources to skip before returning the first resource in the page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "filter",
+            "description": "The filter to apply to the list.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "post": {
+        "summary": "An aep-compliant Create method for store.",
+        "operationId": "Bookstore_CreateStore",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Store"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "store",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Store",
+              "required": [
+                "store"
+              ]
+            }
+          },
+          {
+            "name": "parent",
+            "description": "A field for the parent of store",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "description": "An id that uniquely identifies the resource within the collection",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
     "/{parent}/books": {
       "get": {
         "summary": "An aep-compliant List method for books.",
@@ -419,6 +530,119 @@
         ]
       }
     },
+    "/{parent}/items": {
+      "get": {
+        "summary": "An aep-compliant List method for items.",
+        "operationId": "Bookstore_ListItems",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListItemsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "A field for the parent of item",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "stores/[^/]+"
+          },
+          {
+            "name": "pageToken",
+            "description": "The page token indicating the starting point of the page",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "description": "The maximum number of resources to return in a single page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "skip",
+            "description": "The number of resources to skip before returning the first resource in the page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "filter",
+            "description": "The filter to apply to the list.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "post": {
+        "summary": "An aep-compliant Create method for item.",
+        "operationId": "Bookstore_CreateItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Item"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "A field for the parent of item",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "stores/[^/]+"
+          },
+          {
+            "name": "item",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Item",
+              "required": [
+                "item"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "description": "An id that uniquely identifies the resource within the collection",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
     "/{path_1}": {
       "get": {
         "summary": "An aep-compliant Get method for book-edition.",
@@ -527,13 +751,13 @@
         ]
       },
       "patch": {
-        "summary": "An aep-compliant Update method for publisher.",
-        "operationId": "Bookstore_UpdatePublisher",
+        "summary": "An aep-compliant Update method for item.",
+        "operationId": "Bookstore_UpdateItem",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Publisher"
+              "$ref": "#/definitions/v1Item"
             }
           },
           "default": {
@@ -550,17 +774,17 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "publishers/[^/]+"
+            "pattern": "stores/[^/]+/items/[^/]+"
           },
           {
-            "name": "publisher",
+            "name": "item",
             "description": "The resource to perform the operation on.",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1Publisher",
+              "$ref": "#/definitions/v1Item",
               "required": [
-                "publisher"
+                "item"
               ]
             }
           }
@@ -603,8 +827,8 @@
         ]
       },
       "delete": {
-        "summary": "An aep-compliant Delete method for publisher.",
-        "operationId": "Bookstore_DeletePublisher",
+        "summary": "An aep-compliant Delete method for item.",
+        "operationId": "Bookstore_DeleteItem",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -627,6 +851,114 @@
             "in": "path",
             "required": true,
             "type": "string",
+            "pattern": "stores/[^/]+/items/[^/]+"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "patch": {
+        "summary": "An aep-compliant Update method for publisher.",
+        "operationId": "Bookstore_UpdatePublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Publisher"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_2",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers/[^/]+"
+          },
+          {
+            "name": "publisher",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Publisher",
+              "required": [
+                "publisher"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/{path_3}": {
+      "get": {
+        "summary": "An aep-compliant Get method for item.",
+        "operationId": "Bookstore_GetItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Item"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_3",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "stores/[^/]+/items/[^/]+"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "delete": {
+        "summary": "An aep-compliant Delete method for publisher.",
+        "operationId": "Bookstore_DeletePublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_3",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
             "pattern": "publishers/[^/]+"
           },
           {
@@ -640,9 +972,52 @@
         "tags": [
           "Bookstore"
         ]
+      },
+      "patch": {
+        "summary": "An aep-compliant Update method for store.",
+        "operationId": "Bookstore_UpdateStore",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Store"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_3",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "stores/[^/]+"
+          },
+          {
+            "name": "store",
+            "description": "The resource to perform the operation on.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Store",
+              "required": [
+                "store"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
       }
     },
-    "/{path_3}": {
+    "/{path_4}": {
       "get": {
         "summary": "An aep-compliant Get method for publisher.",
         "operationId": "Bookstore_GetPublisher",
@@ -662,12 +1037,84 @@
         },
         "parameters": [
           {
-            "name": "path_3",
+            "name": "path_4",
             "description": "The globally unique identifier for the resource",
             "in": "path",
             "required": true,
             "type": "string",
             "pattern": "publishers/[^/]+"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      },
+      "delete": {
+        "summary": "An aep-compliant Delete method for store.",
+        "operationId": "Bookstore_DeleteStore",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_4",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "stores/[^/]+"
+          },
+          {
+            "name": "force",
+            "description": "If true, the resource will be deleted, even if children still exist.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/{path_5}": {
+      "get": {
+        "summary": "An aep-compliant Get method for store.",
+        "operationId": "Bookstore_GetStore",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Store"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_5",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "stores/[^/]+"
           }
         ],
         "tags": [
@@ -874,6 +1321,54 @@
           "Bookstore"
         ]
       }
+    },
+    "/{path}:move": {
+      "post": {
+        "summary": "move a item.",
+        "operationId": "Bookstore_MoveItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiOperation"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "stores/[^/]+/items/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "targetStore": {
+                  "type": "string",
+                  "description": "Field for target_store."
+                }
+              },
+              "title": "Request message for the move method"
+            }
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
     }
   },
   "definitions": {
@@ -1051,6 +1546,33 @@
       },
       "description": "A Isbn."
     },
+    "v1Item": {
+      "type": "object",
+      "properties": {
+        "book": {
+          "type": "string",
+          "description": "Field for book."
+        },
+        "condition": {
+          "type": "string",
+          "description": "Field for condition."
+        },
+        "price": {
+          "type": "number",
+          "format": "double",
+          "description": "Field for price."
+        },
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        }
+      },
+      "description": "A Item.",
+      "required": [
+        "condition",
+        "price"
+      ]
+    },
     "v1ListBookEditionsResponse": {
       "type": "object",
       "properties": {
@@ -1113,6 +1635,24 @@
       },
       "title": "Response message for the Listisbn method"
     },
+    "v1ListItemsResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Item"
+          },
+          "title": "A list of items"
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token indicating the ending point of this response."
+        }
+      },
+      "title": "Response message for the Listitem method"
+    },
     "v1ListPublishersResponse": {
       "type": "object",
       "properties": {
@@ -1131,6 +1671,24 @@
       },
       "title": "Response message for the Listpublisher method"
     },
+    "v1ListStoresResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Store"
+          },
+          "title": "A list of stores"
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "The page token indicating the ending point of this response."
+        }
+      },
+      "title": "Response message for the Liststore method"
+    },
     "v1Publisher": {
       "type": "object",
       "properties": {
@@ -1144,6 +1702,27 @@
         }
       },
       "description": "A Publisher."
+    },
+    "v1Store": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Field for name."
+        },
+        "description": {
+          "type": "string",
+          "description": "Field for description."
+        },
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        }
+      },
+      "description": "A Store.",
+      "required": [
+        "name"
+      ]
     }
   }
 }

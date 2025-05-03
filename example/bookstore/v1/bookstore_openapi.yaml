@@ -82,6 +82,35 @@ components:
         - isbns/{isbn}
         plural: isbns
         singular: isbn
+    item:
+      properties:
+        book:
+          type: string
+          x-aep-field-number: 1
+        condition:
+          type: string
+          x-aep-field-number: 2
+        path:
+          description: The server-assigned path of the resource, which is unique within
+            the service.
+          type: string
+          x-aep-field-number: 10018
+        price:
+          format: double
+          type: number
+          x-aep-field-number: 3
+      required:
+      - title
+      - condition
+      - price
+      type: object
+      x-aep-resource:
+        parents:
+        - store
+        patterns:
+        - stores/{store}/items/{item}
+        plural: items
+        singular: item
     publisher:
       properties:
         description:
@@ -98,6 +127,27 @@ components:
         - publishers/{publisher}
         plural: publishers
         singular: publisher
+    store:
+      properties:
+        description:
+          type: string
+          x-aep-field-number: 2
+        name:
+          type: string
+          x-aep-field-number: 1
+        path:
+          description: The server-assigned path of the resource, which is unique within
+            the service.
+          type: string
+          x-aep-field-number: 10018
+      required:
+      - name
+      type: object
+      x-aep-resource:
+        patterns:
+        - stores/{store}
+        plural: stores
+        singular: store
 info:
   contact:
     email: aepsupport@aep.dev
@@ -624,6 +674,291 @@ paths:
             properties:
               success:
                 type: boolean
+            type: object
+  /stores:
+    get:
+      description: List method for store
+      operationId: ListStore
+      parameters:
+      - in: query
+        name: max_page_size
+        schema:
+          type: integer
+      - in: query
+        name: page_token
+        schema:
+          type: string
+      - in: query
+        name: skip
+        schema:
+          type: integer
+      - in: query
+        name: filter
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  next_page_token:
+                    type: string
+                  results:
+                    items:
+                      $ref: '#/components/schemas/store'
+                    type: array
+                type: object
+          description: Successful response
+    post:
+      description: Create method for store
+      operationId: CreateStore
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/store'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/store'
+          description: Successful response
+  /stores/{store}:
+    delete:
+      description: Delete method for store
+      operationId: DeleteStore
+      parameters:
+      - in: path
+        name: store
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: force
+        schema:
+          type: boolean
+      responses:
+        "204":
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+    get:
+      description: Get method for store
+      operationId: GetStore
+      parameters:
+      - in: path
+        name: store
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/store'
+          description: Successful response
+    patch:
+      description: Update method for store
+      operationId: UpdateStore
+      parameters:
+      - in: path
+        name: store
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/store'
+        required: true
+      responses:
+        "200":
+          content:
+            application/merge-patch+json:
+              schema:
+                $ref: '#/components/schemas/store'
+          description: Successful response
+  /stores/{store}/items:
+    get:
+      description: List method for item
+      operationId: ListItem
+      parameters:
+      - in: path
+        name: store
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: max_page_size
+        schema:
+          type: integer
+      - in: query
+        name: page_token
+        schema:
+          type: string
+      - in: query
+        name: skip
+        schema:
+          type: integer
+      - in: query
+        name: filter
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  next_page_token:
+                    type: string
+                  results:
+                    items:
+                      $ref: '#/components/schemas/item'
+                    type: array
+                type: object
+          description: Successful response
+    post:
+      description: Create method for item
+      operationId: CreateItem
+      parameters:
+      - in: path
+        name: store
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: id
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/item'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/item'
+          description: Successful response
+  /stores/{store}/items/{item}:
+    delete:
+      description: Delete method for item
+      operationId: DeleteItem
+      parameters:
+      - in: path
+        name: store
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: item
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+    get:
+      description: Get method for item
+      operationId: GetItem
+      parameters:
+      - in: path
+        name: store
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: item
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/item'
+          description: Successful response
+    patch:
+      description: Update method for item
+      operationId: UpdateItem
+      parameters:
+      - in: path
+        name: store
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: item
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/item'
+        required: true
+      responses:
+        "200":
+          content:
+            application/merge-patch+json:
+              schema:
+                $ref: '#/components/schemas/item'
+          description: Successful response
+  /stores/{store}/items/{item}:move:
+    post:
+      description: Custom method move for item
+      operationId: :MoveItem
+      parameters:
+      - in: path
+        name: store
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: item
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                target_store:
+                  type: string
+                  x-aep-field-number: 1
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: https://aep.dev/json-schema/type/operation.json
+          description: Long-running operation response
+      x-aep-long-running-operation:
+        response:
+          schema:
             type: object
 servers:
 - url: http://localhost:8081
