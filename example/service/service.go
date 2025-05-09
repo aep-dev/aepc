@@ -7,6 +7,7 @@ import (
 	"log"
 	"log/slog"
 	"net"
+	"strings"
 	"sync"
 	"time"
 
@@ -416,6 +417,210 @@ func (s BookstoreServer) ListPublishers(_ context.Context, r *bpb.ListPublishers
 	return &bpb.ListPublishersResponse{Results: publishers}, nil
 }
 
+func (s BookstoreServer) CreateStore(_ context.Context, r *bpb.CreateStoreRequest) (*bpb.Store, error) {
+	store := proto.Clone(r.Store).(*bpb.Store)
+	log.Printf("creating store %q", r)
+	if r.Id == "" {
+		var maxID int
+		err := s.db.QueryRow("SELECT COALESCE(MAX(CAST(SUBSTR(path, 8) AS INTEGER)), 0) FROM stores").Scan(&maxID)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to generate ID: %v", err)
+		}
+		r.Id = fmt.Sprintf("%d", maxID+1)
+	}
+	path := fmt.Sprintf("stores/%v", r.Id)
+	store.Path = path
+
+	_, err := s.db.Exec(`
+		INSERT INTO stores (path, name, description)
+		VALUES (?, ?, ?)`,
+		store.Path, store.Name, store.Description)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create store: %v", err)
+	}
+
+	log.Printf("created store %q", path)
+	return store, nil
+}
+
+func (s BookstoreServer) GetStore(_ context.Context, r *bpb.GetStoreRequest) (*bpb.Store, error) {
+	store := &bpb.Store{}
+	err := s.db.QueryRow(`
+		SELECT path, name, description
+		FROM stores WHERE path = ?`, r.Path).Scan(
+		&store.Path, &store.Name, &store.Description)
+
+	if err == sql.ErrNoRows {
+		return nil, status.Errorf(codes.NotFound, "store %q not found", r.Path)
+	}
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get store: %v", err)
+	}
+	return store, nil
+}
+
+func (s BookstoreServer) UpdateStore(_ context.Context, r *bpb.UpdateStoreRequest) (*bpb.Store, error) {
+	store := proto.Clone(r.Store).(*bpb.Store)
+	store.Path = r.Path
+
+	result, err := s.db.Exec(`
+		UPDATE stores
+		SET name = ?, description = ?
+		WHERE path = ?`,
+		store.Name, store.Description, store.Path)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to update store: %v", err)
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get rows affected: %v", err)
+	}
+	if rows == 0 {
+		return nil, status.Errorf(codes.NotFound, "store %q not found", r.Path)
+	}
+
+	log.Printf("updated store %q", store.Path)
+	return store, nil
+}
+
+func (s BookstoreServer) DeleteStore(_ context.Context, r *bpb.DeleteStoreRequest) (*emptypb.Empty, error) {
+	result, err := s.db.Exec("DELETE FROM stores WHERE path = ?", r.Path)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to delete store: %v", err)
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get rows affected: %v", err)
+	}
+	if rows == 0 {
+		return nil, status.Errorf(codes.NotFound, "store %q not found", r.Path)
+	}
+
+	log.Printf("deleted store %q", r.Path)
+	return &emptypb.Empty{}, nil
+}
+
+func (s BookstoreServer) CreateItem(_ context.Context, r *bpb.CreateItemRequest) (*bpb.Item, error) {
+	item := proto.Clone(r.Item).(*bpb.Item)
+	log.Printf("creating item %q", r)
+	if r.Id == "" {
+		var maxID int
+		err := s.db.QueryRow("SELECT COALESCE(MAX(CAST(SUBSTR(path, 14) AS INTEGER)), 0) FROM items").Scan(&maxID)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to generate ID: %v", err)
+		}
+		r.Id = fmt.Sprintf("%d", maxID+1)
+	}
+	path := fmt.Sprintf("stores/%v/items/%v", r.Parent, r.Id)
+	item.Path = path
+
+	_, err := s.db.Exec(`
+		INSERT INTO items (path, book, condition, price)
+		VALUES (?, ?, ?, ?)`,
+		item.Path, item.Book, item.Condition, item.Price)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create item: %v", err)
+	}
+
+	log.Printf("created item %q", path)
+	return item, nil
+}
+
+func (s BookstoreServer) GetItem(_ context.Context, r *bpb.GetItemRequest) (*bpb.Item, error) {
+	item := &bpb.Item{}
+	err := s.db.QueryRow(`
+		SELECT path, book, condition, price
+		FROM items WHERE path = ?`, r.Path).Scan(
+		&item.Path, &item.Book, &item.Condition, &item.Price)
+
+	if err == sql.ErrNoRows {
+		return nil, status.Errorf(codes.NotFound, "item %q not found", r.Path)
+	}
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get item: %v", err)
+	}
+	return item, nil
+}
+
+func (s BookstoreServer) UpdateItem(_ context.Context, r *bpb.UpdateItemRequest) (*bpb.Item, error) {
+	item := proto.Clone(r.Item).(*bpb.Item)
+	item.Path = r.Path
+
+	result, err := s.db.Exec(`
+		UPDATE items
+		SET book = ?, condition = ?, price = ?
+		WHERE path = ?`,
+		item.Book, item.Condition, item.Price, item.Path)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to update item: %v", err)
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get rows affected: %v", err)
+	}
+	if rows == 0 {
+		return nil, status.Errorf(codes.NotFound, "item %q not found", r.Path)
+	}
+
+	log.Printf("updated item %q", item.Path)
+	return item, nil
+}
+
+func (s BookstoreServer) DeleteItem(_ context.Context, r *bpb.DeleteItemRequest) (*emptypb.Empty, error) {
+	result, err := s.db.Exec("DELETE FROM items WHERE path = ?", r.Path)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to delete item: %v", err)
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get rows affected: %v", err)
+	}
+	if rows == 0 {
+		return nil, status.Errorf(codes.NotFound, "item %q not found", r.Path)
+	}
+
+	log.Printf("deleted item %q", r.Path)
+	return &emptypb.Empty{}, nil
+}
+
+func (s BookstoreServer) MoveItem(ctx context.Context, r *bpb.MoveItemRequest) (*api.Operation, error) {
+	log.Printf("moving item %q to store %q", r.Path, r.TargetStore)
+
+	operationID := fmt.Sprintf("op-%d", time.Now().UnixNano())
+	opStore.createOperation(operationID)
+
+	go func() {
+		// Simulate the moving process
+		result, err := s.db.Exec(`
+			UPDATE items
+			SET path = ?
+			WHERE path = ?`,
+			fmt.Sprintf("%s/items/%s", r.TargetStore, r.Path[strings.LastIndex(r.Path, "/")+1:]), r.Path)
+		if err != nil {
+			opStore.completeOperation(operationID, nil, status.Errorf(codes.Internal, "failed to move item: %v", err))
+			return
+		}
+
+		rows, err := result.RowsAffected()
+		if err != nil {
+			opStore.completeOperation(operationID, nil, status.Errorf(codes.Internal, "failed to get rows affected: %v", err))
+			return
+		}
+		if rows == 0 {
+			opStore.completeOperation(operationID, nil, status.Errorf(codes.NotFound, "item %q not found", r.Path))
+			return
+		}
+
+		opStore.completeOperation(operationID, &anypb.Any{}, nil)
+	}()
+
+	return &api.Operation{Path: operationID, Done: false}, nil
+}
+
 func StartServer(targetPort int) {
 	db, err := sql.Open("sqlite3", "/tmp/bookstore.db")
 	if err != nil {
@@ -435,6 +640,17 @@ func StartServer(targetPort int) {
 		CREATE TABLE IF NOT EXISTS publishers (
 			path TEXT PRIMARY KEY,
 			description TEXT
+		);
+		CREATE TABLE IF NOT EXISTS stores (
+			path TEXT PRIMARY KEY,
+			name TEXT,
+			description TEXT
+		);
+		CREATE TABLE IF NOT EXISTS items (
+			path TEXT PRIMARY KEY,
+			book TEXT,
+			condition TEXT,
+			price REAL
 		);
 	`)
 	if err != nil {

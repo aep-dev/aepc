@@ -108,3 +108,63 @@ resources:
       list: {}
       create:
         supports_user_settable_create: true
+  store:
+    singular: "store"
+    plural: "stores"
+    schema:
+      type: object
+      required: ["name"]
+      properties:
+        name:
+          type: string
+          x-aep-field-number: 1
+        description:
+          type: string
+          x-aep-field-number: 2
+    methods:
+      create:
+        supports_user_settable_create: true
+      get: {}
+      update: {}
+      delete: {}
+      list:
+        supports_filter: true
+        supports_skip: true
+  item:
+    singular: "item"
+    plural: "items"
+    parents: ["store"]
+    schema:
+      type: object
+      required: ["title", "condition", "price"]
+      properties:
+        book:
+          type: string
+          x-aep-field-number: 1
+        condition:
+          type: string
+          x-aep-field-number: 2
+        price:
+          type: number
+          format: double
+          x-aep-field-number: 3
+    methods:
+      create:
+        supports_user_settable_create: true
+      get: {}
+      update: {}
+      delete: {}
+      list:
+        supports_filter: true
+        supports_skip: true
+    custom_methods:
+      - name: "move"
+        method: "POST"
+        description: "Move an item to a different store"
+        is_long_running: true
+        request:
+          type: object
+          properties:
+            target_store:
+              type: string
+              x-aep-field-number: 1

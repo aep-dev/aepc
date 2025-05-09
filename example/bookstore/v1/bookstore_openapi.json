@@ -866,6 +866,476 @@
           }
         }
       }
+    },
+    "/stores": {
+      "get": {
+        "description": "List method for store",
+        "operationId": "ListStore",
+        "parameters": [
+          {
+            "name": "max_page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "next_page_token": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/store"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create method for store",
+        "operationId": "CreateStore",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/store"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/store"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/stores/{store}": {
+      "get": {
+        "description": "Get method for store",
+        "operationId": "GetStore",
+        "parameters": [
+          {
+            "name": "store",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/store"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update method for store",
+        "operationId": "UpdateStore",
+        "parameters": [
+          {
+            "name": "store",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/merge-patch+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/store"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/merge-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/store"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "delete": {
+        "description": "Delete method for store",
+        "operationId": "DeleteStore",
+        "parameters": [
+          {
+            "name": "store",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "force",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stores/{store}/items": {
+      "get": {
+        "description": "List method for item",
+        "operationId": "ListItem",
+        "parameters": [
+          {
+            "name": "store",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "max_page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "next_page_token": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/item"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create method for item",
+        "operationId": "CreateItem",
+        "parameters": [
+          {
+            "name": "store",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/item"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/item"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/stores/{store}/items/{item}": {
+      "get": {
+        "description": "Get method for item",
+        "operationId": "GetItem",
+        "parameters": [
+          {
+            "name": "store",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/item"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update method for item",
+        "operationId": "UpdateItem",
+        "parameters": [
+          {
+            "name": "store",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/merge-patch+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/item"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/merge-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/item"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "delete": {
+        "description": "Delete method for item",
+        "operationId": "DeleteItem",
+        "parameters": [
+          {
+            "name": "store",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stores/{store}/items/{item}:move": {
+      "post": {
+        "description": "Custom method move for item",
+        "operationId": ":MoveItem",
+        "parameters": [
+          {
+            "name": "store",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Long-running operation response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "https://aep.dev/json-schema/type/operation.json"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "target_store": {
+                    "type": "string",
+                    "x-aep-field-number": 1
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "x-aep-long-running-operation": {
+          "response": {
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -979,6 +1449,44 @@
           ]
         }
       },
+      "item": {
+        "type": "object",
+        "properties": {
+          "book": {
+            "type": "string",
+            "x-aep-field-number": 1
+          },
+          "condition": {
+            "type": "string",
+            "x-aep-field-number": 2
+          },
+          "path": {
+            "type": "string",
+            "x-aep-field-number": 10018,
+            "description": "The server-assigned path of the resource, which is unique within the service."
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "x-aep-field-number": 3
+          }
+        },
+        "x-aep-resource": {
+          "singular": "item",
+          "plural": "items",
+          "patterns": [
+            "stores/{store}/items/{item}"
+          ],
+          "parents": [
+            "store"
+          ]
+        },
+        "required": [
+          "title",
+          "condition",
+          "price"
+        ]
+      },
       "publisher": {
         "type": "object",
         "properties": {
@@ -999,6 +1507,34 @@
             "publishers/{publisher}"
           ]
         }
+      },
+      "store": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "x-aep-field-number": 2
+          },
+          "name": {
+            "type": "string",
+            "x-aep-field-number": 1
+          },
+          "path": {
+            "type": "string",
+            "x-aep-field-number": 10018,
+            "description": "The server-assigned path of the resource, which is unique within the service."
+          }
+        },
+        "x-aep-resource": {
+          "singular": "store",
+          "plural": "stores",
+          "patterns": [
+            "stores/{store}"
+          ]
+        },
+        "required": [
+          "name"
+        ]
       }
     }
   }
