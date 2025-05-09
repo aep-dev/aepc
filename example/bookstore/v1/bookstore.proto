@@ -291,7 +291,7 @@ message Book {
   int32 edition = 4 [(google.api.field_behavior) = REQUIRED];
 
   // Field for author.
-  repeated Author author = 5 [(google.api.field_behavior) = REQUIRED];
+  repeated Author author = 5;
 
   // Field for path.
   string path = 10018;

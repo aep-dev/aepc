@@ -36,7 +36,6 @@ components:
           type: boolean
           x-aep-field-number: 3
       required:
-      - author
       - edition
       - isbn
       - price

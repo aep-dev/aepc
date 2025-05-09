@@ -74,7 +74,10 @@ func NewBookstoreServer(db *sql.DB) *BookstoreServer {
 }
 
 func (s BookstoreServer) CreateBook(_ context.Context, r *bpb.CreateBookRequest) (*bpb.Book, error) {
-	book := proto.Clone(r.Book).(*bpb.Book)
+	book, err := NewSerializableBook(proto.Clone(r.Book).(*bpb.Book))
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create book: %v", err)
+	}
 	log.Printf("creating book %q", r)
 	if r.Id == "" {
 		var maxID int
@@ -87,23 +90,25 @@ func (s BookstoreServer) CreateBook(_ context.Context, r *bpb.CreateBookRequest)
 	path := fmt.Sprintf("%v/books/%v", r.Parent, r.Id)
 	book.Path = path
 
-	_, err := s.db.Exec(`
+	_, err = s.db.Exec(`
 		INSERT INTO books (path, author, price, published, edition, isbn)
 		VALUES (?, ?, ?, ?, ?, ?)`,
-		book.Path, book.Author, book.Price, book.Published, book.Edition, book.Isbn)
+		book.Path, book.AuthorSerialized, book.Price, book.Published, book.Edition, book.IsbnSerialized)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create book: %v", err)
 	}
 
 	log.Printf("created book %q", path)
-	return book, nil
+	return book.Book, nil
 }
 
 func (s BookstoreServer) ApplyBook(_ context.Context, r *bpb.ApplyBookRequest) (*bpb.Book, error) {
+	book, err := NewSerializableBook(proto.Clone(r.Book).(*bpb.Book))
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create book: %v", err)
+	}
 	log.Printf("applying book request: %v", r)
-	book := proto.Clone(r.Book).(*bpb.Book)
 	book.Path = r.Path
-
 	result, err := s.db.Exec(`
 		INSERT INTO books (path, author, price, published, edition, isbn)
 		VALUES (?, ?, ?, ?, ?, ?)
@@ -113,7 +118,7 @@ func (s BookstoreServer) ApplyBook(_ context.Context, r *bpb.ApplyBookRequest) (
 			published = excluded.published,
 			edition = excluded.edition,
 			isbn = excluded.isbn`,
-		book.Path, book.Author, book.Price, book.Published, book.Edition, book.Isbn)
+		book.Path, book.AuthorSerialized, book.Price, book.Published, book.Edition, book.IsbnSerialized)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to apply book: %v", err)
 	}
@@ -126,18 +131,20 @@ func (s BookstoreServer) ApplyBook(_ context.Context, r *bpb.ApplyBookRequest) (
 	}
 
 	log.Printf("applied book %q", book.Path)
-	return book, nil
+	return book.Book, nil
 }
 
 func (s BookstoreServer) UpdateBook(_ context.Context, r *bpb.UpdateBookRequest) (*bpb.Book, error) {
-	book := proto.Clone(r.Book).(*bpb.Book)
+	book, err := NewSerializableBook(proto.Clone(r.Book).(*bpb.Book))
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create book: %v", err)
+	}
 	book.Path = r.Path
-
 	result, err := s.db.Exec(`
 		UPDATE books
 		SET author = ?, price = ?, published = ?, edition = ?
 		WHERE path = ?`,
-		book.Author, book.Price, book.Published, book.Edition, book.Path)
+		book.AuthorSerialized, book.Price, book.Published, book.Edition, book.Path)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to update book: %v", err)
 	}
@@ -151,7 +158,7 @@ func (s BookstoreServer) UpdateBook(_ context.Context, r *bpb.UpdateBookRequest)
 	}
 
 	log.Printf("updated book %q", book.Path)
-	return book, nil
+	return book.Book, nil
 }
 
 func (s BookstoreServer) DeleteBook(_ context.Context, r *bpb.DeleteBookRequest) (*emptypb.Empty, error) {
@@ -174,23 +181,31 @@ func (s BookstoreServer) DeleteBook(_ context.Context, r *bpb.DeleteBookRequest)
 
 func (s BookstoreServer) GetBook(_ context.Context, r *bpb.GetBookRequest) (*bpb.Book, error) {
 	book := &bpb.Book{}
-	err := s.db.QueryRow(`
-		SELECT path, author, price, published, edition
-		FROM books WHERE path = ?`, r.Path).Scan(
-		&book.Path, &book.Author, &book.Price, &book.Published, &book.Edition)
 
+	// Deserialize the 'author' field from JSON when reading from the database
+	var authorsSerialized string
+	var isbnSerialized string
+	err := s.db.QueryRow(`
+		SELECT path, author, price, published, edition, isbn
+		FROM books WHERE path = ?`, r.Path).Scan(
+		&book.Path, &authorsSerialized, &book.Price, &book.Published, &book.Edition, isbnSerialized)
 	if err == sql.ErrNoRows {
 		return nil, status.Errorf(codes.NotFound, "book %q not found", r.Path)
 	}
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get book: %v", err)
 	}
+	err = UnmarshalIntoBook(authorsSerialized, isbnSerialized, book)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to deserialize book: %v", err)
+	}
+
 	return book, nil
 }
 
 func (s BookstoreServer) ListBooks(_ context.Context, r *bpb.ListBooksRequest) (*bpb.ListBooksResponse, error) {
 	rows, err := s.db.Query(`
-		SELECT path, author, price, published, edition
+		SELECT path, author, price, published, edition, isbn
 		FROM books`)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to list books: %v", err)
@@ -200,9 +215,17 @@ func (s BookstoreServer) ListBooks(_ context.Context, r *bpb.ListBooksRequest) (
 	var books []*bpb.Book
 	for rows.Next() {
 		book := &bpb.Book{}
-		if err := rows.Scan(&book.Path, &book.Author, &book.Price, &book.Published, &book.Edition); err != nil {
+
+		// Deserialize the 'author' field from JSON when listing books
+		var authorsSerialized string
+		var isbnSerialized string
+		if err := rows.Scan(&book.Path, &authorsSerialized, &book.Price, &book.Published, &book.Edition, &isbnSerialized); err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to scan book: %v", err)
 		}
+		if err := UnmarshalIntoBook(authorsSerialized, isbnSerialized, book); err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to deserialize authors: %v", err)
+		}
+
 		books = append(books, book)
 	}
 	if err = rows.Err(); err != nil {

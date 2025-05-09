@@ -30,7 +30,7 @@ resources:
     parents: ["publisher"]
     schema:
       type: object
-      required: ["author", "edition", "isbn", "price", "published"]
+      required: ["edition", "isbn", "price", "published"]
       properties:
         isbn:
           type: array
