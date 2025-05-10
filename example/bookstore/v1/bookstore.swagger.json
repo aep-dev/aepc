@@ -1515,8 +1515,7 @@
         "isbn",
         "price",
         "published",
-        "edition",
-        "author"
+        "edition"
       ]
     },
     "v1BookEdition": {

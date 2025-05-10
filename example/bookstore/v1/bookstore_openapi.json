@@ -1398,7 +1398,6 @@
           ]
         },
         "required": [
-          "author",
           "edition",
           "isbn",
           "price",
