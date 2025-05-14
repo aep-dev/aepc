@@ -204,9 +204,14 @@ func (s BookstoreServer) GetBook(_ context.Context, r *bpb.GetBookRequest) (*bpb
 }
 
 func (s BookstoreServer) ListBooks(_ context.Context, r *bpb.ListBooksRequest) (*bpb.ListBooksResponse, error) {
+	if r.Parent == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "parent must be specified")
+	}
+
 	rows, err := s.db.Query(`
 		SELECT path, author, price, published, edition, isbn
-		FROM books`)
+		FROM books
+		WHERE path LIKE ?`, r.Parent+"/%")
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to list books: %v", err)
 	}
@@ -216,7 +221,6 @@ func (s BookstoreServer) ListBooks(_ context.Context, r *bpb.ListBooksRequest) (
 	for rows.Next() {
 		book := &bpb.Book{}
 
-		// Deserialize the 'author' field from JSON when listing books
 		var authorsSerialized string
 		var isbnSerialized string
 		if err := rows.Scan(&book.Path, &authorsSerialized, &book.Price, &book.Published, &book.Edition, &isbnSerialized); err != nil {
@@ -655,7 +659,7 @@ func StartServer(targetPort int) {
 		CREATE TABLE IF NOT EXISTS books (
 			path TEXT PRIMARY KEY,
 			author TEXT,
-			price REAL,
+			price INTEGER,
 			published BOOLEAN,
 			edition INTEGER,
 			isbn TEXT

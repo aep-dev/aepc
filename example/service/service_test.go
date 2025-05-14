@@ -199,3 +199,41 @@ func TestMoveItem(t *testing.T) {
 		t.Fatalf("expected new path to be 'stores/2/items/1', got %q", newPath)
 	}
 }
+
+func TestListBooksByPublisher(t *testing.T) {
+	db := setupTestDB(t)
+	defer db.Close()
+
+	s := NewBookstoreServer(db)
+
+	// Serialize authors and ISBNs for test data
+	authorOneSerialized := `[{"name":"Author One"}]`
+	authorTwoSerialized := `[{"name":"Author Two"}]`
+	isbnOneSerialized := `["1111111111"]`
+	isbnTwoSerialized := `["2222222222"]`
+
+	// Insert test books
+	_, err := db.Exec(`
+		INSERT INTO books (path, author, price, published, edition, isbn)
+		VALUES (?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?)`,
+		"publishers/1/books/1", authorOneSerialized, 10, true, 1, isbnOneSerialized,
+		"publishers/2/books/2", authorTwoSerialized, 15, true, 1, isbnTwoSerialized,
+	)
+	if err != nil {
+		t.Fatalf("failed to insert test books: %v", err)
+	}
+
+	// Test filtering by publisher 1
+	resp, err := s.ListBooks(context.Background(), &bpb.ListBooksRequest{Parent: "publishers/1"})
+	if err != nil {
+		t.Fatalf("ListBooks failed: %v", err)
+	}
+
+	if len(resp.Results) != 1 {
+		t.Fatalf("expected 1 book, got %d", len(resp.Results))
+	}
+
+	if resp.Results[0].Path != "publishers/1/books/1" {
+		t.Errorf("unexpected book path: %s", resp.Results[0].Path)
+	}
+}
