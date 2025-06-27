@@ -32,7 +32,7 @@ require (
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a // indirect
 	github.com/bufbuild/protocompile v0.14.1 // indirect
-	github.com/cloudflare/circl v1.3.7 // indirect
+	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/dikhan/http_goclient v0.0.0-20181010015730-b9de9b5ee7b6 // indirect
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/go-openapi/analysis v0.0.0-20171215055114-2bbaa248df98 // indirect
