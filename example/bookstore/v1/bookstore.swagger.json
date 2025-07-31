@@ -2,6 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "example/bookstore/v1/bookstore.proto",
+    "description": "this file is generated.",
     "version": "version not set"
   },
   "tags": [
@@ -43,14 +44,14 @@
             "type": "string"
           },
           {
-            "name": "pageToken",
+            "name": "page_token",
             "description": "The page token indicating the starting point of the page",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "maxPageSize",
+            "name": "max_page_size",
             "description": "The maximum number of resources to return in a single page.",
             "in": "query",
             "required": false,
@@ -139,14 +140,14 @@
             "type": "string"
           },
           {
-            "name": "pageToken",
+            "name": "page_token",
             "description": "The page token indicating the starting point of the page",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "maxPageSize",
+            "name": "max_page_size",
             "description": "The maximum number of resources to return in a single page.",
             "in": "query",
             "required": false,
@@ -250,14 +251,14 @@
             "type": "string"
           },
           {
-            "name": "pageToken",
+            "name": "page_token",
             "description": "The page token indicating the starting point of the page",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "maxPageSize",
+            "name": "max_page_size",
             "description": "The maximum number of resources to return in a single page.",
             "in": "query",
             "required": false,
@@ -362,14 +363,14 @@
             "pattern": "publishers/[^/]+"
           },
           {
-            "name": "pageToken",
+            "name": "page_token",
             "description": "The page token indicating the starting point of the page",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "maxPageSize",
+            "name": "max_page_size",
             "description": "The maximum number of resources to return in a single page.",
             "in": "query",
             "required": false,
@@ -460,14 +461,14 @@
             "pattern": "publishers/[^/]+/books/[^/]+"
           },
           {
-            "name": "pageToken",
+            "name": "page_token",
             "description": "The page token indicating the starting point of the page",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "maxPageSize",
+            "name": "max_page_size",
             "description": "The maximum number of resources to return in a single page.",
             "in": "query",
             "required": false,
@@ -506,14 +507,14 @@
             "pattern": "publishers/[^/]+/books/[^/]+"
           },
           {
-            "name": "bookEdition",
+            "name": "book_edition",
             "description": "The resource to perform the operation on.",
             "in": "body",
             "required": true,
             "schema": {
               "$ref": "#/definitions/v1BookEdition",
               "required": [
-                "bookEdition"
+                "book_edition"
               ]
             }
           },
@@ -558,14 +559,14 @@
             "pattern": "stores/[^/]+"
           },
           {
-            "name": "pageToken",
+            "name": "page_token",
             "description": "The page token indicating the starting point of the page",
             "in": "query",
             "required": false,
             "type": "string"
           },
           {
-            "name": "maxPageSize",
+            "name": "max_page_size",
             "description": "The maximum number of resources to return in a single page.",
             "in": "query",
             "required": false,
@@ -1356,7 +1357,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "targetStore": {
+                "target_store": {
                   "type": "string",
                   "description": "Field for target_store."
                 }
@@ -1375,13 +1376,13 @@
     "BookAuthor": {
       "type": "object",
       "properties": {
-        "firstName": {
+        "first_name": {
           "type": "string",
-          "description": "Field for firstName."
+          "description": "Field for first_name."
         },
-        "lastName": {
+        "last_name": {
           "type": "string",
-          "description": "Field for lastName."
+          "description": "Field for last_name."
         }
       },
       "description": "A Author."
@@ -1521,9 +1522,9 @@
     "v1BookEdition": {
       "type": "object",
       "properties": {
-        "displayname": {
+        "display_name": {
           "type": "string",
-          "description": "Field for displayname."
+          "description": "Field for display_name."
         },
         "path": {
           "type": "string",
@@ -1532,7 +1533,7 @@
       },
       "description": "A BookEdition.",
       "required": [
-        "displayname"
+        "display_name"
       ]
     },
     "v1Isbn": {
@@ -1583,7 +1584,7 @@
           },
           "title": "A list of book-editions"
         },
-        "nextPageToken": {
+        "next_page_token": {
           "type": "string",
           "description": "The page token indicating the ending point of this response."
         }
@@ -1601,7 +1602,7 @@
           },
           "title": "A list of books"
         },
-        "nextPageToken": {
+        "next_page_token": {
           "type": "string",
           "description": "The page token indicating the ending point of this response."
         },
@@ -1627,7 +1628,7 @@
           },
           "title": "A list of isbns"
         },
-        "nextPageToken": {
+        "next_page_token": {
           "type": "string",
           "description": "The page token indicating the ending point of this response."
         }
@@ -1645,7 +1646,7 @@
           },
           "title": "A list of items"
         },
-        "nextPageToken": {
+        "next_page_token": {
           "type": "string",
           "description": "The page token indicating the ending point of this response."
         }
@@ -1663,7 +1664,7 @@
           },
           "title": "A list of publishers"
         },
-        "nextPageToken": {
+        "next_page_token": {
           "type": "string",
           "description": "The page token indicating the ending point of this response."
         }
@@ -1681,7 +1682,7 @@
           },
           "title": "A list of stores"
         },
-        "nextPageToken": {
+        "next_page_token": {
           "type": "string",
           "description": "The page token indicating the ending point of this response."
         }

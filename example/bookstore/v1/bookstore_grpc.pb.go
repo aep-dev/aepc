@@ -4,6 +4,8 @@
 // - protoc             (unknown)
 // source: example/bookstore/v1/bookstore.proto
 
+// this file is generated.
+
 package bookstore
 
 import (

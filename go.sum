@@ -20,6 +20,8 @@ github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 h1:d+Bc7a5rLufV
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
 github.com/aep-dev/aep-lib-go v0.0.0-20250430054534-ddf1c9b35c06 h1:XRvxjt1cbCv6QvUCcK7NBqwnowqXqujFD3hMIfSTIMU=
 github.com/aep-dev/aep-lib-go v0.0.0-20250430054534-ddf1c9b35c06/go.mod h1:YWfg3gjAGpvwFJnEQl1JjBGd0evGBKobt5wU/QxV6pA=
+github.com/aep-dev/aep-lib-go v0.0.0-20250731172928-46c6aa2f6b31 h1:g48QMZeNwHZjVI5E1EOr2UyTQulOsX9uXO20RF41BQo=
+github.com/aep-dev/aep-lib-go v0.0.0-20250731172928-46c6aa2f6b31/go.mod h1:YWfg3gjAGpvwFJnEQl1JjBGd0evGBKobt5wU/QxV6pA=
 github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768 h1:b5fRfpIIsOsdsT2N1MsBxr0K/fZacCUlWp0uY9/BJzM=
 github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768/go.mod h1:sUuUJSkWTc4GBxp8GEZXCeEI38VMyuM5msPQ9BG0kMA=
 github.com/agext/levenshtein v1.2.2 h1:0S/Yg6LYmFJ5stwQeRp6EeOcCbj7xiqQSdNelsXvaqE=

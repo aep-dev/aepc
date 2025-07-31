@@ -188,7 +188,7 @@ func (s BookstoreServer) GetBook(_ context.Context, r *bpb.GetBookRequest) (*bpb
 	err := s.db.QueryRow(`
 		SELECT path, author, price, published, edition, isbn
 		FROM books WHERE path = ?`, r.Path).Scan(
-		&book.Path, &authorsSerialized, &book.Price, &book.Published, &book.Edition, isbnSerialized)
+		&book.Path, &authorsSerialized, &book.Price, &book.Published, &book.Edition, &isbnSerialized)
 	if err == sql.ErrNoRows {
 		return nil, status.Errorf(codes.NotFound, "book %q not found", r.Path)
 	}

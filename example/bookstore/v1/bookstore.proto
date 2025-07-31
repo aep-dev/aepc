@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+// this file is generated.
 package example.bookstore.v1;
 
 import "aep/api/operation.proto";
@@ -271,11 +272,11 @@ message Book {
 
   // A Author.
   message Author {
-    // Field for firstName.
-    string firstName = 1;
+    // Field for first_name.
+    string first_name = 1 [json_name = "first_name"];
 
-    // Field for lastName.
-    string lastName = 2;
+    // Field for last_name.
+    string last_name = 2 [json_name = "last_name"];
   }
 
   // Field for isbn.
@@ -308,8 +309,11 @@ message BookEdition {
     singular: "book-edition"
   };
 
-  // Field for displayname.
-  string displayname = 1 [(google.api.field_behavior) = REQUIRED];
+  // Field for display_name.
+  string display_name = 1 [
+    json_name = "display_name",
+    (google.api.field_behavior) = REQUIRED
+  ];
 
   // Field for path.
   string path = 10018;
@@ -421,7 +425,7 @@ message UpdateBookRequest {
   Book book = 10015 [(google.api.field_behavior) = REQUIRED];
 
   // The update mask for the resource
-  google.protobuf.FieldMask update_mask = 10012;
+  google.protobuf.FieldMask update_mask = 10012 [json_name = "update_mask"];
 }
 
 // Request message for the DeleteBook method
@@ -445,10 +449,10 @@ message ListBooksRequest {
   ];
 
   // The page token indicating the starting point of the page
-  string page_token = 10010;
+  string page_token = 10010 [json_name = "page_token"];
 
   // The maximum number of resources to return in a single page.
-  int32 max_page_size = 10017;
+  int32 max_page_size = 10017 [json_name = "max_page_size"];
 }
 
 // Response message for the Listbook method
@@ -457,7 +461,7 @@ message ListBooksResponse {
   repeated Book results = 10016;
 
   // The page token indicating the ending point of this response.
-  string next_page_token = 10011;
+  string next_page_token = 10011 [json_name = "next_page_token"];
 
   // A list of books that were not reachable.
   repeated Book unreachable = 10019;
@@ -500,7 +504,10 @@ message CreateBookEditionRequest {
   string id = 10014;
 
   // The resource to perform the operation on.
-  BookEdition book_edition = 10015 [(google.api.field_behavior) = REQUIRED];
+  BookEdition book_edition = 10015 [
+    json_name = "book_edition",
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 // Request message for the Getbook-edition method
@@ -530,10 +537,10 @@ message ListBookEditionsRequest {
   ];
 
   // The page token indicating the starting point of the page
-  string page_token = 10010;
+  string page_token = 10010 [json_name = "page_token"];
 
   // The maximum number of resources to return in a single page.
-  int32 max_page_size = 10017;
+  int32 max_page_size = 10017 [json_name = "max_page_size"];
 }
 
 // Response message for the Listbook-edition method
@@ -542,7 +549,7 @@ message ListBookEditionsResponse {
   repeated BookEdition results = 10016;
 
   // The page token indicating the ending point of this response.
-  string next_page_token = 10011;
+  string next_page_token = 10011 [json_name = "next_page_token"];
 }
 
 // A Create request for a  isbn resource.
@@ -578,10 +585,10 @@ message ListIsbnsRequest {
   ];
 
   // The page token indicating the starting point of the page
-  string page_token = 10010;
+  string page_token = 10010 [json_name = "page_token"];
 
   // The maximum number of resources to return in a single page.
-  int32 max_page_size = 10017;
+  int32 max_page_size = 10017 [json_name = "max_page_size"];
 }
 
 // Response message for the Listisbn method
@@ -590,7 +597,7 @@ message ListIsbnsResponse {
   repeated Isbn results = 10016;
 
   // The page token indicating the ending point of this response.
-  string next_page_token = 10011;
+  string next_page_token = 10011 [json_name = "next_page_token"];
 }
 
 // A Create request for a  item resource.
@@ -629,7 +636,7 @@ message UpdateItemRequest {
   Item item = 10015 [(google.api.field_behavior) = REQUIRED];
 
   // The update mask for the resource
-  google.protobuf.FieldMask update_mask = 10012;
+  google.protobuf.FieldMask update_mask = 10012 [json_name = "update_mask"];
 }
 
 // Request message for the DeleteItem method
@@ -650,10 +657,10 @@ message ListItemsRequest {
   ];
 
   // The page token indicating the starting point of the page
-  string page_token = 10010;
+  string page_token = 10010 [json_name = "page_token"];
 
   // The maximum number of resources to return in a single page.
-  int32 max_page_size = 10017;
+  int32 max_page_size = 10017 [json_name = "max_page_size"];
 
   // The number of resources to skip before returning the first resource in the page.
   int32 skip = 10021;
@@ -668,13 +675,13 @@ message ListItemsResponse {
   repeated Item results = 10016;
 
   // The page token indicating the ending point of this response.
-  string next_page_token = 10011;
+  string next_page_token = 10011 [json_name = "next_page_token"];
 }
 
 // Request message for the move method
 message MoveItemRequest {
   // Field for target_store.
-  string target_store = 1;
+  string target_store = 1 [json_name = "target_store"];
 
   // The globally unique identifier for the resource
   string path = 10018 [
@@ -719,7 +726,7 @@ message UpdatePublisherRequest {
   Publisher publisher = 10015 [(google.api.field_behavior) = REQUIRED];
 
   // The update mask for the resource
-  google.protobuf.FieldMask update_mask = 10012;
+  google.protobuf.FieldMask update_mask = 10012 [json_name = "update_mask"];
 }
 
 // Request message for the DeletePublisher method
@@ -743,10 +750,10 @@ message ListPublishersRequest {
   ];
 
   // The page token indicating the starting point of the page
-  string page_token = 10010;
+  string page_token = 10010 [json_name = "page_token"];
 
   // The maximum number of resources to return in a single page.
-  int32 max_page_size = 10017;
+  int32 max_page_size = 10017 [json_name = "max_page_size"];
 
   // The number of resources to skip before returning the first resource in the page.
   int32 skip = 10021;
@@ -761,7 +768,7 @@ message ListPublishersResponse {
   repeated Publisher results = 10016;
 
   // The page token indicating the ending point of this response.
-  string next_page_token = 10011;
+  string next_page_token = 10011 [json_name = "next_page_token"];
 }
 
 // Request message for the Applypublisher method
@@ -812,7 +819,7 @@ message UpdateStoreRequest {
   Store store = 10015 [(google.api.field_behavior) = REQUIRED];
 
   // The update mask for the resource
-  google.protobuf.FieldMask update_mask = 10012;
+  google.protobuf.FieldMask update_mask = 10012 [json_name = "update_mask"];
 }
 
 // Request message for the DeleteStore method
@@ -836,10 +843,10 @@ message ListStoresRequest {
   ];
 
   // The page token indicating the starting point of the page
-  string page_token = 10010;
+  string page_token = 10010 [json_name = "page_token"];
 
   // The maximum number of resources to return in a single page.
-  int32 max_page_size = 10017;
+  int32 max_page_size = 10017 [json_name = "max_page_size"];
 
   // The number of resources to skip before returning the first resource in the page.
   int32 skip = 10021;
@@ -854,5 +861,5 @@ message ListStoresResponse {
   repeated Store results = 10016;
 
   // The page token indicating the ending point of this response.
-  string next_page_token = 10011;
+  string next_page_token = 10011 [json_name = "next_page_token"];
 }

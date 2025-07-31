@@ -54,10 +54,10 @@ resources:
           items:
             type: object
             properties:
-              firstName:
+              first_name:
                 type: string
                 x-aep-field-number: 1
-              lastName:
+              last_name:
                 type: string
                 x-aep-field-number: 2
     methods:
@@ -87,9 +87,9 @@ resources:
     parents: ["book"]
     schema:
       type: object
-      required: ["displayname"]
+      required: ["display_name"]
       properties:
-        displayname:
+        display_name:
           type: string
           x-aep-field-number: 1
     methods:

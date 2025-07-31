@@ -546,7 +546,7 @@ func local_request_Bookstore_ArchiveBook_0(ctx context.Context, marshaler runtim
 }
 
 var (
-	filter_Bookstore_CreateBookEdition_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_edition": 0, "bookEdition": 1, "parent": 2}, Base: []int{1, 1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 1, 2, 3, 4, 4}}
+	filter_Bookstore_CreateBookEdition_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_edition": 0, "parent": 1}, Base: []int{1, 2, 4, 0, 0, 0, 0}, Check: []int{0, 1, 1, 2, 2, 3, 3}}
 )
 
 func request_Bookstore_CreateBookEdition_0(ctx context.Context, marshaler runtime.Marshaler, client BookstoreClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
