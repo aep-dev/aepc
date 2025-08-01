@@ -19,19 +19,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: "test: no change to generated files."
+      - name: "test: all tests"
         run: |
           go install github.com/bufbuild/buf/cmd/buf@v1.42.0
-          ./scripts/verify-goldens.sh
-
-      - name: "test: example server function"
-        run: |
-          ./scripts/test_http_api.sh
-
-      - name: run OAS api-linter
-        run: |
-          ./scripts/run-oas-linter.sh
-
-      - name: run protobuf api-linter
-        run: |
-          ./scripts/run-proto-linter.sh
+          ./scripts/test-all.sh

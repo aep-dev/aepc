@@ -272,11 +272,11 @@ message Book {
 
   // A Author.
   message Author {
-    // Field for first_name.
-    string first_name = 1 [json_name = "first_name"];
+    // Field for given_name.
+    string given_name = 1 [json_name = "given_name"];
 
-    // Field for last_name.
-    string last_name = 2 [json_name = "last_name"];
+    // Field for family_name.
+    string family_name = 2 [json_name = "family_name"];
   }
 
   // Field for isbn.
