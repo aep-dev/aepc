@@ -54,10 +54,10 @@ resources:
           items:
             type: object
             properties:
-              first_name:
+              given_name:
                 type: string
                 x-aep-field-number: 1
-              last_name:
+              family_name:
                 type: string
                 x-aep-field-number: 2
     methods:

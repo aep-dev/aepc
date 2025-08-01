@@ -1376,13 +1376,13 @@
     "BookAuthor": {
       "type": "object",
       "properties": {
-        "first_name": {
+        "given_name": {
           "type": "string",
-          "description": "Field for first_name."
+          "description": "Field for given_name."
         },
-        "last_name": {
+        "family_name": {
           "type": "string",
-          "description": "Field for last_name."
+          "description": "Field for family_name."
         }
       },
       "description": "A Author."
