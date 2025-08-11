@@ -95,13 +95,13 @@
         }
       }
     },
-    "/isbns/{isbn}": {
+    "/isbns/{isbn_id}": {
       "get": {
         "description": "Get method for isbn",
         "operationId": "GetIsbn",
         "parameters": [
           {
-            "name": "isbn",
+            "name": "isbn_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -217,13 +217,13 @@
         }
       }
     },
-    "/publishers/{publisher}": {
+    "/publishers/{publisher_id}": {
       "get": {
         "description": "Get method for publisher",
         "operationId": "GetPublisher",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -249,7 +249,7 @@
         "operationId": "UpdatePublisher",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -285,7 +285,7 @@
         "operationId": "ApplyPublisher",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -321,7 +321,7 @@
         "operationId": "DeletePublisher",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -348,13 +348,13 @@
         }
       }
     },
-    "/publishers/{publisher}/books": {
+    "/publishers/{publisher_id}/books": {
       "get": {
         "description": "List method for book",
         "operationId": "ListBook",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -411,7 +411,7 @@
         "operationId": "CreateBook",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -450,13 +450,13 @@
         }
       }
     },
-    "/publishers/{publisher}/books/{book}": {
+    "/publishers/{publisher_id}/books/{book_id}": {
       "get": {
         "description": "Get method for book",
         "operationId": "GetBook",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -464,7 +464,7 @@
             }
           },
           {
-            "name": "book",
+            "name": "book_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -490,7 +490,7 @@
         "operationId": "UpdateBook",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -498,7 +498,7 @@
             }
           },
           {
-            "name": "book",
+            "name": "book_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -534,7 +534,7 @@
         "operationId": "ApplyBook",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -542,7 +542,7 @@
             }
           },
           {
-            "name": "book",
+            "name": "book_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -578,7 +578,7 @@
         "operationId": "DeleteBook",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -586,7 +586,7 @@
             }
           },
           {
-            "name": "book",
+            "name": "book_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -613,13 +613,13 @@
         }
       }
     },
-    "/publishers/{publisher}/books/{book}/editions": {
+    "/publishers/{publisher_id}/books/{book_id}/editions": {
       "get": {
         "description": "List method for book-edition",
         "operationId": "ListBookEdition",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -627,7 +627,7 @@
             }
           },
           {
-            "name": "book",
+            "name": "book_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -678,7 +678,7 @@
         "operationId": "CreateBookEdition",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -686,7 +686,7 @@
             }
           },
           {
-            "name": "book",
+            "name": "book_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -725,13 +725,13 @@
         }
       }
     },
-    "/publishers/{publisher}/books/{book}/editions/{book-edition}": {
+    "/publishers/{publisher_id}/books/{book_id}/editions/{book_edition_id}": {
       "get": {
         "description": "Get method for book-edition",
         "operationId": "GetBookEdition",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -739,7 +739,7 @@
             }
           },
           {
-            "name": "book",
+            "name": "book_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -747,7 +747,7 @@
             }
           },
           {
-            "name": "book-edition",
+            "name": "book_edition_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -773,7 +773,7 @@
         "operationId": "DeleteBookEdition",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -781,7 +781,7 @@
             }
           },
           {
-            "name": "book",
+            "name": "book_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -789,7 +789,7 @@
             }
           },
           {
-            "name": "book-edition",
+            "name": "book_edition_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -809,13 +809,13 @@
         }
       }
     },
-    "/publishers/{publisher}/books/{book}:archive": {
+    "/publishers/{publisher_id}/books/{book_id}:archive": {
       "post": {
         "description": "Custom method archive for book",
         "operationId": ":ArchiveBook",
         "parameters": [
           {
-            "name": "publisher",
+            "name": "publisher_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -823,7 +823,7 @@
             }
           },
           {
-            "name": "book",
+            "name": "book_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -961,13 +961,13 @@
         }
       }
     },
-    "/stores/{store}": {
+    "/stores/{store_id}": {
       "get": {
         "description": "Get method for store",
         "operationId": "GetStore",
         "parameters": [
           {
-            "name": "store",
+            "name": "store_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -993,7 +993,7 @@
         "operationId": "UpdateStore",
         "parameters": [
           {
-            "name": "store",
+            "name": "store_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1029,7 +1029,7 @@
         "operationId": "DeleteStore",
         "parameters": [
           {
-            "name": "store",
+            "name": "store_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1056,13 +1056,13 @@
         }
       }
     },
-    "/stores/{store}/items": {
+    "/stores/{store_id}/items": {
       "get": {
         "description": "List method for item",
         "operationId": "ListItem",
         "parameters": [
           {
-            "name": "store",
+            "name": "store_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1127,7 +1127,7 @@
         "operationId": "CreateItem",
         "parameters": [
           {
-            "name": "store",
+            "name": "store_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1166,13 +1166,13 @@
         }
       }
     },
-    "/stores/{store}/items/{item}": {
+    "/stores/{store_id}/items/{item_id}": {
       "get": {
         "description": "Get method for item",
         "operationId": "GetItem",
         "parameters": [
           {
-            "name": "store",
+            "name": "store_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1180,7 +1180,7 @@
             }
           },
           {
-            "name": "item",
+            "name": "item_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1206,7 +1206,7 @@
         "operationId": "UpdateItem",
         "parameters": [
           {
-            "name": "store",
+            "name": "store_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1214,7 +1214,7 @@
             }
           },
           {
-            "name": "item",
+            "name": "item_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1250,7 +1250,7 @@
         "operationId": "DeleteItem",
         "parameters": [
           {
-            "name": "store",
+            "name": "store_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1258,7 +1258,7 @@
             }
           },
           {
-            "name": "item",
+            "name": "item_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1278,13 +1278,13 @@
         }
       }
     },
-    "/stores/{store}/items/{item}:move": {
+    "/stores/{store_id}/items/{item_id}:move": {
       "post": {
         "description": "Custom method move for item",
         "operationId": ":MoveItem",
         "parameters": [
           {
-            "name": "store",
+            "name": "store_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1292,7 +1292,7 @@
             }
           },
           {
-            "name": "item",
+            "name": "item_id",
             "in": "path",
             "required": true,
             "schema": {
@@ -1319,8 +1319,7 @@
                 "type": "object",
                 "properties": {
                   "target_store": {
-                    "type": "string",
-                    "x-aep-field-number": 1
+                    "type": "string"
                   }
                 }
               }
@@ -1357,41 +1356,35 @@
                   "x-aep-field-number": 1
                 }
               }
-            },
-            "x-aep-field-number": 5
+            }
           },
           "edition": {
             "type": "integer",
-            "format": "int32",
-            "x-aep-field-number": 4
+            "format": "int32"
           },
           "isbn": {
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "x-aep-field-number": 1
+            }
           },
           "path": {
             "type": "string",
-            "x-aep-field-number": 10018,
             "description": "The server-assigned path of the resource, which is unique within the service."
           },
           "price": {
             "type": "integer",
-            "format": "int32",
-            "x-aep-field-number": 2
+            "format": "int32"
           },
           "published": {
-            "type": "boolean",
-            "x-aep-field-number": 3
+            "type": "boolean"
           }
         },
         "x-aep-resource": {
           "singular": "book",
           "plural": "books",
           "patterns": [
-            "publishers/{publisher}/books/{book}"
+            "publishers/{publisher_id}/books/{book_id}"
           ],
           "parents": [
             "publisher"
@@ -1408,12 +1401,10 @@
         "type": "object",
         "properties": {
           "display_name": {
-            "type": "string",
-            "x-aep-field-number": 1
+            "type": "string"
           },
           "path": {
             "type": "string",
-            "x-aep-field-number": 10018,
             "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
@@ -1421,7 +1412,7 @@
           "singular": "book-edition",
           "plural": "book-editions",
           "patterns": [
-            "publishers/{publisher}/books/{book}/editions/{book-edition}"
+            "publishers/{publisher_id}/books/{book_id}/editions/{book_edition_id}"
           ],
           "parents": [
             "book"
@@ -1436,7 +1427,6 @@
         "properties": {
           "path": {
             "type": "string",
-            "x-aep-field-number": 10018,
             "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
@@ -1444,7 +1434,7 @@
           "singular": "isbn",
           "plural": "isbns",
           "patterns": [
-            "isbns/{isbn}"
+            "isbns/{isbn_id}"
           ]
         }
       },
@@ -1452,29 +1442,25 @@
         "type": "object",
         "properties": {
           "book": {
-            "type": "string",
-            "x-aep-field-number": 1
+            "type": "string"
           },
           "condition": {
-            "type": "string",
-            "x-aep-field-number": 2
+            "type": "string"
           },
           "path": {
             "type": "string",
-            "x-aep-field-number": 10018,
             "description": "The server-assigned path of the resource, which is unique within the service."
           },
           "price": {
             "type": "number",
-            "format": "double",
-            "x-aep-field-number": 3
+            "format": "double"
           }
         },
         "x-aep-resource": {
           "singular": "item",
           "plural": "items",
           "patterns": [
-            "stores/{store}/items/{item}"
+            "stores/{store_id}/items/{item_id}"
           ],
           "parents": [
             "store"
@@ -1490,12 +1476,10 @@
         "type": "object",
         "properties": {
           "description": {
-            "type": "string",
-            "x-aep-field-number": 1
+            "type": "string"
           },
           "path": {
             "type": "string",
-            "x-aep-field-number": 10018,
             "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
@@ -1503,7 +1487,7 @@
           "singular": "publisher",
           "plural": "publishers",
           "patterns": [
-            "publishers/{publisher}"
+            "publishers/{publisher_id}"
           ]
         }
       },
@@ -1511,16 +1495,13 @@
         "type": "object",
         "properties": {
           "description": {
-            "type": "string",
-            "x-aep-field-number": 2
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "x-aep-field-number": 1
+            "type": "string"
           },
           "path": {
             "type": "string",
-            "x-aep-field-number": 10018,
             "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
@@ -1528,7 +1509,7 @@
           "singular": "store",
           "plural": "stores",
           "patterns": [
-            "stores/{store}"
+            "stores/{store_id}"
           ]
         },
         "required": [
