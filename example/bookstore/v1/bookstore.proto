@@ -265,7 +265,7 @@ service Bookstore {
 message Book {
   option (google.api.resource) = {
     type: "bookstore.example.com/book",
-    pattern: [ "publishers/{publisher}/books/{book}" ],
+    pattern: [ "publishers/{publisher_id}/books/{book_id}" ],
     plural: "books",
     singular: "book"
   };
@@ -303,7 +303,7 @@ message BookEdition {
   option (google.api.resource) = {
     type: "bookstore.example.com/book-edition",
     pattern: [
-      "publishers/{publisher}/books/{book}/editions/{book-edition}"
+      "publishers/{publisher_id}/books/{book_id}/editions/{book_edition_id}"
     ],
     plural: "book-editions",
     singular: "book-edition"
@@ -323,7 +323,7 @@ message BookEdition {
 message Isbn {
   option (google.api.resource) = {
     type: "bookstore.example.com/isbn",
-    pattern: [ "isbns/{isbn}" ],
+    pattern: [ "isbns/{isbn_id}" ],
     plural: "isbns",
     singular: "isbn"
   };
@@ -336,7 +336,7 @@ message Isbn {
 message Item {
   option (google.api.resource) = {
     type: "bookstore.example.com/item",
-    pattern: [ "stores/{store}/items/{item}" ],
+    pattern: [ "stores/{store_id}/items/{item_id}" ],
     plural: "items",
     singular: "item"
   };
@@ -358,7 +358,7 @@ message Item {
 message Publisher {
   option (google.api.resource) = {
     type: "bookstore.example.com/publisher",
-    pattern: [ "publishers/{publisher}" ],
+    pattern: [ "publishers/{publisher_id}" ],
     plural: "publishers",
     singular: "publisher"
   };
@@ -374,7 +374,7 @@ message Publisher {
 message Store {
   option (google.api.resource) = {
     type: "bookstore.example.com/store",
-    pattern: [ "stores/{store}" ],
+    pattern: [ "stores/{store_id}" ],
     plural: "stores",
     singular: "store"
   };
