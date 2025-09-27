@@ -1,10 +1,14 @@
 package service
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	bpb "github.com/aep-dev/aepc/example/bookstore/v1"
+	"google.golang.org/protobuf/proto"
 )
 
 type SerializableBook struct {
@@ -40,4 +44,23 @@ func UnmarshalIntoBook(authorsSerialized, isbnSerialized string, b *bpb.Book) er
 		return fmt.Errorf("failed to deserialize isbn: %v", err)
 	}
 	return nil
+}
+
+// GenerateETag generates an ETag for a protobuf message based on its content
+func GenerateETag(msg proto.Message) (string, error) {
+	data, err := proto.Marshal(msg)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal message for ETag: %v", err)
+	}
+
+	hash := md5.Sum(data)
+	return `"` + hex.EncodeToString(hash[:]) + `"`, nil
+}
+
+// ValidateETag compares the provided ETag with the current resource ETag
+func ValidateETag(providedETag, currentETag string) bool {
+	// Remove quotes from both ETags if present for comparison
+	cleanProvided := strings.Trim(providedETag, `"`)
+	cleanCurrent := strings.Trim(currentETag, `"`)
+	return cleanProvided == cleanCurrent
 }

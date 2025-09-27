@@ -33,6 +33,24 @@ func Run(grpcServerEndpoint string) {
 				UseProtoNames: true,
 			},
 		}),
+		// Configure header forwarding for If-Match header
+		runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
+			switch key {
+			case "If-Match":
+				return "grpcgateway-if-match", true
+			default:
+				return runtime.DefaultHeaderMatcher(key)
+			}
+		}),
+		// Configure outgoing header forwarding for ETag header
+		runtime.WithOutgoingHeaderMatcher(func(key string) (string, bool) {
+			switch key {
+			case "etag":
+				return "ETag", true
+			default:
+				return runtime.DefaultHeaderMatcher(key)
+			}
+		}),
 	)
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	err := bpb.RegisterBookstoreHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)

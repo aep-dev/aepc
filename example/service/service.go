@@ -13,9 +13,9 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	_ "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
 	api "buf.build/gen/go/aep/api/protocolbuffers/go/aep/api"
 	lrpb "cloud.google.com/go/longrunning/autogen/longrunningpb"
 	bpb "github.com/aep-dev/aepc/example/bookstore/v1"
@@ -61,6 +61,26 @@ func (s *operationStore) getOperation(id string) (*operationStatus, bool) {
 	defer s.mu.Unlock()
 	op, exists := s.operations[id]
 	return op, exists
+}
+
+// extractIfMatchHeader extracts the If-Match header from gRPC metadata
+func extractIfMatchHeader(ctx context.Context) string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return ""
+	}
+
+	// Check for If-Match header (grpc-gateway converts HTTP headers to lowercase with grpcgateway- prefix)
+	if values := md.Get("grpcgateway-if-match"); len(values) > 0 {
+		return values[0]
+	}
+
+	// Also check for standard if-match in case it comes through differently
+	if values := md.Get("if-match"); len(values) > 0 {
+		return values[0]
+	}
+
+	return ""
 }
 
 type BookstoreServer struct {
@@ -134,7 +154,30 @@ func (s BookstoreServer) ApplyBook(_ context.Context, r *bpb.ApplyBookRequest) (
 	return book.Book, nil
 }
 
-func (s BookstoreServer) UpdateBook(_ context.Context, r *bpb.UpdateBookRequest) (*bpb.Book, error) {
+func (s BookstoreServer) UpdateBook(ctx context.Context, r *bpb.UpdateBookRequest) (*bpb.Book, error) {
+	// Extract If-Match header from context
+	ifMatchHeader := extractIfMatchHeader(ctx)
+
+	// If If-Match header is provided, validate it against current resource
+	if ifMatchHeader != "" {
+		// First, get the current resource to generate its ETag
+		currentBook, err := s.GetBook(ctx, &bpb.GetBookRequest{Path: r.Path})
+		if err != nil {
+			return nil, err // This will return NotFound if the resource doesn't exist
+		}
+
+		// Generate ETag for current resource
+		currentETag, err := GenerateETag(currentBook)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to generate ETag: %v", err)
+		}
+
+		// Validate the provided ETag
+		if !ValidateETag(ifMatchHeader, currentETag) {
+			return nil, status.Errorf(codes.FailedPrecondition, "If-Match header value does not match current resource ETag")
+		}
+	}
+
 	book, err := NewSerializableBook(proto.Clone(r.Book).(*bpb.Book))
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create book: %v", err)
@@ -297,7 +340,7 @@ func (s BookstoreServer) GetOperation(ctx context.Context, r *lrpb.GetOperationR
 	return operation, nil
 }
 
-func (s BookstoreServer) CreatePublisher(_ context.Context, r *bpb.CreatePublisherRequest) (*bpb.Publisher, error) {
+func (s BookstoreServer) CreatePublisher(ctx context.Context, r *bpb.CreatePublisherRequest) (*bpb.Publisher, error) {
 	publisher := proto.Clone(r.Publisher).(*bpb.Publisher)
 	log.Printf("creating publisher %q", r)
 	if r.Id == "" {
@@ -317,6 +360,18 @@ func (s BookstoreServer) CreatePublisher(_ context.Context, r *bpb.CreatePublish
 		publisher.Path, publisher.Description)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create publisher: %v", err)
+	}
+
+	// Generate ETag for the created resource
+	etag, err := GenerateETag(publisher)
+	if err != nil {
+		log.Printf("warning: failed to generate ETag: %v", err)
+	} else {
+		// Set ETag header in gRPC response metadata
+		err = grpc.SetHeader(ctx, metadata.Pairs("etag", etag))
+		if err != nil {
+			log.Printf("warning: failed to set ETag header: %v", err)
+		}
 	}
 
 	log.Printf("created publisher %q", path)
@@ -350,7 +405,38 @@ func (s BookstoreServer) ApplyPublisher(_ context.Context, r *bpb.ApplyPublisher
 	return publisher, nil
 }
 
-func (s BookstoreServer) UpdatePublisher(_ context.Context, r *bpb.UpdatePublisherRequest) (*bpb.Publisher, error) {
+func (s BookstoreServer) UpdatePublisher(ctx context.Context, r *bpb.UpdatePublisherRequest) (*bpb.Publisher, error) {
+	// Extract If-Match header from context
+	ifMatchHeader := extractIfMatchHeader(ctx)
+
+	// If If-Match header is provided, validate it against current resource
+	if ifMatchHeader != "" {
+		// Get the current resource data directly from database (without setting headers)
+		currentPublisher := &bpb.Publisher{}
+		err := s.db.QueryRow(`
+			SELECT path, description
+			FROM publishers WHERE path = ?`, r.Path).Scan(
+			&currentPublisher.Path, &currentPublisher.Description)
+
+		if err == sql.ErrNoRows {
+			return nil, status.Errorf(codes.NotFound, "publisher %q not found", r.Path)
+		}
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to get current publisher for ETag validation: %v", err)
+		}
+
+		// Generate ETag for current resource
+		currentETag, err := GenerateETag(currentPublisher)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to generate ETag: %v", err)
+		}
+
+		// Validate the provided ETag
+		if !ValidateETag(ifMatchHeader, currentETag) {
+			return nil, status.Errorf(codes.FailedPrecondition, "If-Match header value does not match current resource ETag")
+		}
+	}
+
 	publisher := proto.Clone(r.Publisher).(*bpb.Publisher)
 	publisher.Path = r.Path
 
@@ -369,6 +455,18 @@ func (s BookstoreServer) UpdatePublisher(_ context.Context, r *bpb.UpdatePublish
 	}
 	if rows == 0 {
 		return nil, status.Errorf(codes.NotFound, "publisher %q not found", r.Path)
+	}
+
+	// Generate ETag for the updated resource
+	etag, err := GenerateETag(publisher)
+	if err != nil {
+		log.Printf("warning: failed to generate ETag: %v", err)
+	} else {
+		// Set ETag header in gRPC response metadata
+		err = grpc.SetHeader(ctx, metadata.Pairs("etag", etag))
+		if err != nil {
+			log.Printf("warning: failed to set ETag header: %v", err)
+		}
 	}
 
 	log.Printf("updated publisher %q", publisher.Path)
@@ -393,7 +491,7 @@ func (s BookstoreServer) DeletePublisher(_ context.Context, r *bpb.DeletePublish
 	return &emptypb.Empty{}, nil
 }
 
-func (s BookstoreServer) GetPublisher(_ context.Context, r *bpb.GetPublisherRequest) (*bpb.Publisher, error) {
+func (s BookstoreServer) GetPublisher(ctx context.Context, r *bpb.GetPublisherRequest) (*bpb.Publisher, error) {
 	publisher := &bpb.Publisher{}
 	err := s.db.QueryRow(`
 		SELECT path, description
@@ -406,6 +504,19 @@ func (s BookstoreServer) GetPublisher(_ context.Context, r *bpb.GetPublisherRequ
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get publisher: %v", err)
 	}
+
+	// Generate and set ETag header
+	etag, err := GenerateETag(publisher)
+	if err != nil {
+		log.Printf("warning: failed to generate ETag: %v", err)
+	} else {
+		// Set ETag header in gRPC response metadata
+		err = grpc.SetHeader(ctx, metadata.Pairs("etag", etag))
+		if err != nil {
+			log.Printf("warning: failed to set ETag header: %v", err)
+		}
+	}
+
 	return publisher, nil
 }
 
@@ -486,7 +597,30 @@ func (s BookstoreServer) GetStore(_ context.Context, r *bpb.GetStoreRequest) (*b
 	return store, nil
 }
 
-func (s BookstoreServer) UpdateStore(_ context.Context, r *bpb.UpdateStoreRequest) (*bpb.Store, error) {
+func (s BookstoreServer) UpdateStore(ctx context.Context, r *bpb.UpdateStoreRequest) (*bpb.Store, error) {
+	// Extract If-Match header from context
+	ifMatchHeader := extractIfMatchHeader(ctx)
+
+	// If If-Match header is provided, validate it against current resource
+	if ifMatchHeader != "" {
+		// First, get the current resource to generate its ETag
+		currentStore, err := s.GetStore(ctx, &bpb.GetStoreRequest{Path: r.Path})
+		if err != nil {
+			return nil, err // This will return NotFound if the resource doesn't exist
+		}
+
+		// Generate ETag for current resource
+		currentETag, err := GenerateETag(currentStore)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to generate ETag: %v", err)
+		}
+
+		// Validate the provided ETag
+		if !ValidateETag(ifMatchHeader, currentETag) {
+			return nil, status.Errorf(codes.FailedPrecondition, "If-Match header value does not match current resource ETag")
+		}
+	}
+
 	store := proto.Clone(r.Store).(*bpb.Store)
 	store.Path = r.Path
 
@@ -571,7 +705,30 @@ func (s BookstoreServer) GetItem(_ context.Context, r *bpb.GetItemRequest) (*bpb
 	return item, nil
 }
 
-func (s BookstoreServer) UpdateItem(_ context.Context, r *bpb.UpdateItemRequest) (*bpb.Item, error) {
+func (s BookstoreServer) UpdateItem(ctx context.Context, r *bpb.UpdateItemRequest) (*bpb.Item, error) {
+	// Extract If-Match header from context
+	ifMatchHeader := extractIfMatchHeader(ctx)
+
+	// If If-Match header is provided, validate it against current resource
+	if ifMatchHeader != "" {
+		// First, get the current resource to generate its ETag
+		currentItem, err := s.GetItem(ctx, &bpb.GetItemRequest{Path: r.Path})
+		if err != nil {
+			return nil, err // This will return NotFound if the resource doesn't exist
+		}
+
+		// Generate ETag for current resource
+		currentETag, err := GenerateETag(currentItem)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to generate ETag: %v", err)
+		}
+
+		// Validate the provided ETag
+		if !ValidateETag(ifMatchHeader, currentETag) {
+			return nil, status.Errorf(codes.FailedPrecondition, "If-Match header value does not match current resource ETag")
+		}
+	}
+
 	item := proto.Clone(r.Item).(*bpb.Item)
 	item.Path = r.Path
 
