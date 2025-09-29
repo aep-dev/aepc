@@ -3,12 +3,16 @@ package service
 import (
 	"context"
 	"database/sql"
+	"strings"
 	"testing"
 	"time"
 
 	lrpb "cloud.google.com/go/longrunning/autogen/longrunningpb"
 	bpb "github.com/aep-dev/aepc/example/bookstore/v1"
 	_ "github.com/mattn/go-sqlite3"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 func setupTestDB(t *testing.T) *sql.DB {
@@ -25,6 +29,10 @@ func setupTestDB(t *testing.T) *sql.DB {
 			published BOOLEAN,
 			edition INTEGER,
 			isbn TEXT
+		);
+		CREATE TABLE publishers (
+			path TEXT PRIMARY KEY,
+			description TEXT
 		);
 		CREATE TABLE stores (
 			path TEXT PRIMARY KEY,
@@ -235,5 +243,291 @@ func TestListBooksByPublisher(t *testing.T) {
 
 	if resp.Results[0].Path != "publishers/1/books/1" {
 		t.Errorf("unexpected book path: %s", resp.Results[0].Path)
+	}
+}
+
+func TestUpdateBookWithIfMatchHeader(t *testing.T) {
+	db := setupTestDB(t)
+	defer db.Close()
+
+	s := NewBookstoreServer(db)
+
+	// First, create a publisher
+	publisher := &bpb.Publisher{
+		Description: "Test Publisher",
+	}
+	createdPublisher, err := s.CreatePublisher(context.Background(), &bpb.CreatePublisherRequest{
+		Id:        "1",
+		Publisher: publisher,
+	})
+	if err != nil {
+		t.Fatalf("CreatePublisher failed: %v", err)
+	}
+
+	// Then create a book
+	book := &bpb.Book{
+		Price:     10,
+		Published: true,
+		Edition:   1,
+	}
+	createdBook, err := s.CreateBook(context.Background(), &bpb.CreateBookRequest{
+		Parent: createdPublisher.Path,
+		Id:     "1",
+		Book:   book,
+	})
+	if err != nil {
+		t.Fatalf("CreateBook failed: %v", err)
+	}
+
+	// Get the current book to generate its ETag
+	currentBook, err := s.GetBook(context.Background(), &bpb.GetBookRequest{
+		Path: createdBook.Path,
+	})
+	if err != nil {
+		t.Fatalf("GetBook failed: %v", err)
+	}
+
+	// Generate ETag for current book
+	currentETag, err := GenerateETag(currentBook)
+	if err != nil {
+		t.Fatalf("GenerateETag failed: %v", err)
+	}
+
+	// Test 1: Update with correct If-Match header should succeed
+	ctx := metadata.NewIncomingContext(context.Background(), metadata.Pairs("grpcgateway-if-match", currentETag))
+	updatedBook := &bpb.Book{
+		Price:     20,
+		Published: true,
+		Edition:   2,
+	}
+	result, err := s.UpdateBook(ctx, &bpb.UpdateBookRequest{
+		Path: createdBook.Path,
+		Book: updatedBook,
+	})
+	if err != nil {
+		t.Fatalf("UpdateBook with correct If-Match failed: %v", err)
+	}
+	if result.Price != 20 || result.Edition != 2 {
+		t.Errorf("Update did not apply correctly: price=%d, edition=%d", result.Price, result.Edition)
+	}
+
+	// Test 2: Update with incorrect If-Match header should fail
+	wrongETag := `"wrongetag"`
+	ctx2 := metadata.NewIncomingContext(context.Background(), metadata.Pairs("grpcgateway-if-match", wrongETag))
+	_, err = s.UpdateBook(ctx2, &bpb.UpdateBookRequest{
+		Path: createdBook.Path,
+		Book: updatedBook,
+	})
+	if err == nil {
+		t.Fatalf("UpdateBook with incorrect If-Match should have failed")
+	}
+	if status.Code(err) != codes.FailedPrecondition {
+		t.Errorf("Expected FailedPrecondition error, got: %v", status.Code(err))
+	}
+
+	// Test 3: Update without If-Match header should succeed (backwards compatibility)
+	updatedBook.Price = 30
+	_, err = s.UpdateBook(context.Background(), &bpb.UpdateBookRequest{
+		Path: createdBook.Path,
+		Book: updatedBook,
+	})
+	if err != nil {
+		t.Fatalf("UpdateBook without If-Match should succeed: %v", err)
+	}
+
+	// Test 4: Update with If-Match header for non-existent resource should fail
+	ctx3 := metadata.NewIncomingContext(context.Background(), metadata.Pairs("grpcgateway-if-match", currentETag))
+	_, err = s.UpdateBook(ctx3, &bpb.UpdateBookRequest{
+		Path: "publishers/99/books/99",
+		Book: updatedBook,
+	})
+	if err == nil {
+		t.Fatalf("UpdateBook for non-existent resource should have failed")
+	}
+	if status.Code(err) != codes.NotFound {
+		t.Errorf("Expected NotFound error, got: %v", status.Code(err))
+	}
+}
+
+func TestUpdatePublisherWithIfMatchHeader(t *testing.T) {
+	db := setupTestDB(t)
+	defer db.Close()
+
+	s := NewBookstoreServer(db)
+
+	// Create a publisher
+	publisher := &bpb.Publisher{
+		Description: "Original Description",
+	}
+	createdPublisher, err := s.CreatePublisher(context.Background(), &bpb.CreatePublisherRequest{
+		Id:        "1",
+		Publisher: publisher,
+	})
+	if err != nil {
+		t.Fatalf("CreatePublisher failed: %v", err)
+	}
+
+	// Generate ETag for current publisher
+	currentETag, err := GenerateETag(createdPublisher)
+	if err != nil {
+		t.Fatalf("GenerateETag failed: %v", err)
+	}
+
+	// Test update with correct If-Match header
+	ctx := metadata.NewIncomingContext(context.Background(), metadata.Pairs("grpcgateway-if-match", currentETag))
+	updatedPublisher := &bpb.Publisher{
+		Description: "Updated Description",
+	}
+	result, err := s.UpdatePublisher(ctx, &bpb.UpdatePublisherRequest{
+		Path:      createdPublisher.Path,
+		Publisher: updatedPublisher,
+	})
+	if err != nil {
+		t.Fatalf("UpdatePublisher with correct If-Match failed: %v", err)
+	}
+	if result.Description != "Updated Description" {
+		t.Errorf("Update did not apply correctly: description=%s", result.Description)
+	}
+
+	// Test update with incorrect If-Match header
+	wrongETag := `"wrongetag"`
+	ctx2 := metadata.NewIncomingContext(context.Background(), metadata.Pairs("grpcgateway-if-match", wrongETag))
+	_, err = s.UpdatePublisher(ctx2, &bpb.UpdatePublisherRequest{
+		Path:      createdPublisher.Path,
+		Publisher: updatedPublisher,
+	})
+	if err == nil {
+		t.Fatalf("UpdatePublisher with incorrect If-Match should have failed")
+	}
+	if status.Code(err) != codes.FailedPrecondition {
+		t.Errorf("Expected FailedPrecondition error, got: %v", status.Code(err))
+	}
+}
+
+func TestETagGeneration(t *testing.T) {
+	// Test ETag generation for different resources
+	book1 := &bpb.Book{
+		Path:      "publishers/1/books/1",
+		Price:     10,
+		Published: true,
+		Edition:   1,
+	}
+
+	book2 := &bpb.Book{
+		Path:      "publishers/1/books/1",
+		Price:     20, // Different price
+		Published: true,
+		Edition:   1,
+	}
+
+	book3 := &bpb.Book{
+		Path:      "publishers/1/books/1",
+		Price:     10,
+		Published: true,
+		Edition:   1,
+	}
+
+	etag1, err := GenerateETag(book1)
+	if err != nil {
+		t.Fatalf("GenerateETag failed: %v", err)
+	}
+
+	etag2, err := GenerateETag(book2)
+	if err != nil {
+		t.Fatalf("GenerateETag failed: %v", err)
+	}
+
+	etag3, err := GenerateETag(book3)
+	if err != nil {
+		t.Fatalf("GenerateETag failed: %v", err)
+	}
+
+	// ETags for different content should be different
+	if etag1 == etag2 {
+		t.Error("ETags should be different for different content")
+	}
+
+	// ETags for same content should be identical
+	if etag1 != etag3 {
+		t.Error("ETags should be identical for identical content")
+	}
+
+	// Test ETag validation
+	if !ValidateETag(etag1, etag3) {
+		t.Error("ValidateETag should return true for identical ETags")
+	}
+
+	if ValidateETag(etag1, etag2) {
+		t.Error("ValidateETag should return false for different ETags")
+	}
+
+	// Test ETag validation with quotes
+	quotedETag := `"` + strings.Trim(etag1, `"`) + `"`
+	if !ValidateETag(etag1, quotedETag) {
+		t.Error("ValidateETag should handle quoted ETags correctly")
+	}
+
+	// Test publisher ETags
+	pub1 := &bpb.Publisher{
+		Path:        "publishers/1",
+		Description: "Test Publisher",
+	}
+
+	pub2 := &bpb.Publisher{
+		Path:        "publishers/1",
+		Description: "Updated Publisher", // Different description
+	}
+
+	pubEtag1, err := GenerateETag(pub1)
+	if err != nil {
+		t.Fatalf("GenerateETag for publisher failed: %v", err)
+	}
+
+	pubEtag2, err := GenerateETag(pub2)
+	if err != nil {
+		t.Fatalf("GenerateETag for publisher failed: %v", err)
+	}
+
+	if pubEtag1 == pubEtag2 {
+		t.Error("Publisher ETags should be different for different descriptions")
+	}
+
+	// Test that ETags are properly quoted
+	if !strings.HasPrefix(etag1, `"`) || !strings.HasSuffix(etag1, `"`) {
+		t.Error("ETags should be properly quoted")
+	}
+}
+
+func TestExtractIfMatchHeader(t *testing.T) {
+	// Test extracting If-Match header from metadata
+	testETag := `"test-etag-value"`
+
+	// Test with grpcgateway-if-match key (this is what the gateway sets)
+	ctx1 := metadata.NewIncomingContext(context.Background(),
+		metadata.Pairs("grpcgateway-if-match", testETag))
+	extractedETag1 := extractIfMatchHeader(ctx1)
+	if extractedETag1 != testETag {
+		t.Errorf("Expected ETag %s, got %s", testETag, extractedETag1)
+	}
+
+	// Test with standard if-match key
+	ctx2 := metadata.NewIncomingContext(context.Background(),
+		metadata.Pairs("if-match", testETag))
+	extractedETag2 := extractIfMatchHeader(ctx2)
+	if extractedETag2 != testETag {
+		t.Errorf("Expected ETag %s, got %s", testETag, extractedETag2)
+	}
+
+	// Test with no metadata
+	extractedETag3 := extractIfMatchHeader(context.Background())
+	if extractedETag3 != "" {
+		t.Errorf("Expected empty ETag, got %s", extractedETag3)
+	}
+
+	// Test with empty metadata
+	ctx4 := metadata.NewIncomingContext(context.Background(), metadata.MD{})
+	extractedETag4 := extractIfMatchHeader(ctx4)
+	if extractedETag4 != "" {
+		t.Errorf("Expected empty ETag, got %s", extractedETag4)
 	}
 }
