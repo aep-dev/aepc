@@ -5,9 +5,9 @@ go 1.23.0
 toolchain go1.23.6
 
 require (
-	buf.build/gen/go/aep/api/protocolbuffers/go v1.36.6-20250414222444-e90b7c746f4b.1
+	buf.build/gen/go/aep/api/protocolbuffers/go v1.36.10-20251011185002-1454930c8f99.1
 	cloud.google.com/go/longrunning v0.6.6
-	github.com/aep-dev/aep-lib-go v0.0.0-20250818052453-22855a0b13d9
+	github.com/aep-dev/aep-lib-go v0.0.0-20251011190527-4b8a96d91310
 	github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768
 	github.com/google/cel-go v0.22.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0
@@ -17,11 +17,11 @@ require (
 	github.com/spf13/cobra v1.7.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20250303144028-a0af3efb3deb
 	google.golang.org/grpc v1.71.0
-	google.golang.org/protobuf v1.36.6
+	google.golang.org/protobuf v1.36.10
 )
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20240221180331-f05a6f4403ce.1 // indirect
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.10-20240221180331-f05a6f4403ce.1 // indirect
 	cel.dev/expr v0.19.1 // indirect
 	github.com/DataDog/datadog-go v2.2.0+incompatible // indirect
 	github.com/ProtonMail/go-crypto v1.1.0-alpha.2 // indirect
