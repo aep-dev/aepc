@@ -15,6 +15,117 @@
     }
   ],
   "paths": {
+    "/deleted-publishers": {
+      "get": {
+        "description": "List method for deleted_publisher",
+        "operationId": "ListDeletedPublisher",
+        "parameters": [
+          {
+            "name": "max_page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "next_page_token": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/deleted_publisher"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deleted-publishers/{deleted_publisher_id}": {
+      "get": {
+        "description": "Get method for deleted_publisher",
+        "operationId": "GetDeletedPublisher",
+        "parameters": [
+          {
+            "name": "deleted_publisher_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/deleted_publisher"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deleted-publishers/{deleted_publisher_id}:undelete": {
+      "post": {
+        "description": "Custom method undelete for deleted_publisher",
+        "operationId": ":UndeleteDeletedPublisher",
+        "parameters": [
+          {
+            "name": "deleted_publisher_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
     "/isbns": {
       "get": {
         "description": "List method for isbn",
@@ -1421,6 +1532,30 @@
         "required": [
           "display_name"
         ]
+      },
+      "deleted_publisher": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "expire_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time when this deleted publisher will expire and be permanently removed"
+          },
+          "path": {
+            "type": "string",
+            "description": "The server-assigned path of the resource, which is unique within the service."
+          }
+        },
+        "x-aep-resource": {
+          "singular": "deleted_publisher",
+          "plural": "deleted_publishers",
+          "patterns": [
+            "deleted-publishers/{deleted_publisher_id}"
+          ]
+        }
       },
       "isbn": {
         "type": "object",

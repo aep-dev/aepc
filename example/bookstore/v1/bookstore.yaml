@@ -24,6 +24,33 @@ resources:
         supports_filter: true
         supports_skip: true
       apply: {}
+  deleted_publisher:
+    singular: "deleted_publisher"
+    plural: "deleted_publishers"
+    schema:
+      type: object
+      properties:
+        description:
+          type: string
+          x-aep-field-number: 1
+        expire_time:
+          type: string
+          format: date-time
+          description: "The time when this deleted publisher will expire and be permanently removed"
+          x-aep-field-number: 2
+    methods:
+      get: {}
+      list: {}
+    custom_methods:
+      - name: "undelete"
+        method: "POST"
+        description: "Undelete a previously deleted publisher and restore it to the publishers collection"
+        request:
+          type: object
+          properties: {}
+        response:
+          type: object
+          properties: {}
   book:
     singular: "book"
     plural: "books"

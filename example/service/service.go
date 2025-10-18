@@ -474,20 +474,46 @@ func (s BookstoreServer) UpdatePublisher(ctx context.Context, r *bpb.UpdatePubli
 }
 
 func (s BookstoreServer) DeletePublisher(_ context.Context, r *bpb.DeletePublisherRequest) (*emptypb.Empty, error) {
-	result, err := s.db.Exec("DELETE FROM publishers WHERE path = ?", r.Path)
+	// First, get the publisher to be deleted
+	var description string
+	err := s.db.QueryRow("SELECT description FROM publishers WHERE path = ?", r.Path).Scan(&description)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, status.Errorf(codes.NotFound, "publisher %q not found", r.Path)
+		}
+		return nil, status.Errorf(codes.Internal, "failed to get publisher: %v", err)
+	}
+
+	// Calculate expiration time (30 days from now)
+	expireTime := time.Now().Add(30 * 24 * time.Hour).Format(time.RFC3339)
+
+	// Start a transaction to move publisher to deleted_publishers table
+	tx, err := s.db.Begin()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to start transaction: %v", err)
+	}
+	defer tx.Rollback()
+
+	// Insert into deleted_publishers table
+	deletedPath := strings.Replace(r.Path, "publishers/", "deleted_publishers/", 1)
+	_, err = tx.Exec("INSERT INTO deleted_publishers (path, description, expire_time) VALUES (?, ?, ?)",
+		deletedPath, description, expireTime)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to insert into deleted_publishers: %v", err)
+	}
+
+	// Remove from publishers table
+	_, err = tx.Exec("DELETE FROM publishers WHERE path = ?", r.Path)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to delete publisher: %v", err)
 	}
 
-	rows, err := result.RowsAffected()
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to get rows affected: %v", err)
-	}
-	if rows == 0 {
-		return nil, status.Errorf(codes.NotFound, "publisher %q not found", r.Path)
+	// Commit the transaction
+	if err = tx.Commit(); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to commit transaction: %v", err)
 	}
 
-	log.Printf("deleted publisher %q", r.Path)
+	log.Printf("moved publisher %q to deleted_publishers with expiration %q", r.Path, expireTime)
 	return &emptypb.Empty{}, nil
 }
 
@@ -553,6 +579,113 @@ func (s BookstoreServer) ListPublishers(_ context.Context, r *bpb.ListPublishers
 	}
 
 	return &bpb.ListPublishersResponse{Results: publishers}, nil
+}
+
+// Deleted Publishers methods
+func (s BookstoreServer) GetDeletedPublisher(ctx context.Context, r *bpb.GetDeletedPublisherRequest) (*bpb.DeletedPublisher, error) {
+	// Normalize path: convert hyphens to underscores for database lookup
+	normalizedPath := strings.Replace(r.Path, "deleted-publishers/", "deleted_publishers/", 1)
+	log.Printf("GetDeletedPublisher: original path=%q, normalized=%q", r.Path, normalizedPath)
+
+	deletedPublisher := &bpb.DeletedPublisher{}
+	err := s.db.QueryRow("SELECT path, description, expire_time FROM deleted_publishers WHERE path = ?", normalizedPath).Scan(&deletedPublisher.Path, &deletedPublisher.Description, &deletedPublisher.ExpireTime)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, status.Errorf(codes.NotFound, "deleted publisher %q not found", r.Path)
+		}
+		return nil, status.Errorf(codes.Internal, "failed to get deleted publisher: %v", err)
+	}
+
+	// Convert the path back to the hyphenated format for consistency with the API
+	deletedPublisher.Path = strings.Replace(deletedPublisher.Path, "deleted_publishers/", "deleted-publishers/", 1)
+
+	log.Printf("got deleted publisher %q", r.Path)
+	return deletedPublisher, nil
+}
+
+func (s BookstoreServer) ListDeletedPublishers(_ context.Context, r *bpb.ListDeletedPublishersRequest) (*bpb.ListDeletedPublishersResponse, error) {
+	maxPageSize := r.GetMaxPageSize()
+	if maxPageSize <= 0 {
+		maxPageSize = 10 // default page size
+	}
+	rows, err := s.db.Query(`
+		SELECT path, description, expire_time
+		FROM deleted_publishers
+		LIMIT ?`, maxPageSize)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to list deleted publishers: %v", err)
+	}
+	defer rows.Close()
+
+	var deletedPublishers []*bpb.DeletedPublisher
+	for rows.Next() {
+		deletedPublisher := &bpb.DeletedPublisher{}
+		if err := rows.Scan(&deletedPublisher.Path, &deletedPublisher.Description, &deletedPublisher.ExpireTime); err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to scan deleted publisher: %v", err)
+		}
+		deletedPublishers = append(deletedPublishers, deletedPublisher)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to iterate deleted publishers: %v", err)
+	}
+
+	return &bpb.ListDeletedPublishersResponse{Results: deletedPublishers}, nil
+}
+
+func (s BookstoreServer) UndeleteDeletedPublisher(ctx context.Context, r *bpb.UndeleteDeletedPublisherRequest) (*bpb.UndeleteDeletedPublisherResponse, error) {
+	// Normalize path: convert hyphens to underscores for database lookup
+	normalizedPath := strings.Replace(r.Path, "deleted-publishers/", "deleted_publishers/", 1)
+
+	// Check if the deleted publisher exists
+	var description, expireTime string
+	err := s.db.QueryRow("SELECT description, expire_time FROM deleted_publishers WHERE path = ?", normalizedPath).Scan(&description, &expireTime)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, status.Errorf(codes.NotFound, "deleted publisher %q not found", r.Path)
+		}
+		return nil, status.Errorf(codes.Internal, "failed to get deleted publisher: %v", err)
+	}
+
+	// Convert deleted_publishers path back to publishers path
+	publisherPath := strings.Replace(normalizedPath, "deleted_publishers/", "publishers/", 1)
+
+	// Check if a publisher with the same path already exists (conflict case)
+	var existingPath string
+	checkErr := s.db.QueryRow("SELECT path FROM publishers WHERE path = ?", publisherPath).Scan(&existingPath)
+	if checkErr == nil {
+		return nil, status.Errorf(codes.AlreadyExists, "publisher %q already exists and is not deleted", publisherPath)
+	} else if checkErr != sql.ErrNoRows {
+		return nil, status.Errorf(codes.Internal, "failed to check for existing publisher: %v", checkErr)
+	}
+
+	// Start a transaction to restore publisher
+	tx, err := s.db.Begin()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to start transaction: %v", err)
+	}
+	defer tx.Rollback()
+
+	// Insert back into publishers table
+	_, err = tx.Exec("INSERT INTO publishers (path, description) VALUES (?, ?)", publisherPath, description)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to restore publisher: %v", err)
+	}
+
+	// Remove from deleted_publishers table
+	_, err = tx.Exec("DELETE FROM deleted_publishers WHERE path = ?", normalizedPath)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to remove from deleted_publishers: %v", err)
+	}
+
+	// Commit the transaction
+	if err = tx.Commit(); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to commit transaction: %v", err)
+	}
+
+	log.Printf("restored publisher %q from deleted_publishers", publisherPath)
+
+	// Return empty response
+	return &bpb.UndeleteDeletedPublisherResponse{}, nil
 }
 
 func (s BookstoreServer) CreateStore(_ context.Context, r *bpb.CreateStoreRequest) (*bpb.Store, error) {
@@ -824,6 +957,11 @@ func StartServer(targetPort int) {
 		CREATE TABLE IF NOT EXISTS publishers (
 			path TEXT PRIMARY KEY,
 			description TEXT
+		);
+		CREATE TABLE IF NOT EXISTS deleted_publishers (
+			path TEXT PRIMARY KEY,
+			description TEXT,
+			expire_time TEXT
 		);
 		CREATE TABLE IF NOT EXISTS stores (
 			path TEXT PRIMARY KEY,

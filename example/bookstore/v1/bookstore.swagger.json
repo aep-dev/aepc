@@ -17,6 +17,53 @@
     "application/json"
   ],
   "paths": {
+    "/deleted_publishers": {
+      "get": {
+        "summary": "An aep-compliant List method for deleted_publishers.",
+        "operationId": "Bookstore_ListDeletedPublishers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListDeletedPublishersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "A field for the parent of deleted_publisher",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page_token",
+            "description": "The page token indicating the starting point of the page",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "max_page_size",
+            "description": "The maximum number of resources to return in a single page.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
     "/isbns": {
       "get": {
         "summary": "An aep-compliant List method for isbns.",
@@ -797,13 +844,13 @@
     },
     "/{path_2}": {
       "get": {
-        "summary": "An aep-compliant Get method for isbn.",
-        "operationId": "Bookstore_GetIsbn",
+        "summary": "An aep-compliant Get method for deleted_publisher.",
+        "operationId": "Bookstore_GetDeletedPublisher",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Isbn"
+              "$ref": "#/definitions/v1DeletedPublisher"
             }
           },
           "default": {
@@ -820,7 +867,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "isbns/[^/]+"
+            "pattern": "deleted-publishers/[^/]+"
           }
         ],
         "tags": [
@@ -905,13 +952,13 @@
     },
     "/{path_3}": {
       "get": {
-        "summary": "An aep-compliant Get method for item.",
-        "operationId": "Bookstore_GetItem",
+        "summary": "An aep-compliant Get method for isbn.",
+        "operationId": "Bookstore_GetIsbn",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Item"
+              "$ref": "#/definitions/v1Isbn"
             }
           },
           "default": {
@@ -928,7 +975,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "stores/[^/]+/items/[^/]+"
+            "pattern": "isbns/[^/]+"
           }
         ],
         "tags": [
@@ -1020,13 +1067,13 @@
     },
     "/{path_4}": {
       "get": {
-        "summary": "An aep-compliant Get method for publisher.",
-        "operationId": "Bookstore_GetPublisher",
+        "summary": "An aep-compliant Get method for item.",
+        "operationId": "Bookstore_GetItem",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1Publisher"
+              "$ref": "#/definitions/v1Item"
             }
           },
           "default": {
@@ -1043,7 +1090,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "pattern": "publishers/[^/]+"
+            "pattern": "stores/[^/]+/items/[^/]+"
           }
         ],
         "tags": [
@@ -1092,6 +1139,39 @@
     },
     "/{path_5}": {
       "get": {
+        "summary": "An aep-compliant Get method for publisher.",
+        "operationId": "Bookstore_GetPublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Publisher"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path_5",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "publishers/[^/]+"
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
+    },
+    "/{path_6}": {
+      "get": {
         "summary": "An aep-compliant Get method for store.",
         "operationId": "Bookstore_GetStore",
         "responses": {
@@ -1110,7 +1190,7 @@
         },
         "parameters": [
           {
-            "name": "path_5",
+            "name": "path_6",
             "description": "The globally unique identifier for the resource",
             "in": "path",
             "required": true,
@@ -1370,6 +1450,48 @@
           "Bookstore"
         ]
       }
+    },
+    "/{path}:undelete": {
+      "post": {
+        "summary": "undelete a deleted_publisher.",
+        "operationId": "Bookstore_UndeleteDeletedPublisher",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UndeleteDeletedPublisherResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "path",
+            "description": "The globally unique identifier for the resource",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "deleted-publishers/[^/]+"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "title": "Request message for the undelete method"
+            }
+          }
+        ],
+        "tags": [
+          "Bookstore"
+        ]
+      }
     }
   },
   "definitions": {
@@ -1536,6 +1658,24 @@
         "display_name"
       ]
     },
+    "v1DeletedPublisher": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Field for description."
+        },
+        "expire_time": {
+          "type": "string",
+          "description": "Field for expire_time."
+        },
+        "path": {
+          "type": "string",
+          "description": "Field for path."
+        }
+      },
+      "description": "A DeletedPublisher."
+    },
     "v1Isbn": {
       "type": "object",
       "properties": {
@@ -1616,6 +1756,24 @@
         }
       },
       "title": "Response message for the Listbook method"
+    },
+    "v1ListDeletedPublishersResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1DeletedPublisher"
+          },
+          "title": "A list of deleted_publishers"
+        },
+        "next_page_token": {
+          "type": "string",
+          "description": "The page token indicating the ending point of this response."
+        }
+      },
+      "title": "Response message for the Listdeleted_publisher method"
     },
     "v1ListIsbnsResponse": {
       "type": "object",
@@ -1723,6 +1881,10 @@
       "required": [
         "name"
       ]
+    },
+    "v1UndeleteDeletedPublisherResponse": {
+      "type": "object",
+      "title": "Response message for the undelete method"
     }
   }
 }

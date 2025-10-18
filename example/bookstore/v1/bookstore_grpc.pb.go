@@ -23,37 +23,40 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Bookstore_CreateBook_FullMethodName        = "/example.bookstore.v1.Bookstore/CreateBook"
-	Bookstore_GetBook_FullMethodName           = "/example.bookstore.v1.Bookstore/GetBook"
-	Bookstore_UpdateBook_FullMethodName        = "/example.bookstore.v1.Bookstore/UpdateBook"
-	Bookstore_DeleteBook_FullMethodName        = "/example.bookstore.v1.Bookstore/DeleteBook"
-	Bookstore_ListBooks_FullMethodName         = "/example.bookstore.v1.Bookstore/ListBooks"
-	Bookstore_ApplyBook_FullMethodName         = "/example.bookstore.v1.Bookstore/ApplyBook"
-	Bookstore_ArchiveBook_FullMethodName       = "/example.bookstore.v1.Bookstore/ArchiveBook"
-	Bookstore_CreateBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/CreateBookEdition"
-	Bookstore_GetBookEdition_FullMethodName    = "/example.bookstore.v1.Bookstore/GetBookEdition"
-	Bookstore_DeleteBookEdition_FullMethodName = "/example.bookstore.v1.Bookstore/DeleteBookEdition"
-	Bookstore_ListBookEditions_FullMethodName  = "/example.bookstore.v1.Bookstore/ListBookEditions"
-	Bookstore_CreateIsbn_FullMethodName        = "/example.bookstore.v1.Bookstore/CreateIsbn"
-	Bookstore_GetIsbn_FullMethodName           = "/example.bookstore.v1.Bookstore/GetIsbn"
-	Bookstore_ListIsbns_FullMethodName         = "/example.bookstore.v1.Bookstore/ListIsbns"
-	Bookstore_CreateItem_FullMethodName        = "/example.bookstore.v1.Bookstore/CreateItem"
-	Bookstore_GetItem_FullMethodName           = "/example.bookstore.v1.Bookstore/GetItem"
-	Bookstore_UpdateItem_FullMethodName        = "/example.bookstore.v1.Bookstore/UpdateItem"
-	Bookstore_DeleteItem_FullMethodName        = "/example.bookstore.v1.Bookstore/DeleteItem"
-	Bookstore_ListItems_FullMethodName         = "/example.bookstore.v1.Bookstore/ListItems"
-	Bookstore_MoveItem_FullMethodName          = "/example.bookstore.v1.Bookstore/MoveItem"
-	Bookstore_CreatePublisher_FullMethodName   = "/example.bookstore.v1.Bookstore/CreatePublisher"
-	Bookstore_GetPublisher_FullMethodName      = "/example.bookstore.v1.Bookstore/GetPublisher"
-	Bookstore_UpdatePublisher_FullMethodName   = "/example.bookstore.v1.Bookstore/UpdatePublisher"
-	Bookstore_DeletePublisher_FullMethodName   = "/example.bookstore.v1.Bookstore/DeletePublisher"
-	Bookstore_ListPublishers_FullMethodName    = "/example.bookstore.v1.Bookstore/ListPublishers"
-	Bookstore_ApplyPublisher_FullMethodName    = "/example.bookstore.v1.Bookstore/ApplyPublisher"
-	Bookstore_CreateStore_FullMethodName       = "/example.bookstore.v1.Bookstore/CreateStore"
-	Bookstore_GetStore_FullMethodName          = "/example.bookstore.v1.Bookstore/GetStore"
-	Bookstore_UpdateStore_FullMethodName       = "/example.bookstore.v1.Bookstore/UpdateStore"
-	Bookstore_DeleteStore_FullMethodName       = "/example.bookstore.v1.Bookstore/DeleteStore"
-	Bookstore_ListStores_FullMethodName        = "/example.bookstore.v1.Bookstore/ListStores"
+	Bookstore_CreateBook_FullMethodName               = "/example.bookstore.v1.Bookstore/CreateBook"
+	Bookstore_GetBook_FullMethodName                  = "/example.bookstore.v1.Bookstore/GetBook"
+	Bookstore_UpdateBook_FullMethodName               = "/example.bookstore.v1.Bookstore/UpdateBook"
+	Bookstore_DeleteBook_FullMethodName               = "/example.bookstore.v1.Bookstore/DeleteBook"
+	Bookstore_ListBooks_FullMethodName                = "/example.bookstore.v1.Bookstore/ListBooks"
+	Bookstore_ApplyBook_FullMethodName                = "/example.bookstore.v1.Bookstore/ApplyBook"
+	Bookstore_ArchiveBook_FullMethodName              = "/example.bookstore.v1.Bookstore/ArchiveBook"
+	Bookstore_CreateBookEdition_FullMethodName        = "/example.bookstore.v1.Bookstore/CreateBookEdition"
+	Bookstore_GetBookEdition_FullMethodName           = "/example.bookstore.v1.Bookstore/GetBookEdition"
+	Bookstore_DeleteBookEdition_FullMethodName        = "/example.bookstore.v1.Bookstore/DeleteBookEdition"
+	Bookstore_ListBookEditions_FullMethodName         = "/example.bookstore.v1.Bookstore/ListBookEditions"
+	Bookstore_GetDeletedPublisher_FullMethodName      = "/example.bookstore.v1.Bookstore/GetDeletedPublisher"
+	Bookstore_ListDeletedPublishers_FullMethodName    = "/example.bookstore.v1.Bookstore/ListDeletedPublishers"
+	Bookstore_UndeleteDeletedPublisher_FullMethodName = "/example.bookstore.v1.Bookstore/UndeleteDeletedPublisher"
+	Bookstore_CreateIsbn_FullMethodName               = "/example.bookstore.v1.Bookstore/CreateIsbn"
+	Bookstore_GetIsbn_FullMethodName                  = "/example.bookstore.v1.Bookstore/GetIsbn"
+	Bookstore_ListIsbns_FullMethodName                = "/example.bookstore.v1.Bookstore/ListIsbns"
+	Bookstore_CreateItem_FullMethodName               = "/example.bookstore.v1.Bookstore/CreateItem"
+	Bookstore_GetItem_FullMethodName                  = "/example.bookstore.v1.Bookstore/GetItem"
+	Bookstore_UpdateItem_FullMethodName               = "/example.bookstore.v1.Bookstore/UpdateItem"
+	Bookstore_DeleteItem_FullMethodName               = "/example.bookstore.v1.Bookstore/DeleteItem"
+	Bookstore_ListItems_FullMethodName                = "/example.bookstore.v1.Bookstore/ListItems"
+	Bookstore_MoveItem_FullMethodName                 = "/example.bookstore.v1.Bookstore/MoveItem"
+	Bookstore_CreatePublisher_FullMethodName          = "/example.bookstore.v1.Bookstore/CreatePublisher"
+	Bookstore_GetPublisher_FullMethodName             = "/example.bookstore.v1.Bookstore/GetPublisher"
+	Bookstore_UpdatePublisher_FullMethodName          = "/example.bookstore.v1.Bookstore/UpdatePublisher"
+	Bookstore_DeletePublisher_FullMethodName          = "/example.bookstore.v1.Bookstore/DeletePublisher"
+	Bookstore_ListPublishers_FullMethodName           = "/example.bookstore.v1.Bookstore/ListPublishers"
+	Bookstore_ApplyPublisher_FullMethodName           = "/example.bookstore.v1.Bookstore/ApplyPublisher"
+	Bookstore_CreateStore_FullMethodName              = "/example.bookstore.v1.Bookstore/CreateStore"
+	Bookstore_GetStore_FullMethodName                 = "/example.bookstore.v1.Bookstore/GetStore"
+	Bookstore_UpdateStore_FullMethodName              = "/example.bookstore.v1.Bookstore/UpdateStore"
+	Bookstore_DeleteStore_FullMethodName              = "/example.bookstore.v1.Bookstore/DeleteStore"
+	Bookstore_ListStores_FullMethodName               = "/example.bookstore.v1.Bookstore/ListStores"
 )
 
 // BookstoreClient is the client API for Bookstore service.
@@ -82,6 +85,12 @@ type BookstoreClient interface {
 	DeleteBookEdition(ctx context.Context, in *DeleteBookEditionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// An aep-compliant List method for book-editions.
 	ListBookEditions(ctx context.Context, in *ListBookEditionsRequest, opts ...grpc.CallOption) (*ListBookEditionsResponse, error)
+	// An aep-compliant Get method for deleted_publisher.
+	GetDeletedPublisher(ctx context.Context, in *GetDeletedPublisherRequest, opts ...grpc.CallOption) (*DeletedPublisher, error)
+	// An aep-compliant List method for deleted_publishers.
+	ListDeletedPublishers(ctx context.Context, in *ListDeletedPublishersRequest, opts ...grpc.CallOption) (*ListDeletedPublishersResponse, error)
+	// undelete a deleted_publisher.
+	UndeleteDeletedPublisher(ctx context.Context, in *UndeleteDeletedPublisherRequest, opts ...grpc.CallOption) (*UndeleteDeletedPublisherResponse, error)
 	// An aep-compliant Create method for isbn.
 	CreateIsbn(ctx context.Context, in *CreateIsbnRequest, opts ...grpc.CallOption) (*Isbn, error)
 	// An aep-compliant Get method for isbn.
@@ -225,6 +234,33 @@ func (c *bookstoreClient) DeleteBookEdition(ctx context.Context, in *DeleteBookE
 func (c *bookstoreClient) ListBookEditions(ctx context.Context, in *ListBookEditionsRequest, opts ...grpc.CallOption) (*ListBookEditionsResponse, error) {
 	out := new(ListBookEditionsResponse)
 	err := c.cc.Invoke(ctx, Bookstore_ListBookEditions_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookstoreClient) GetDeletedPublisher(ctx context.Context, in *GetDeletedPublisherRequest, opts ...grpc.CallOption) (*DeletedPublisher, error) {
+	out := new(DeletedPublisher)
+	err := c.cc.Invoke(ctx, Bookstore_GetDeletedPublisher_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookstoreClient) ListDeletedPublishers(ctx context.Context, in *ListDeletedPublishersRequest, opts ...grpc.CallOption) (*ListDeletedPublishersResponse, error) {
+	out := new(ListDeletedPublishersResponse)
+	err := c.cc.Invoke(ctx, Bookstore_ListDeletedPublishers_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookstoreClient) UndeleteDeletedPublisher(ctx context.Context, in *UndeleteDeletedPublisherRequest, opts ...grpc.CallOption) (*UndeleteDeletedPublisherResponse, error) {
+	out := new(UndeleteDeletedPublisherResponse)
+	err := c.cc.Invoke(ctx, Bookstore_UndeleteDeletedPublisher_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -437,6 +473,12 @@ type BookstoreServer interface {
 	DeleteBookEdition(context.Context, *DeleteBookEditionRequest) (*emptypb.Empty, error)
 	// An aep-compliant List method for book-editions.
 	ListBookEditions(context.Context, *ListBookEditionsRequest) (*ListBookEditionsResponse, error)
+	// An aep-compliant Get method for deleted_publisher.
+	GetDeletedPublisher(context.Context, *GetDeletedPublisherRequest) (*DeletedPublisher, error)
+	// An aep-compliant List method for deleted_publishers.
+	ListDeletedPublishers(context.Context, *ListDeletedPublishersRequest) (*ListDeletedPublishersResponse, error)
+	// undelete a deleted_publisher.
+	UndeleteDeletedPublisher(context.Context, *UndeleteDeletedPublisherRequest) (*UndeleteDeletedPublisherResponse, error)
 	// An aep-compliant Create method for isbn.
 	CreateIsbn(context.Context, *CreateIsbnRequest) (*Isbn, error)
 	// An aep-compliant Get method for isbn.
@@ -516,6 +558,15 @@ func (UnimplementedBookstoreServer) DeleteBookEdition(context.Context, *DeleteBo
 }
 func (UnimplementedBookstoreServer) ListBookEditions(context.Context, *ListBookEditionsRequest) (*ListBookEditionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBookEditions not implemented")
+}
+func (UnimplementedBookstoreServer) GetDeletedPublisher(context.Context, *GetDeletedPublisherRequest) (*DeletedPublisher, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDeletedPublisher not implemented")
+}
+func (UnimplementedBookstoreServer) ListDeletedPublishers(context.Context, *ListDeletedPublishersRequest) (*ListDeletedPublishersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDeletedPublishers not implemented")
+}
+func (UnimplementedBookstoreServer) UndeleteDeletedPublisher(context.Context, *UndeleteDeletedPublisherRequest) (*UndeleteDeletedPublisherResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UndeleteDeletedPublisher not implemented")
 }
 func (UnimplementedBookstoreServer) CreateIsbn(context.Context, *CreateIsbnRequest) (*Isbn, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateIsbn not implemented")
@@ -784,6 +835,60 @@ func _Bookstore_ListBookEditions_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BookstoreServer).ListBookEditions(ctx, req.(*ListBookEditionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bookstore_GetDeletedPublisher_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeletedPublisherRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).GetDeletedPublisher(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_GetDeletedPublisher_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).GetDeletedPublisher(ctx, req.(*GetDeletedPublisherRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bookstore_ListDeletedPublishers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDeletedPublishersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).ListDeletedPublishers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_ListDeletedPublishers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).ListDeletedPublishers(ctx, req.(*ListDeletedPublishersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bookstore_UndeleteDeletedPublisher_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UndeleteDeletedPublisherRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookstoreServer).UndeleteDeletedPublisher(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bookstore_UndeleteDeletedPublisher_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookstoreServer).UndeleteDeletedPublisher(ctx, req.(*UndeleteDeletedPublisherRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1198,6 +1303,18 @@ var Bookstore_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListBookEditions",
 			Handler:    _Bookstore_ListBookEditions_Handler,
+		},
+		{
+			MethodName: "GetDeletedPublisher",
+			Handler:    _Bookstore_GetDeletedPublisher_Handler,
+		},
+		{
+			MethodName: "ListDeletedPublishers",
+			Handler:    _Bookstore_ListDeletedPublishers_Handler,
+		},
+		{
+			MethodName: "UndeleteDeletedPublisher",
+			Handler:    _Bookstore_UndeleteDeletedPublisher_Handler,
 		},
 		{
 			MethodName: "CreateIsbn",

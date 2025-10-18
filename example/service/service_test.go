@@ -34,6 +34,11 @@ func setupTestDB(t *testing.T) *sql.DB {
 			path TEXT PRIMARY KEY,
 			description TEXT
 		);
+		CREATE TABLE deleted_publishers (
+			path TEXT PRIMARY KEY,
+			description TEXT,
+			expire_time TEXT
+		);
 		CREATE TABLE stores (
 			path TEXT PRIMARY KEY,
 			name TEXT,
@@ -529,5 +534,140 @@ func TestExtractIfMatchHeader(t *testing.T) {
 	extractedETag4 := extractIfMatchHeader(ctx4)
 	if extractedETag4 != "" {
 		t.Errorf("Expected empty ETag, got %s", extractedETag4)
+	}
+}
+
+func TestPublisherUndelete(t *testing.T) {
+	db := setupTestDB(t)
+	defer db.Close()
+	server := NewBookstoreServer(db)
+
+	ctx := context.Background()
+
+	// Create a publisher
+	createResp, err := server.CreatePublisher(ctx, &bpb.CreatePublisherRequest{
+		Id: "test-publisher",
+		Publisher: &bpb.Publisher{
+			Description: "Test Publisher for Undelete",
+		},
+	})
+	if err != nil {
+		t.Fatalf("Failed to create publisher: %v", err)
+	}
+
+	publisherPath := createResp.Path
+
+	// Delete the publisher (should move to deleted_publishers)
+	_, err = server.DeletePublisher(ctx, &bpb.DeletePublisherRequest{
+		Path: publisherPath,
+	})
+	if err != nil {
+		t.Fatalf("Failed to delete publisher: %v", err)
+	}
+
+	// Verify publisher is no longer in publishers table
+	_, err = server.GetPublisher(ctx, &bpb.GetPublisherRequest{
+		Path: publisherPath,
+	})
+	if err == nil {
+		t.Fatal("Expected publisher to be deleted, but it still exists")
+	}
+	if status.Code(err) != codes.NotFound {
+		t.Fatalf("Expected NotFound error, got %v", err)
+	}
+
+	// Verify publisher is in deleted_publishers table
+	deletedPath := strings.Replace(publisherPath, "publishers/", "deleted_publishers/", 1)
+	deletedPublisher, err := server.GetDeletedPublisher(ctx, &bpb.GetDeletedPublisherRequest{
+		Path: deletedPath,
+	})
+	if err != nil {
+		t.Fatalf("Failed to get deleted publisher: %v", err)
+	}
+	if deletedPublisher.Description != "Test Publisher for Undelete" {
+		t.Errorf("Expected description 'Test Publisher for Undelete', got %q", deletedPublisher.Description)
+	}
+	if deletedPublisher.ExpireTime == "" {
+		t.Error("Expected expire_time to be set")
+	}
+
+	// List deleted publishers
+	listResp, err := server.ListDeletedPublishers(ctx, &bpb.ListDeletedPublishersRequest{})
+	if err != nil {
+		t.Fatalf("Failed to list deleted publishers: %v", err)
+	}
+	if len(listResp.Results) != 1 {
+		t.Errorf("Expected 1 deleted publisher, got %d", len(listResp.Results))
+	}
+
+	// Undelete the publisher
+	_, err = server.UndeleteDeletedPublisher(ctx, &bpb.UndeleteDeletedPublisherRequest{
+		Path: deletedPath,
+	})
+	if err != nil {
+		t.Fatalf("Failed to undelete publisher: %v", err)
+	}
+
+	// Verify publisher is restored in publishers table
+	restoredPublisher, err := server.GetPublisher(ctx, &bpb.GetPublisherRequest{
+		Path: publisherPath,
+	})
+	if err != nil {
+		t.Fatalf("Failed to get restored publisher: %v", err)
+	}
+	if restoredPublisher.Description != "Test Publisher for Undelete" {
+		t.Errorf("Expected description 'Test Publisher for Undelete', got %q", restoredPublisher.Description)
+	}
+
+	// Verify publisher is no longer in deleted_publishers table
+	_, err = server.GetDeletedPublisher(ctx, &bpb.GetDeletedPublisherRequest{
+		Path: deletedPath,
+	})
+	if err == nil {
+		t.Fatal("Expected deleted publisher to be removed, but it still exists")
+	}
+	if status.Code(err) != codes.NotFound {
+		t.Fatalf("Expected NotFound error, got %v", err)
+	}
+
+	// Test undeleting non-existent deleted publisher
+	_, err = server.UndeleteDeletedPublisher(ctx, &bpb.UndeleteDeletedPublisherRequest{
+		Path: "deleted_publishers/non-existent",
+	})
+	if err == nil {
+		t.Fatal("Expected error when undeleting non-existent publisher")
+	}
+	if status.Code(err) != codes.NotFound {
+		t.Fatalf("Expected NotFound error, got %v", err)
+	}
+
+	// Test undeleting when publisher already exists (conflict)
+	// Create another publisher first
+	_, err = server.CreatePublisher(ctx, &bpb.CreatePublisherRequest{
+		Id: "conflict-publisher",
+		Publisher: &bpb.Publisher{
+			Description: "Conflict Test Publisher",
+		},
+	})
+	if err != nil {
+		t.Fatalf("Failed to create conflict publisher: %v", err)
+	}
+
+	// Manually insert into deleted_publishers with same ID
+	_, err = db.Exec("INSERT INTO deleted_publishers (path, description, expire_time) VALUES (?, ?, ?)",
+		"deleted_publishers/conflict-publisher", "Old Conflict Publisher", time.Now().Add(30*24*time.Hour).Format(time.RFC3339))
+	if err != nil {
+		t.Fatalf("Failed to insert conflict deleted publisher: %v", err)
+	}
+
+	// Try to undelete - should fail with AlreadyExists
+	_, err = server.UndeleteDeletedPublisher(ctx, &bpb.UndeleteDeletedPublisherRequest{
+		Path: "deleted_publishers/conflict-publisher",
+	})
+	if err == nil {
+		t.Fatal("Expected error when undeleting publisher that already exists")
+	}
+	if status.Code(err) != codes.AlreadyExists {
+		t.Fatalf("Expected AlreadyExists error, got %v", err)
 	}
 }
