@@ -28,3 +28,5 @@ buf generate
 #   service/bookstore/service.proto
 # generate updated openapi definition
 # java -jar swagger-codegen-cli.jar generate -l openapi -i openapi/service.swagger.json -o openapi
+# finally, format all protos
+buf format -w
