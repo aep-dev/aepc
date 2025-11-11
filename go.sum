@@ -1,9 +1,7 @@
-buf.build/gen/go/aep/api/protocolbuffers/go v1.36.10-20251011054345-69202ce22a67.1 h1:JNlDDKI9OtieWhXP4DdTx4H6P0WsQbW8B+cmjGCHYTE=
-buf.build/gen/go/aep/api/protocolbuffers/go v1.36.10-20251011054345-69202ce22a67.1/go.mod h1:6eR/uxhdJhB/Gk0vgKgcar7k/qKXZEArkfpF87AjF/A=
-buf.build/gen/go/aep/api/protocolbuffers/go v1.36.10-20251011185002-1454930c8f99.1 h1:oLb4mOvnV3wNCVcbHsw4KCtQWtMbf8VURShtwM0N2A0=
-buf.build/gen/go/aep/api/protocolbuffers/go v1.36.10-20251011185002-1454930c8f99.1/go.mod h1:6eR/uxhdJhB/Gk0vgKgcar7k/qKXZEArkfpF87AjF/A=
-buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.10-20240221180331-f05a6f4403ce.1 h1:19otp5rJIcsvEF2aZtpXLSunZFD6kaHnP/u107WpLQI=
-buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.10-20240221180331-f05a6f4403ce.1/go.mod h1:fUl8CEN/6ZAMk6bP8ahBJPUJw7rbp+j4x+wCcYi2IG4=
+buf.build/gen/go/aep/api/protocolbuffers/go v1.36.10-20251109183837-26a011a354ee.1 h1:hvHgJH3scOHSRm9nC9JOdesPF9yc7Fl281TNQe60SL0=
+buf.build/gen/go/aep/api/protocolbuffers/go v1.36.10-20251109183837-26a011a354ee.1/go.mod h1:JOZpZ+zS3G2OKO02hKlEazAGR5X9uVpFyeCamXBXg5c=
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.10-20250912141014-52f32327d4b0.1 h1:31on4W/yPcV4nZHL4+UCiCvLPsMqe/vJcNg8Rci0scc=
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.10-20250912141014-52f32327d4b0.1/go.mod h1:fUl8CEN/6ZAMk6bP8ahBJPUJw7rbp+j4x+wCcYi2IG4=
 cel.dev/expr v0.19.1 h1:NciYrtDRIR0lNCnH1LFJegdjspNx9fI59O7TWcua/W4=
 cel.dev/expr v0.19.1/go.mod h1:MrpN08Q+lEBs+bGYdLxxHkZoUSsCp0nSKTs0nTymJgw=
 cloud.google.com/go/longrunning v0.6.6 h1:XJNDo5MUfMM05xK3ewpbSdmt7R2Zw+aQEMbdQR65Rbw=
@@ -20,10 +18,8 @@ github.com/PuerkitoBio/purell v1.1.0 h1:rmGxhojJlM0tuKtfdvliR84CFHljx9ag64t2xmVk
 github.com/PuerkitoBio/purell v1.1.0/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 h1:d+Bc7a5rLufV/sSk/8dngufqelfh6jnri85riMAaF/M=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
-github.com/aep-dev/aep-lib-go v0.0.0-20251011055007-381f909d01a4 h1:CXhpcLwjpPLImwgL35MtmYhwoKHDQtfKYUKPn+N26PI=
-github.com/aep-dev/aep-lib-go v0.0.0-20251011055007-381f909d01a4/go.mod h1:Hi2ea6nI65CLja4hqoXoViUnnZk4S5E3esreV05tDjo=
-github.com/aep-dev/aep-lib-go v0.0.0-20251011190527-4b8a96d91310 h1:Hp9cCdNYMYq0DkfcgEE68rIrVRBn8YcoY9mfVvo7Zug=
-github.com/aep-dev/aep-lib-go v0.0.0-20251011190527-4b8a96d91310/go.mod h1:26IeaYRvf6ObXyPm6rlqEUiH0qyFoT1Eyf8Ys2r95tg=
+github.com/aep-dev/aep-lib-go v0.0.0-20251111165230-98620886fcd9 h1:7cTm+JDlHZUaxkL8X/VJl6G+Nxn42VYDtiyM4xKgXEo=
+github.com/aep-dev/aep-lib-go v0.0.0-20251111165230-98620886fcd9/go.mod h1:oPOz/8HDQAI0sR+pHSteMkiP/WHM3RNHKY4DctnwVpo=
 github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768 h1:b5fRfpIIsOsdsT2N1MsBxr0K/fZacCUlWp0uY9/BJzM=
 github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768/go.mod h1:sUuUJSkWTc4GBxp8GEZXCeEI38VMyuM5msPQ9BG0kMA=
 github.com/agext/levenshtein v1.2.2 h1:0S/Yg6LYmFJ5stwQeRp6EeOcCbj7xiqQSdNelsXvaqE=

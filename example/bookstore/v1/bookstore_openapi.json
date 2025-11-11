@@ -1349,11 +1349,15 @@
               "properties": {
                 "family_name": {
                   "type": "string",
-                  "x-aep-field-number": 2
+                  "x-aep-field": {
+                    "field_number": 2
+                  }
                 },
                 "given_name": {
                   "type": "string",
-                  "x-aep-field-number": 1
+                  "x-aep-field": {
+                    "field_number": 1
+                  }
                 }
               }
             }
@@ -1388,7 +1392,8 @@
           ],
           "parents": [
             "publisher"
-          ]
+          ],
+          "type": "bookstore.example.com/book"
         },
         "required": [
           "edition",
@@ -1416,7 +1421,8 @@
           ],
           "parents": [
             "book"
-          ]
+          ],
+          "type": "bookstore.example.com/book-edition"
         },
         "required": [
           "display_name"
@@ -1435,7 +1441,8 @@
           "plural": "isbns",
           "patterns": [
             "isbns/{isbn_id}"
-          ]
+          ],
+          "type": "bookstore.example.com/isbn"
         }
       },
       "item": {
@@ -1464,7 +1471,8 @@
           ],
           "parents": [
             "store"
-          ]
+          ],
+          "type": "bookstore.example.com/item"
         },
         "required": [
           "title",
@@ -1488,7 +1496,8 @@
           "plural": "publishers",
           "patterns": [
             "publishers/{publisher_id}"
-          ]
+          ],
+          "type": "bookstore.example.com/publisher"
         }
       },
       "store": {
@@ -1510,7 +1519,8 @@
           "plural": "stores",
           "patterns": [
             "stores/{store_id}"
-          ]
+          ],
+          "type": "bookstore.example.com/store"
         },
         "required": [
           "name"

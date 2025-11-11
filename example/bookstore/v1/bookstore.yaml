@@ -13,7 +13,8 @@ resources:
       properties:
         description:
           type: string
-          x-aep-field-number: 1
+          x-aep-field:
+            field_number: 1
     methods:
       create:
         supports_user_settable_create: true
@@ -36,30 +37,37 @@ resources:
           type: array
           items:
             type: string
-          x-aep-field-number: 1
+          x-aep-field:
+            field_number: 1
         price:
           type: integer
           format: int32
-          x-aep-field-number: 2
+          x-aep-field:
+            field_number: 2
         published:
           type: boolean
-          x-aep-field-number: 3
+          x-aep-field:
+            field_number: 3
         edition:
           type: integer
           format: int32
-          x-aep-field-number: 4
+          x-aep-field:
+            field_number: 4
         author:
           type: array
-          x-aep-field-number: 5
+          x-aep-field:
+            field_number: 5
           items:
             type: object
             properties:
               given_name:
                 type: string
-                x-aep-field-number: 1
+                x-aep-field:
+                  field_number: 1
               family_name:
                 type: string
-                x-aep-field-number: 2
+                x-aep-field:
+                  field_number: 2
     methods:
       create:
         supports_user_settable_create: true
@@ -91,7 +99,8 @@ resources:
       properties:
         display_name:
           type: string
-          x-aep-field-number: 1
+          x-aep-field:
+            field_number: 1
     methods:
       create:
         supports_user_settable_create: true
@@ -117,10 +126,12 @@ resources:
       properties:
         name:
           type: string
-          x-aep-field-number: 1
+          x-aep-field:
+            field_number: 1
         description:
           type: string
-          x-aep-field-number: 2
+          x-aep-field:
+            field_number: 2
     methods:
       create:
         supports_user_settable_create: true
@@ -140,14 +151,17 @@ resources:
       properties:
         book:
           type: string
-          x-aep-field-number: 1
+          x-aep-field:
+            field_number: 1
         condition:
           type: string
-          x-aep-field-number: 2
+          x-aep-field:
+            field_number: 2
         price:
           type: number
           format: double
-          x-aep-field-number: 3
+          x-aep-field:
+            field_number: 3
     methods:
       create:
         supports_user_settable_create: true
@@ -167,4 +181,5 @@ resources:
           properties:
             target_store:
               type: string
-              x-aep-field-number: 1
+              x-aep-field:
+                field_number: 1
