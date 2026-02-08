@@ -7,7 +7,7 @@ toolchain go1.23.6
 require (
 	buf.build/gen/go/aep/api/protocolbuffers/go v1.36.10-20251109183837-26a011a354ee.1
 	cloud.google.com/go/longrunning v0.6.6
-	github.com/aep-dev/aep-lib-go v0.0.0-20251111165230-98620886fcd9
+	github.com/aep-dev/aep-lib-go v0.0.0-20260208052831-f2a02f53a637
 	github.com/aep-dev/terraform-provider-aep v0.0.0-20241112052633-f48d45460768
 	github.com/google/cel-go v0.22.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0
@@ -105,3 +105,6 @@ require (
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 )
+
+// uncomment for local development
+// replace github.com/aep-dev/aep-lib-go => ../aep-lib-go

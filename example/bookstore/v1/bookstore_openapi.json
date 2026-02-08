@@ -1374,6 +1374,7 @@
           },
           "path": {
             "type": "string",
+            "readOnly": true,
             "description": "The server-assigned path of the resource, which is unique within the service."
           },
           "price": {
@@ -1410,6 +1411,7 @@
           },
           "path": {
             "type": "string",
+            "readOnly": true,
             "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
@@ -1433,6 +1435,7 @@
         "properties": {
           "path": {
             "type": "string",
+            "readOnly": true,
             "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
@@ -1456,6 +1459,7 @@
           },
           "path": {
             "type": "string",
+            "readOnly": true,
             "description": "The server-assigned path of the resource, which is unique within the service."
           },
           "price": {
@@ -1488,6 +1492,7 @@
           },
           "path": {
             "type": "string",
+            "readOnly": true,
             "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },
@@ -1511,6 +1516,7 @@
           },
           "path": {
             "type": "string",
+            "readOnly": true,
             "description": "The server-assigned path of the resource, which is unique within the service."
           }
         },

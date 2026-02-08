@@ -1508,7 +1508,8 @@
         },
         "path": {
           "type": "string",
-          "description": "Field for path."
+          "description": "Field for path.",
+          "readOnly": true
         }
       },
       "description": "A Book.",
@@ -1528,7 +1529,8 @@
         },
         "path": {
           "type": "string",
-          "description": "Field for path."
+          "description": "Field for path.",
+          "readOnly": true
         }
       },
       "description": "A BookEdition.",
@@ -1541,7 +1543,8 @@
       "properties": {
         "path": {
           "type": "string",
-          "description": "Field for path."
+          "description": "Field for path.",
+          "readOnly": true
         }
       },
       "description": "A Isbn."
@@ -1564,7 +1567,8 @@
         },
         "path": {
           "type": "string",
-          "description": "Field for path."
+          "description": "Field for path.",
+          "readOnly": true
         }
       },
       "description": "A Item.",
@@ -1698,7 +1702,8 @@
         },
         "path": {
           "type": "string",
-          "description": "Field for path."
+          "description": "Field for path.",
+          "readOnly": true
         }
       },
       "description": "A Publisher."
@@ -1716,7 +1721,8 @@
         },
         "path": {
           "type": "string",
-          "description": "Field for path."
+          "description": "Field for path.",
+          "readOnly": true
         }
       },
       "description": "A Store.",
