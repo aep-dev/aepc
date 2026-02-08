@@ -326,7 +326,12 @@ message Book {
   repeated Author author = 5;
 
   // Field for path.
-  string path = 10018;
+  string path = 10018 [
+    (aep.api.field_info) = {
+      field_behavior: [FIELD_BEHAVIOR_OUTPUT_ONLY]
+    },
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
 }
 
 // A BookEdition.
@@ -348,7 +353,12 @@ message BookEdition {
   ];
 
   // Field for path.
-  string path = 10018;
+  string path = 10018 [
+    (aep.api.field_info) = {
+      field_behavior: [FIELD_BEHAVIOR_OUTPUT_ONLY]
+    },
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
 }
 
 // A Isbn.
@@ -361,7 +371,12 @@ message Isbn {
   };
 
   // Field for path.
-  string path = 10018;
+  string path = 10018 [
+    (aep.api.field_info) = {
+      field_behavior: [FIELD_BEHAVIOR_OUTPUT_ONLY]
+    },
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
 }
 
 // A Item.
@@ -393,7 +408,12 @@ message Item {
   ];
 
   // Field for path.
-  string path = 10018;
+  string path = 10018 [
+    (aep.api.field_info) = {
+      field_behavior: [FIELD_BEHAVIOR_OUTPUT_ONLY]
+    },
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
 }
 
 // A Publisher.
@@ -409,7 +429,12 @@ message Publisher {
   string description = 1;
 
   // Field for path.
-  string path = 10018;
+  string path = 10018 [
+    (aep.api.field_info) = {
+      field_behavior: [FIELD_BEHAVIOR_OUTPUT_ONLY]
+    },
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
 }
 
 // A Store.
@@ -433,7 +458,12 @@ message Store {
   string description = 2;
 
   // Field for path.
-  string path = 10018;
+  string path = 10018 [
+    (aep.api.field_info) = {
+      field_behavior: [FIELD_BEHAVIOR_OUTPUT_ONLY]
+    },
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
 }
 
 // A Create request for a  book resource.
